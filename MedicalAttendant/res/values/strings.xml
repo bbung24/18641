@@ -14,5 +14,7 @@
     <string name="info2">Info2</string>
     <string name="info3">Info3</string>
     <string name="info4">Info4</string>
+    <string name="title_activity_find_doctors">FindDoctorsActivity</string>
+    <string name="title_activity_check_up">CheckUpActivity</string>
 
 </resources>
