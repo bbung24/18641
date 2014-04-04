@@ -1,1 +1,0 @@
-INDEX VERSION 1.126+/Users/ino/Documents/S14/18641/Project2/18641/.metadata/.plugins/org.eclipse.jdt.core
