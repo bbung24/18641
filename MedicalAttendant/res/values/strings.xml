@@ -14,5 +14,17 @@
     <string name="info2">Info2</string>
     <string name="info3">Info3</string>
     <string name="info4">Info4</string>
-
+    <string name="distantdiagnosis">DistantDiagnosis</string>
+    <string name="checkup">Check-Up</string>
+    <string name="finddoctor">Find Doctors</string>
+    <string name="symptoms">Symptoms</string>
+    <string name="addpicture">Add Picture</string>
+    <string name="addvoicerecord">Add Voice Record</string>
+    <string name="usemedicaldevice">Use Medical Device</string>
+    <string name="doctor1">Doctor1</string>
+    <string name="doctor2">Doctor2</string>
+    <string name="doctor3">Doctor3</string>
+    <string name="doctor4">Doctor4</string>
+    <string name="submit">Submit</string>
+    
 </resources>
