@@ -29,4 +29,6 @@
     <string name="inobyungsin">inobyungsin</string>
     <string name="title_activity_find_doctors">FindDoctorsActivity</string>
     <string name="title_activity_check_up">CheckUpActivity</string>
+    <string name="title_activity_examination">ExaminationActivity</string>
+
 </resources>

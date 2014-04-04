@@ -30,6 +30,10 @@
             android:name="com.example.medicalattendant.CheckUpActivity"
             android:label="@string/title_activity_check_up" >
         </activity>
+        <activity
+            android:name="com.example.medicalattendant.ExaminationActivity"
+            android:label="@string/title_activity_examination" >
+        </activity>
     </application>
 
 </manifest>
