@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MedicalAttendant</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="ddcu">Distant Diagnosis Check Up</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="id">ID</string>
+    <string name="password">Password</string>
+    <string name="passwordconfirm">Confirm Password</string>
+    <string name="age">Age</string>
+    <string name="info2">Info2</string>
+    <string name="info3">Info3</string>
+    <string name="info4">Info4</string>
+    <string name="distantdiagnosis">DistantDiagnosis</string>
+    <string name="checkup">Check-Up</string>
+    <string name="finddoctor">Find Doctors</string>
+    <string name="symptoms">Symptoms</string>
+    <string name="addpicture">Add Picture</string>
+    <string name="addvoicerecord">Add Voice Record</string>
+    <string name="usemedicaldevice">Use Medical Device</string>
+    <string name="doctor1">Doctor1</string>
+    <string name="doctor2">Doctor2</string>
+    <string name="doctor3">Doctor3</string>
+    <string name="doctor4">Doctor4</string>
+    <string name="submit">Submit</string>
+    <string name="inobyungsin">inobyungsin</string>
+    <string name="title_activity_find_doctors">FindDoctorsActivity</string>
+    <string name="title_activity_check_up">CheckUpActivity</string>
+</resources>
