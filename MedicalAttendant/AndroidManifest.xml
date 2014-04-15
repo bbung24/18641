@@ -34,6 +34,18 @@
             android:name="com.example.medicalattendant.ExaminationActivity"
             android:label="@string/title_activity_examination" >
         </activity>
+        <activity
+            android:name="com.example.medicalattendant.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.MainMenuActivity"
+            android:label="@string/title_activity_main_menu" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
     </application>
 
 </manifest>
