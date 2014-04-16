@@ -27,8 +27,6 @@
     <string name="doctor4">Doctor4</string>
     <string name="submit">Submit</string>
     <string name="inobyungsin">inobyungsin</string>
-<<<<<<< HEAD
-=======
     <string name="title_activity_find_doctors">FindDoctorsActivity</string>
     <string name="title_activity_check_up">CheckUpActivity</string>
     <string name="title_activity_examination">ExaminationActivity</string>
@@ -36,5 +34,4 @@
     <string name="title_activity_main_menu">MainMenuActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
 
->>>>>>> FETCH_HEAD
 </resources>
