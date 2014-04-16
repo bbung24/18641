@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,19 +10,18 @@
     tools:context="com.example.medicalattendant.RegisterActivity$PlaceholderFragment" >
 
     <LinearLayout
-        android:id="@+id/linearLayout1"
+        android:id="@+id/register_id_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" >
+        android:layout_marginTop="30dp" >
 
         <TextView
             android:id="@+id/register_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/id"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/id" />
 
         <EditText
             android:id="@+id/register_id_edit"
@@ -36,19 +36,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
+        android:id="@+id/register_pwd_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout1"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_marginTop="20dp" >
+        android:layout_alignLeft="@+id/register_id_layout"
+        android:layout_below="@+id/register_id_layout"
+        android:layout_marginTop="15dp" >
 
         <TextView
             android:id="@+id/register_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/password"/>
 
         <EditText
             android:id="@+id/register_pwd_edit"
@@ -60,19 +59,19 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/register_confirm_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/linearLayout2"
-        android:layout_alignRight="@+id/linearLayout2"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_marginTop="20dp" >
+        android:layout_alignLeft="@+id/register_pwd_layout"
+        android:layout_alignRight="@+id/register_pwd_layout"
+        android:layout_below="@+id/register_pwd_layout"
+        android:layout_marginTop="15dp" >
 	
        	<TextView
             android:id="@+id/register_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Password Confirm"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="Password Confirm" />
 
         <EditText
             android:id="@+id/register_confirm_edit"
@@ -83,5 +82,39 @@
             android:inputType="textPassword" />
         
     </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/register_age_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/register_confirm_layout"
+        android:layout_alignRight="@+id/register_confirm_layout"
+        android:layout_below="@+id/register_confirm_layout"
+        android:layout_marginTop="15dp" >
+	
+       	<TextView
+            android:id="@+id/register_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Age" />
+
+        <EditText
+            android:id="@+id/register_age_edit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:inputType="number" />
+               
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/register_age_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="@string/register" />
 
 </RelativeLayout>
