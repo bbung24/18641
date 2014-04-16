@@ -22,6 +22,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.example.medicalattendant.FindDoctorsActivity"
+            android:label="@string/title_activity_find_doctors" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.CheckUpActivity"
+            android:label="@string/title_activity_check_up" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.ExaminationActivity"
+            android:label="@string/title_activity_examination" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.MainMenuActivity"
+            android:label="@string/title_activity_main_menu" >
+        </activity>
+        <activity
+            android:name="com.example.medicalattendant.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
     </application>
 
 </manifest>
