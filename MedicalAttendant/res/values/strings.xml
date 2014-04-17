@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">MedicalAttendant</string>
+    <string name="medical_attendant">Medical Attendant</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="ddcu">Distant Diagnosis Check Up</string>
@@ -9,29 +10,32 @@
     <string name="register">Register</string>
     <string name="id">ID</string>
     <string name="password">Password</string>
-    <string name="passwordconfirm">Confirm Password</string>
     <string name="age">Age</string>
     <string name="info2">Info2</string>
     <string name="info3">Info3</string>
     <string name="info4">Info4</string>
-    <string name="distantdiagnosis">DistantDiagnosis</string>
-    <string name="checkup">Check-Up</string>
-    <string name="finddoctor">Find Doctors</string>
+    <string name="distant_diagnosis">DistantDiagnosis</string>
+    <string name="check_up">Check-Up</string>
+    <string name="find_doctor">Find Doctors</string>
     <string name="symptoms">Symptoms</string>
-    <string name="addpicture">Add Picture</string>
-    <string name="addvoicerecord">Add Voice Record</string>
-    <string name="usemedicaldevice">Use Medical Device</string>
+    <string name="add_picture">Add Picture</string>
+    <string name="add_voice_record">Add Voice Record</string>
+    <string name="use_medical_device">Use Medical Device</string>
     <string name="doctor1">Doctor1</string>
     <string name="doctor2">Doctor2</string>
     <string name="doctor3">Doctor3</string>
     <string name="doctor4">Doctor4</string>
     <string name="submit">Submit</string>
-    <string name="inobyungsin">inobyungsin</string>
     <string name="title_activity_find_doctors">FindDoctorsActivity</string>
     <string name="title_activity_check_up">CheckUpActivity</string>
     <string name="title_activity_examination">ExaminationActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_main_menu">MainMenuActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
+    <string name="description_start">This is image of main icon of our app</string>
+    <string name="password_confirm">Password Confirm</string>
+    <string name="medication_to_take">Medication To Take</string>
+    <string name="list_of_medical_examination">List of Medical Examination</string>
+    <string name="title_activity_distant_diagnosis">DistantDiagnosisActivity</string>
 
 </resources>

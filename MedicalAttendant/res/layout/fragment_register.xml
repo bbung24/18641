@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.medicalattendant.RegisterActivity$PlaceholderFragment" >
+    tools:context="com.activities.RegisterActivity$PlaceholderFragment" >
 
     <LinearLayout
         android:id="@+id/register_id_layout"
@@ -71,7 +71,7 @@
             android:id="@+id/register_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Password Confirm" />
+            android:text="@string/password_confirm" />
 
         <EditText
             android:id="@+id/register_confirm_edit"
@@ -96,7 +96,7 @@
             android:id="@+id/register_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Age" />
+            android:text="@string/age" />
 
         <EditText
             android:id="@+id/register_age_edit"

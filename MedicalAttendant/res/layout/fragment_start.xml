@@ -6,11 +6,24 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.medicalattendant.StartActivity$PlaceholderFragment" >
+    tools:context="com.activities.StartActivity$PlaceholderFragment" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/medical_attendant" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="34dp"
+        android:contentDescription="@string/description_start"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

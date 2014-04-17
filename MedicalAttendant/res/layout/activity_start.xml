@@ -3,7 +3,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.medicalattendant.StartActivity"
+    tools:context="com.activities.StartActivity"
     tools:ignore="MergeRootFrame" >
 
     <TextView

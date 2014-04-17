@@ -6,60 +6,41 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.medicalattendant.ExaminationActivity$PlaceholderFragment" >
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="34dp"
-        android:text="Medication To Take" />
-
-    <CheckBox
-        android:id="@+id/checkBox1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="14dp"
-        android:text="Medication 1" />
-
-    <CheckBox
-        android:id="@+id/checkBox2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox1"
-        android:layout_below="@+id/checkBox1"
-        android:text="Medication 2" />
-
-    <CheckBox
-        android:id="@+id/checkBox3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox2"
-        android:layout_below="@+id/checkBox2"
-        android:text="Medication 3" />
+    tools:context="com.activities.ExaminationActivity$PlaceholderFragment" >
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/check_up_list"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true" >
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/medication_to_take_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/check_up_list"
+        android:layout_toRightOf="@+id/check_up_list"
+        android:text="@string/medication_to_take" />
+
+    <ListView
+        android:id="@+id/medication_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_toLeftOf="@+id/textView1" >
+        android:layout_above="@+id/submit_btn"
+        android:layout_alignLeft="@+id/medication_to_take_text"
+        android:layout_below="@+id/medication_to_take_text" >
 
     </ListView>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/submit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/checkBox3"
-        android:layout_below="@+id/checkBox3"
-        android:layout_marginLeft="22dp"
-        android:text="Submit" />
+        android:layout_alignBottom="@+id/check_up_list"
+        android:layout_alignRight="@+id/medication_to_take_text"
+        android:layout_marginRight="19dp"
+        android:text="@string/submit" />
 
 </RelativeLayout>

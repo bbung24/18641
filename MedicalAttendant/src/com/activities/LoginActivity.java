@@ -1,4 +1,4 @@
-package com.example.medicalattendant;
+package com.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class CheckUpActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_check_up);
+		setContentView(R.layout.activity_login);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -26,7 +26,7 @@ public class CheckUpActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.check_up, menu);
+		getMenuInflater().inflate(R.menu.login, menu);
 		return true;
 	}
 
@@ -53,7 +53,7 @@ public class CheckUpActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_check_up,
+			View rootView = inflater.inflate(R.layout.fragment_login,
 					container, false);
 			return rootView;
 		}

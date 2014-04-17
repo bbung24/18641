@@ -1,22 +1,20 @@
-package com.example.medicalattendant;
+package com.activities;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
-public class LoginActivity extends ActionBarActivity {
+public class FindDoctorsActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_find_doctors);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -28,7 +26,7 @@ public class LoginActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login, menu);
+		getMenuInflater().inflate(R.menu.find_doctors, menu);
 		return true;
 	}
 
@@ -55,7 +53,7 @@ public class LoginActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_login,
+			View rootView = inflater.inflate(R.layout.fragment_find_doctors,
 					container, false);
 			return rootView;
 		}

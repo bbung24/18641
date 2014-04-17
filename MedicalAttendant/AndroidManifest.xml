@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.medicalattendant"
+    package="com.activities"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.example.medicalattendant.StartActivity"
+            android:name="com.activities.StartActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,28 +23,32 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.medicalattendant.FindDoctorsActivity"
+            android:name="com.activities.FindDoctorsActivity"
             android:label="@string/title_activity_find_doctors" >
         </activity>
         <activity
-            android:name="com.example.medicalattendant.CheckUpActivity"
+            android:name="com.activities.CheckUpActivity"
             android:label="@string/title_activity_check_up" >
         </activity>
         <activity
-            android:name="com.example.medicalattendant.ExaminationActivity"
+            android:name="com.activities.ExaminationActivity"
             android:label="@string/title_activity_examination" >
         </activity>
         <activity
-            android:name="com.example.medicalattendant.LoginActivity"
+            android:name="com.activities.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
         <activity
-            android:name="com.example.medicalattendant.MainMenuActivity"
+            android:name="com.activities.MainMenuActivity"
             android:label="@string/title_activity_main_menu" >
         </activity>
         <activity
-            android:name="com.example.medicalattendant.RegisterActivity"
+            android:name="com.activities.RegisterActivity"
             android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name="com.activities.DistantDiagnosisActivity"
+            android:label="@string/title_activity_distant_diagnosis" >
         </activity>
     </application>
 

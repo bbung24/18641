@@ -1,22 +1,22 @@
-package com.example.medicalattendant;
+package com.activities;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import com.activities.R;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
-public class ExaminationActivity extends ActionBarActivity {
+public class CheckUpActivity extends ActionBarActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_examination);
+		setContentView(R.layout.activity_check_up);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -28,7 +28,7 @@ public class ExaminationActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.examination, menu);
+		getMenuInflater().inflate(R.menu.check_up, menu);
 		return true;
 	}
 
@@ -55,7 +55,7 @@ public class ExaminationActivity extends ActionBarActivity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_examination,
+			View rootView = inflater.inflate(R.layout.fragment_check_up,
 					container, false);
 			return rootView;
 		}
