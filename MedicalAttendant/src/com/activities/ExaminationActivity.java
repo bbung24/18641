@@ -8,6 +8,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ListView;
 
 public class ExaminationActivity extends ActionBarActivity {
 
@@ -46,7 +48,11 @@ public class ExaminationActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
+		
+		private ListView checkUpList;
+		private ListView medicationList;
+		private Button submitBtn;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -55,6 +61,14 @@ public class ExaminationActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_examination,
 					container, false);
+			checkUpList = (ListView) rootView.findViewById(R.id.check_up_list);
+			//TODO: update this list with checkUpList associated with clicked examination.
+			medicationList = (ListView) rootView.findViewById(R.id.medication_list);
+			// TODO: update this list with medication that doctor put in for clicked examination.
+			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
+			// TODO: put into checkUpList database for checked medications and dates.
+			// then update checkUpList.
+			
 			return rootView;
 		}
 	}

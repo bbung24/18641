@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class FindDoctorsActivity extends ActionBarActivity {
 
@@ -47,6 +48,9 @@ public class FindDoctorsActivity extends ActionBarActivity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
+		private ListView doctorsList;
+		//TODO : add google map here. replace TextureView in xml with google map. 
+		
 		public PlaceholderFragment() {
 		}
 
@@ -55,6 +59,8 @@ public class FindDoctorsActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_find_doctors,
 					container, false);
+			
+			doctorsList = (ListView) rootView.findViewById(R.id.doctors_list);
 			return rootView;
 		}
 	}

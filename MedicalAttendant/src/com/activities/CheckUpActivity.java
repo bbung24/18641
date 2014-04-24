@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 public class CheckUpActivity extends ActionBarActivity {
 
@@ -49,6 +50,8 @@ public class CheckUpActivity extends ActionBarActivity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
+		private ListView examinationList; 
+		
 		public PlaceholderFragment() {
 		}
 
@@ -57,6 +60,11 @@ public class CheckUpActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_check_up,
 					container, false);
+			examinationList = (ListView) rootView.findViewById(R.id.list_of_medical_examination);
+			
+			//TODO: pull Medical Examination lists from 
+			// database and put into the ListView.
+			
 			return rootView;
 		}
 	}

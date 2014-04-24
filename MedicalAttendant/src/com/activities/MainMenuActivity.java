@@ -1,5 +1,7 @@
 package com.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -7,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class MainMenuActivity extends ActionBarActivity {
 
@@ -47,6 +51,11 @@ public class MainMenuActivity extends ActionBarActivity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
+		private Button distantDiagnosisBtn;
+		private Button checkUpBtn;
+		private Button findDoctorsBtn;
+		private Activity activity;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -55,6 +64,28 @@ public class MainMenuActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main_menu,
 					container, false);
+			activity = getActivity();
+			distantDiagnosisBtn = (Button) rootView.findViewById(R.id.distant_diagnosis_btn);
+			distantDiagnosisBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					Intent distantDiagnosisIntent = new Intent(activity, DistantDiagnosisActivity.class);
+					startActivity(distantDiagnosisIntent);
+				}
+			});
+			checkUpBtn = (Button) rootView.findViewById(R.id.check_up_btn);
+			checkUpBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					Intent checkUpIntent = new Intent(activity, CheckUpActivity.class);
+					startActivity(checkUpIntent);
+				}
+			});
+			findDoctorsBtn = (Button) rootView.findViewById(R.id.find_doctor_btn);
+			findDoctorsBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					Intent findDoctorsIntent = new Intent(activity, FindDoctorsActivity.class);
+					startActivity(findDoctorsIntent);
+				}
+			});
 			return rootView;
 		}
 	}
