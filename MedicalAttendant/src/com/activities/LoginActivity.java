@@ -1,5 +1,6 @@
 package com.activities;
 
+import db.MedicalAttendantDB;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -73,11 +75,14 @@ public class LoginActivity extends ActionBarActivity {
 			loginBtn = (Button) rootView.findViewById(R.id.login_btn);
 			loginBtn.setOnClickListener(new OnClickListener(){
 				public void onClick(View view){
-					// TODO: implement checking 
-					checkIdPwd(id.getText().toString(), pwd.getText().toString());
-					Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
-					startActivity(mainMenuIntent);
-					activity.finish();
+					if(checkIdPwd(id.getText().toString(), pwd.getText().toString()))
+					{	
+						Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
+						startActivity(mainMenuIntent);
+						activity.finish();
+					}
+					else
+						Toast.makeText(getActivity().getApplicationContext(), "Invalid ID or PW", Toast.LENGTH_LONG).show();
 				}});
 			registerBtn = (Button) rootView.findViewById(R.id.register_btn);
 			registerBtn.setOnClickListener(new OnClickListener(){
@@ -91,9 +96,17 @@ public class LoginActivity extends ActionBarActivity {
 			return rootView;
 		}
 		
-		public void checkIdPwd(String id, String pwd){
-			System.out.println("ID:" + id);
-			System.out.println("PASSWORD:" + pwd);
+		/**
+		 * 	The method check if id and password combination is registered on db.
+		 */
+		public boolean checkIdPwd(String id, String pwd){
+			
+			MedicalAttendantDB db = new MedicalAttendantDB(getActivity());
+			
+			if(db.getUser(id, pwd) ==null )
+				return false;
+			else
+				return true;
 		}
 	}
 
