@@ -22,7 +22,7 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 
 	public void run() {
 		if (openConnection()) {
-			handleSession();
+			//handleSession();
 		}
 	}// run
 

@@ -60,9 +60,6 @@ public class StartActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_start, container, false);
 			
-			RemoteClient rc = new RemoteClient();
-			rc.start();
-			
 			createTimer();
 			return rootView;
 		}

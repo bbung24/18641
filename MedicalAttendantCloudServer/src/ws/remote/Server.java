@@ -31,7 +31,7 @@ public class Server extends DefaultSocketClient{
 			col.append("pw VARCHAR(100),");
 			col.append("age INT,");
 			col.append("zip_code INT,");
-			col.append("is_doctor BOOLEAN");
+			col.append("job VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -53,7 +53,8 @@ public class Server extends DefaultSocketClient{
 			col.append("name VARCHAR(100),");
 			col.append("symptom VARCHAR(100),");
 			col.append("pic_loc VARCHAR(100),");
-			col.append("voc_loc VARCHAR(100)");
+			col.append("voc_loc VARCHAR(100),");
+			col.append("doctor_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -96,57 +97,56 @@ public class Server extends DefaultSocketClient{
 	// One is that of saving data that was sent from android app.
 	// Another is sending data when needed by android app.
 	@Override
-	public void handleInput(Message input){
+	public void handleInput(Message input) {
 		// TODO: Need to think of communication between 
 		// receiving data and sending data.
 		// Also, in what steps will it be done.
 		String command = input.getCommand();
-		
+
 		if(command.equals(RemoteClientConstants.REGISTER)){
+
 			HashMap<String,String> data = input.getMap();
-			StringBuilder col = new StringBuilder();
-			StringBuilder value = new StringBuilder();
-			Iterator<Entry<String, String>> it = data.entrySet().iterator();
-		    while (it.hasNext()) {
-		        Map.Entry<String, String> pairs = it.next();
-		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		        
-			    String key = pairs.getKey();
-			    String dataValue = pairs.getValue();
-			    
-			    if(it.hasNext()){
-			    	col.append(key+",");
-			    	value.append(dataValue+",");
-			    } else {
-			    	col.append(key);
-			    	value.append(dataValue);
-			    }
-			    
-			    it.remove(); // avoids a ConcurrentModificationException
-			}
-			
+
+			int count = -1;
 			try {
-				md.insertData("users", col.toString(), value.toString(), statement);
+				count = md.countData("users", "user_id", data.get("user_id"), statement);
 			} catch (SQLException e) {
-				System.err.print(e.getStackTrace()+"\n");
+				e.printStackTrace();
+			}
+			if (count == 0){
+				StringBuilder col = new StringBuilder();
+				StringBuilder value = new StringBuilder();
+				Iterator<Entry<String, String>> it = data.entrySet().iterator();
+				while (it.hasNext()) {
+					Map.Entry<String, String> pairs = it.next();
+					System.out.println(pairs.getKey() + " = " + pairs.getValue());
+
+					String key = pairs.getKey();
+					String dataValue = pairs.getValue();
+
+					if(it.hasNext()){
+						col.append(key+",");
+						value.append(dataValue+",");
+					} else {
+						col.append(key);
+						value.append(dataValue);
+					}
+
+					it.remove(); // avoids a ConcurrentModificationException
+				}
+
+				try {
+					md.insertData("users", col.toString(), value.toString(), statement);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, null);
+				sendOutput(output);
+			} else {
+				Message output = new Message("Server", RemoteClientConstants.REGISTER_FAIL, null);
+				sendOutput(output);
 			}
 		}
-		
-		Message output = new Message("Server", "Test", null);
-		sendOutput(output);
-		
-//		if(input.getCommand().equalsIgnoreCase("BUILDAUTO")){
-//			if (DEBUG) System.out.println("BUILDAUTO");
-//			Automobile a = input.getA();
-//			if(a == null) {
-//				if (DEBUG) System.out.println
-//				("Automobile received is null");
-//			}
-//			bcmo.buildAuto(a);
-//			output.setCommand("BUILDAUTO");
-//			output.setStrMsg("1");
-//			sendOutput(output);
-//			if (DEBUG) System.out.println("BUILDAUTO - DONE");
 	}
 
 	public static void main (String arg[]){

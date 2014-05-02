@@ -93,8 +93,7 @@ public class RegisterActivity extends ActionBarActivity {
 			job_doctor = (RadioButton) rootView
 					.findViewById(R.id.register_radio_doctor);
 
-			registerBtn = (Button) rootView.findViewById(R.id.register_btn);
-
+			registerBtn = (Button) rootView.findViewById(R.id.register);
 			registerBtn.setOnClickListener(new OnClickListener() {
 				public void onClick(View view) {
 					// TODO: check if that id exists within the database.
@@ -107,7 +106,7 @@ public class RegisterActivity extends ActionBarActivity {
 						reg_map.put(RemoteClientConstants.REGISTSER_INFO_PW,
 								pwd.getText().toString());
 						reg_map.put(RemoteClientConstants.REGISTSER_INFO_AGE,
-								pwd.getText().toString());
+								age.getText().toString());
 						reg_map.put(RemoteClientConstants.REGISTSER_INFO_ZIP,
 								zip.getText().toString());
 
@@ -115,7 +114,7 @@ public class RegisterActivity extends ActionBarActivity {
 							reg_map.put(
 									RemoteClientConstants.REGISTSER_INFO_JOB,
 									RemoteClientConstants.REGISTER_JOB_DOCTOR);
-						else if (job.getCheckedRadioButtonId() == R.id.register_radio_doctor)
+						else if (job.getCheckedRadioButtonId() == R.id.register_radio_patient)
 							reg_map.put(
 									RemoteClientConstants.REGISTSER_INFO_JOB,
 									RemoteClientConstants.REGISTER_JOB_PATIENT);
@@ -126,7 +125,7 @@ public class RegisterActivity extends ActionBarActivity {
 						}
 
 						Message msg_id = new Message(null,
-								RemoteClientConstants.REGISTER_CHECK_ID,
+								RemoteClientConstants.REGISTER,
 								reg_map);
 
 						// Send information to Database.
@@ -136,8 +135,8 @@ public class RegisterActivity extends ActionBarActivity {
 						Message msg_id_in = rc.readInput();
 
 						// Valid ID -> Register on DB.
-						if (msg_id.getCommand().equals(
-								RemoteClientConstants.REGISTER_CHECK_ID_SUCCESS)) {
+						if (msg_id_in.getCommand().equals(
+								RemoteClientConstants.REGISTER_SUCCESS)) {
 							Intent mainMenuIntent = new Intent(activity,
 									MainMenuActivity.class);
 							startActivity(mainMenuIntent);

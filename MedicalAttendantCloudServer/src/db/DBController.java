@@ -87,6 +87,14 @@ public class DBController {
 	
 	//public HashMap<String, String> readData(String tableName, String )
 	
+	public int countData(String tableName, String col, String value,
+			Statement stmt) throws SQLException{
+		String query = "SELECT COUNT(*) FROM " + tableName +" where "+ col + " = " + value;
+		ResultSet rs = stmt.executeQuery(query);
+		rs.next();
+		return Integer.valueOf(rs.getString(1));
+	}
+	
 	public void showTable(String tableName,
 			Statement stmt) throws SQLException {  
 		String query = "SELECT * FROM " + tableName;
