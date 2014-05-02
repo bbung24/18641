@@ -5,7 +5,6 @@ import handleConnections.DefaultSocketClient;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import db.DBController;
 
@@ -64,7 +63,7 @@ public class Server extends DefaultSocketClient{
 
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-			col.append("name VARCHAR(100),");
+			col.append("name VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
 			

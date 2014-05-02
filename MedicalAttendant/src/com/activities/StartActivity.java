@@ -1,5 +1,6 @@
 package com.activities;
 
+import ws.remote.RemoteClient;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,6 +59,10 @@ public class StartActivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_start, container, false);
+			
+			RemoteClient rc = new RemoteClient();
+			rc.start();
+			
 			createTimer();
 			return rootView;
 		}

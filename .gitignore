@@ -27,3 +27,9 @@ proguard/
 
 # .pem for amazon server
 iyong_test.pem
+
+*.classpath
+
+*.jar
+
+*.log

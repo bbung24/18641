@@ -3,12 +3,14 @@ package com.activities;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.os.Build;
 
 public class DoctorDistActivity extends ActionBarActivity {
@@ -48,7 +50,9 @@ public class DoctorDistActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
+		private ListView diagnosisList;
+		private Activity activity;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -57,6 +61,14 @@ public class DoctorDistActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_doctor_dist,
 					container, false);
+			activity = getActivity();
+			diagnosisList = (ListView) rootView.findViewById(R.id.diagnosis_list);
+			// TODO: add diagnosis data that was received for this current doctor user.
+			// TODO: create simple ListView with the patient's name & date(?).
+			
+			// TODO: when each patient's diagnosis is clicked, it will move to 
+			// CreateCheckUpActivity with that patient's id. 
+			
 			return rootView;
 		}
 	}

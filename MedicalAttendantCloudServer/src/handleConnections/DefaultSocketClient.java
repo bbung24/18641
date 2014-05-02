@@ -114,8 +114,10 @@ public class DefaultSocketClient extends Thread implements SocketClientInterface
 		// TODO: Need to think of communication between 
 		// receiving data and sending data.
 		// Also, in what steps will it be done.
-		Message output = new Message(null, null, null);
-		
+		System.out.println(input.getStrMsg());
+		System.out.println(input.getCommand());
+		Message output = new Message("Server", "Test", null);
+		sendOutput(output);
 		
 //		if(input.getCommand().equalsIgnoreCase("BUILDAUTO")){
 //			if (DEBUG) System.out.println("BUILDAUTO");

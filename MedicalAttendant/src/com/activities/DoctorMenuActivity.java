@@ -3,12 +3,16 @@ package com.activities;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.os.Build;
 
 public class DoctorMenuActivity extends ActionBarActivity {
@@ -48,7 +52,10 @@ public class DoctorMenuActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
+		private Button distantBtn;
+		private Button patientsBtn;
+		private Activity activity;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -57,6 +64,22 @@ public class DoctorMenuActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_doctor_menu,
 					container, false);
+			activity = getActivity();
+			
+			distantBtn = (Button) rootView.findViewById(R.id.distant_diagnosis_report_btn);
+			distantBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					Intent distIntent = new Intent(activity, DoctorDistActivity.class);
+					startActivity(distIntent);
+				}
+			});
+			patientsBtn = (Button) rootView.findViewById(R.id.patient_statistics_btn);
+			patientsBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					Intent patientsIntent = new Intent(activity, PatientsActivity.class);
+					startActivity(patientsIntent);
+				}
+			});
 			return rootView;
 		}
 	}
