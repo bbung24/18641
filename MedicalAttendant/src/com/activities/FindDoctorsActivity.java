@@ -9,11 +9,13 @@ import ws.remote.RemoteClient;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,7 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class FindDoctorsActivity extends Activity {
+public class FindDoctorsActivity extends FragmentActivity {
 
 	private RemoteClient rc = new RemoteClient();
 	private ListView doctorsList;
@@ -36,10 +38,12 @@ public class FindDoctorsActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_doctors);
-
-		Message input = rc.readInput();
-		map = input.getMap();
-		doctorSet = map.keySet();
+		
+		googleMap = ((SupportMapFragment)this.getSupportFragmentManager().findFragmentById(R.id.map_doctors)).getMap();
+		
+//		Message input = rc.readInput();
+//		map = input.getMap();
+//		doctorSet = map.keySet();
 		
 //		for(String s :  doctorSet)
 //		{
