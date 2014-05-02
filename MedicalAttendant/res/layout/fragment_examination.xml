@@ -8,11 +8,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.activities.ExaminationActivity$PlaceholderFragment" >
 
+    <TextView
+            android:id="@+id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Summary will go here" />
+    
     <ListView
         android:id="@+id/check_up_list"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true" >
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/summary" >
     </ListView>
 
     <LinearLayout

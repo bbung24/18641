@@ -37,5 +37,12 @@
     <string name="medication_to_take">Medication To Take</string>
     <string name="list_of_medical_examination">List of Medical Examination</string>
     <string name="title_activity_distant_diagnosis">DistantDiagnosisActivity</string>
+    <string name="title_activity_doctor_menu">DoctorMenuActivity</string>
+    <string name="distant_diagnosis_report">Distant Diagnosis Received</string>
+    <string name="patient_summary">Patient Summary</string>
+    <string name="title_activity_doctor_dist">DoctorDistActivity</string>
+    <string name="title_activity_patients">PatientsActivity</string>
+    <string name="title_activity_patient_summ">PatientSummActivity</string>
+    <string name="title_activity_create_check_up">CreateCheckUpActivity</string>
 
 </resources>

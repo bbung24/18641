@@ -6,28 +6,26 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.activities.ExaminationActivity$PlaceholderFragment" >
-
-    <TextView
-            android:id="@+id/summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Summary will go here" />
+    tools:context="com.activities.CreateCheckUpActivity$PlaceholderFragment" >
     
-    <ListView
-        android:id="@+id/check_up_list"
+    <EditText
+        android:id="@+id/response_edit"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/summary" >
-    </ListView>
-
+        android:layout_alignBaseline="@+id/response_edit"
+        android:layout_alignBottom="@+id/response_edit"
+        android:layout_alignLeft="@+id/response_edit"
+        android:ems="10"
+        android:inputType="textMultiLine" >
+        
+      <requestFocus />
+    </EditText>
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/check_up_list"
+        android:layout_toRightOf="@+id/response_edit"
         android:orientation="vertical" >
 
         <TextView
@@ -53,5 +51,7 @@
             android:text="@string/submit" />
 
     </LinearLayout>
+
+    
 
 </RelativeLayout>

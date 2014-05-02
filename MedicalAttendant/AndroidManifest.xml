@@ -5,8 +5,8 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18" />
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
 
     <application
         android:allowBackup="true"
@@ -49,6 +49,26 @@
         <activity
             android:name="com.activities.DistantDiagnosisActivity"
             android:label="@string/title_activity_distant_diagnosis" >
+        </activity>
+        <activity
+            android:name="com.activities.DoctorMenuActivity"
+            android:label="@string/title_activity_doctor_menu" >
+        </activity>
+        <activity
+            android:name="com.activities.DoctorDistActivity"
+            android:label="@string/title_activity_doctor_dist" >
+        </activity>
+        <activity
+            android:name="com.activities.PatientsActivity"
+            android:label="@string/title_activity_patients" >
+        </activity>
+        <activity
+            android:name="com.activities.PatientSummActivity"
+            android:label="@string/title_activity_patient_summ" >
+        </activity>
+        <activity
+            android:name="com.activities.CreateCheckUpActivity"
+            android:label="@string/title_activity_create_check_up" >
         </activity>
     </application>
 
