@@ -79,14 +79,17 @@ public class LoginActivity extends ActionBarActivity {
 			loginBtn = (Button) rootView.findViewById(R.id.login_btn);
 			loginBtn.setOnClickListener(new OnClickListener(){
 				public void onClick(View view){
-					if(checkIdPwd(id.getText().toString(), pwd.getText().toString()))
+					Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
+					startActivity(mainMenuIntent);
+					activity.finish();
+				/*	if(checkIdPwd(id.getText().toString(), pwd.getText().toString()))
 					{	
 						Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
 						startActivity(mainMenuIntent);
 						activity.finish();
 					}
 					else
-						Toast.makeText(getActivity().getApplicationContext(), "Invalid ID or PW", Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity().getApplicationContext(), "Invalid ID or PW", Toast.LENGTH_LONG).show();*/
 				}});
 			registerBtn = (Button) rootView.findViewById(R.id.register_btn);
 			registerBtn.setOnClickListener(new OnClickListener(){

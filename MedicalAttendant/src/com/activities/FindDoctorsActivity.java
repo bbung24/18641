@@ -7,6 +7,8 @@ import java.util.Set;
 import ws.remote.Message;
 import ws.remote.RemoteClient;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -16,7 +18,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,23 +42,11 @@ public class FindDoctorsActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_doctors);
-		
-		googleMap = ((SupportMapFragment)this.getSupportFragmentManager().findFragmentById(R.id.map_doctors)).getMap();
-		
-//		Message input = rc.readInput();
-//		map = input.getMap();
-//		doctorSet = map.keySet();
-		
-//		for(String s :  doctorSet)
-//		{
-//			String docName = s;
-//			int zip = Integer.parseInt(map.get(docName));
-//			
-//			googleMap.addMarker(new MarkerOptions().)
-//			
-//		}
-		
-		
+
+		SupportMapFragment googleMapFrag = (SupportMapFragment) getSupportFragmentManager()
+				.findFragmentById(R.id.map_doctors);
+		googleMap = googleMapFrag.getMap();
+
 		try {
 			// Loading map
 			initilizeMap();
@@ -65,14 +57,16 @@ public class FindDoctorsActivity extends FragmentActivity {
 
 	}
 
+	
 	/**
 	 * function to load map. If map is not created it will create it for you
 	 * */
 	private void initilizeMap() {
 		if (googleMap == null) {
-//			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-//					R.id.map)).getMap();
 
+			SupportMapFragment googleMapFrag = (SupportMapFragment) getSupportFragmentManager()
+					.findFragmentById(R.id.map);
+			googleMap = googleMapFrag.getMap();
 			// check if map is created successfully or not
 			if (googleMap == null) {
 				Toast.makeText(getApplicationContext(),

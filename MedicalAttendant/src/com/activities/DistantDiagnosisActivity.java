@@ -1,5 +1,7 @@
 package com.activities;
 
+import ws.remote.Message;
+import ws.remote.RemoteClient;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +62,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 		private EditText symptomText;
 		private ListView doctorsList;
 		private Activity activity;
+		private RemoteClient rc = new RemoteClient();
+		
 		
 		public PlaceholderFragment() {
 		}
@@ -71,10 +75,23 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 					R.layout.fragment_distant_diagnosis, container, false);
 			activity = getActivity();
 			doctorsList = (ListView) rootView.findViewById(R.id.doctors_layout);
+			
+			rc.sendOutput(new Message(null,));
+			
+			//Key->UserID Value -> dbID
+			Message msg_docList = rc.readInput();
+			
+			
+			msg_docList.g
+			
+			
+			
 			symptomText = (EditText) rootView.findViewById(R.id.symptoms_edit);
 			addPicBtn = (Button) rootView.findViewById(R.id.picture_btn);
 			addPicBtn.setOnClickListener(new OnClickListener(){
 				public void onClick(View view){
+					
+					
 					//TODO: add picture intent but with specification where to save picture.
 					// Also, need to include this saved picture to be saved with this report
 					// into the database.
