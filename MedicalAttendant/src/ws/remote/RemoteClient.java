@@ -55,7 +55,7 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 					.println("Handling session with " + strHost + ":" + iPort);
 
 		// showMenu();
-		Message m = new Message("Client", "Test", null, null);
+		Message m = new Message("Client", "Test", null);
 		sendOutput(m);
 
 		try {
@@ -134,7 +134,7 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 	public void handleInput(Message input) {
 		StringBuilder sb;
 		String userInput;
-		Message m = new Message(null, null, null, null);
+		Message m = new Message(null, null, null);
 
 		System.out.println(input.getStrMsg());
 		System.out.println(input.getCommand());
@@ -212,6 +212,7 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 }
