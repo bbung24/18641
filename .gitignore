@@ -24,3 +24,6 @@ proguard/
 
 # .metadata
 .metadata/
+
+# .pem for amazon server
+iyong_test.pem
