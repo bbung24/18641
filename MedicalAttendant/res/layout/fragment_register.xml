@@ -47,7 +47,7 @@
             android:id="@+id/register_pwd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/password"/>
+            android:text="@string/password" />
 
         <EditText
             android:id="@+id/register_pwd_edit"
@@ -66,8 +66,8 @@
         android:layout_alignRight="@+id/register_pwd_layout"
         android:layout_below="@+id/register_pwd_layout"
         android:layout_marginTop="15dp" >
-	
-       	<TextView
+
+        <TextView
             android:id="@+id/register_confirm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,9 +80,8 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="textPassword" />
-        
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/register_age_layout"
         android:layout_width="wrap_content"
@@ -91,8 +90,8 @@
         android:layout_alignRight="@+id/register_confirm_layout"
         android:layout_below="@+id/register_confirm_layout"
         android:layout_marginTop="15dp" >
-	
-       	<TextView
+
+        <TextView
             android:id="@+id/register_age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,16 +104,75 @@
             android:layout_weight="1"
             android:ems="10"
             android:inputType="number" />
-               
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/register_age_layout"
+        android:layout_below="@+id/register_age_layout"
+        android:layout_marginTop="18dp" >
+
+        <TextView
+            android:id="@+id/register_zip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="41dp"
+            android:text="@string/zip" />
+
+        <EditText
+            android:id="@+id/register_zip_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_weight="1"
+            android:ems="10" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout1"
+        android:layout_below="@+id/linearLayout1" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="52dp"
+            android:layout_height="wrap_content"
+            android:text="@string/job" />
+
+        <RadioGroup
+            android:id="@+id/register_job_radioBT"
+            android:layout_width="244dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/register_radio_patient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClicked"
+                android:text="@string/patient" />
+
+            <RadioButton
+                android:id="@+id/register_radio_doctor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onRadioButtonClicked"
+                android:text="@string/doctor" />
+        </RadioGroup>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/register_age_layout"
+        android:layout_below="@+id/linearLayout2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="21dp"
         android:text="@string/register" />
 
 </RelativeLayout>

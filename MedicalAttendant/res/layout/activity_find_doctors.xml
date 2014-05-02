@@ -3,5 +3,16 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.activities.FindDoctorsActivity"
-    tools:ignore="MergeRootFrame" />
+    tools:context="com.activities.FindDoctorsActivity">
+    
+    
+    <fragment
+        android:id="@+id/doctor_map"
+        android:layout_width="150dp"
+        android:layout_height="400dp"
+
+        class="com.google.android.gms.maps.MapFragment" />
+
+    
+    
+    </FrameLayout>

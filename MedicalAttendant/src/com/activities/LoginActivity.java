@@ -1,5 +1,11 @@
 package com.activities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ws.remote.Message;
+import ws.remote.RemoteClient;
+import ws.remote.RemoteClientInterface;
 import db.MedicalAttendantDB;
 import android.app.Activity;
 import android.content.Intent;
@@ -101,9 +107,20 @@ public class LoginActivity extends ActionBarActivity {
 		 */
 		public boolean checkIdPwd(String id, String pwd){
 			
-			MedicalAttendantDB db = new MedicalAttendantDB(getActivity());
+			RemoteClient rc = new RemoteClient();
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put(RemoteClientInterface.LOGIN_ID, id);
+			map.put(RemoteClientInterface.LOGIN_PW, pwd);
 			
-			if(db.getUser(id, pwd) ==null )
+			
+			Message msg_out = new Message(null,RemoteClientInterface.LOGIN, null,map);
+			rc.sendOutput(msg_out);
+			
+			//hear from server. 
+			Message msg_in;
+			msg_in = rc.readInput();
+		
+			if(msg_in.getCommand().equals(RemoteClientInterface.LOGIN_FAIL))
 				return false;
 			else
 				return true;

@@ -1,5 +1,10 @@
 package com.activities;
 
+import java.util.HashMap;
+
+import ws.remote.Message;
+import ws.remote.RemoteClient;
+import ws.remote.RemoteClientInterface;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +18,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
 
 public class RegisterActivity extends ActionBarActivity {
 
@@ -51,39 +59,100 @@ public class RegisterActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
+		RemoteClient rc;
 		private EditText id;
 		private EditText pwd;
 		private EditText pwdConfirm;
 		private EditText age;
+		private EditText zip;
+		private RadioGroup job;
+		private RadioButton job_patient, job_doctor;
 		private Button registerBtn;
 		private Activity activity;
-		
+
 		public PlaceholderFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+			rc = new RemoteClient();
+
 			View rootView = inflater.inflate(R.layout.fragment_register,
 					container, false);
 			activity = getActivity();
 			id = (EditText) rootView.findViewById(R.id.register_id_edit);
 			pwd = (EditText) rootView.findViewById(R.id.register_pwd_edit);
-			pwdConfirm = (EditText) rootView.findViewById(R.id.register_confirm_edit);
+			pwdConfirm = (EditText) rootView
+					.findViewById(R.id.register_confirm_edit);
 			age = (EditText) rootView.findViewById(R.id.register_age_edit);
+			zip = (EditText) rootView.findViewById(R.id.register_zip_edit);
+			job = (RadioGroup) rootView.findViewById(R.id.register_job_radioBT);
+			job_patient = (RadioButton) rootView
+					.findViewById(R.id.register_radio_patient);
+			job_doctor = (RadioButton) rootView
+					.findViewById(R.id.register_radio_doctor);
+
 			registerBtn = (Button) rootView.findViewById(R.id.register_btn);
-			registerBtn.setOnClickListener(new OnClickListener(){
-				public void onClick(View view){
+
+			registerBtn.setOnClickListener(new OnClickListener() {
+				public void onClick(View view) {
 					// TODO: check if that id exists within the database.
-					if(pwd.getText().toString().equals(pwdConfirm.getText().toString())){
-						// TODO: show dialog that register was successful
-						// and implement registering into database method.
-						
-						// After successful registration.
-						Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
-						startActivity(mainMenuIntent);
-						activity.finish();
+					if (pwd.getText().toString()
+							.equals(pwdConfirm.getText().toString())) {
+
+						HashMap<String, String> reg_map = new HashMap<String, String>();
+						reg_map.put(RemoteClientInterface.REGISTSER_INFO_ID, id
+								.getText().toString());
+						reg_map.put(RemoteClientInterface.REGISTSER_INFO_PW,
+								pwd.getText().toString());
+						reg_map.put(RemoteClientInterface.REGISTSER_INFO_AGE,
+								pwd.getText().toString());
+						reg_map.put(RemoteClientInterface.REGISTSER_INFO_ZIP,
+								zip.getText().toString());
+
+						if (job.getCheckedRadioButtonId() == R.id.register_radio_doctor)
+							reg_map.put(
+									RemoteClientInterface.REGISTSER_INFO_JOB,
+									RemoteClientInterface.REGISTER_JOB_DOCTOR);
+						else if (job.getCheckedRadioButtonId() == R.id.register_radio_doctor)
+							reg_map.put(
+									RemoteClientInterface.REGISTSER_INFO_JOB,
+									RemoteClientInterface.REGISTER_JOB_PATIENT);
+						else {
+							Toast.makeText(activity, "Please Select a Job",
+									Toast.LENGTH_LONG);
+							return;
+						}
+
+						Message msg_id = new Message(null,
+								RemoteClientInterface.REGISTER_CHECK_ID, null,
+								reg_map);
+
+						// Send information to Database.
+						rc.sendOutput(msg_id);
+
+						// Hear from Server.
+						Message msg_id_in = rc.readInput();
+
+						// Valid ID -> Register on DB.
+						if (msg_id.getCommand().equals(
+								RemoteClient.REGISTER_CHECK_ID_SUCCESS)) {
+							Intent mainMenuIntent = new Intent(activity,
+									MainMenuActivity.class);
+							startActivity(mainMenuIntent);
+							activity.finish();
+						}
+						// Invalid ID -> Notify using Toast
+						else {
+							Toast.makeText(getActivity(), "ID already exists",
+									Toast.LENGTH_LONG);
+						}
+
+					} else {
+						Toast.makeText(activity,
+								"Password and Confirm Password don't match",
+								Toast.LENGTH_LONG).show();
 					}
 				}
 			});

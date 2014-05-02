@@ -44,5 +44,9 @@
     <string name="title_activity_patients">PatientsActivity</string>
     <string name="title_activity_patient_summ">PatientSummActivity</string>
     <string name="title_activity_create_check_up">CreateCheckUpActivity</string>
+    <string name="zip">ZipCode</string>
+    <string name="job">Job</string>
+    <string name="doctor">Doctor</string>
+    <string name="patient">Patient</string>
 
 </resources>

@@ -2,6 +2,7 @@ package ws.remote;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class Message implements Serializable {
@@ -12,11 +13,13 @@ public class Message implements Serializable {
 	private String strMsg;
 	private String command;
 	private ArrayList<String> list;
+	private HashMap<String,String> map;
 	
-	public Message(String strMsg, String command, ArrayList<String> list){
+	public Message(String strMsg, String command, ArrayList<String> list, HashMap<String, String> map){
 		this.strMsg = strMsg;
 		this.command = command;
 		this.list = list;
+		this.map = map;
 	}
 
 	public String getStrMsg() {
@@ -41,5 +44,16 @@ public class Message implements Serializable {
 
 	public void setList(ArrayList<String> list) {
 		this.list = list;
+	}
+	
+	public void setMap(HashMap<String,String> map)
+	{
+		this.map = map;
+	}
+	
+	
+	public HashMap<String,String> getMap()
+	{
+		return this.map;
 	}
 }
