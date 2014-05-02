@@ -19,4 +19,6 @@ public class RemoteClientConstants {
 	
 	public final static String REGISTER_JOB_DOCTOR = "Doctor";
 	public final static String REGISTER_JOB_PATIENT = "Patient";
+	
+	public final static String REQEST_LIST_ALLDOC = "Request all doctor";
 }

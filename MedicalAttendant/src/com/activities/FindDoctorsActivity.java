@@ -65,7 +65,7 @@ public class FindDoctorsActivity extends FragmentActivity {
 		if (googleMap == null) {
 
 			SupportMapFragment googleMapFrag = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.map);
+					.findFragmentById(R.id.map_doctors);
 			googleMap = googleMapFrag.getMap();
 			// check if map is created successfully or not
 			if (googleMap == null) {
