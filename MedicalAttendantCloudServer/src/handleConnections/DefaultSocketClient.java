@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import ws.remote.Message;
+
 public class DefaultSocketClient extends Thread implements SocketClientInterface, SocketClientConstants{
 	protected ObjectInputStream reader;
 	protected ObjectOutputStream writer;

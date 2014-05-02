@@ -1,12 +1,10 @@
 package com.activities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ws.remote.Message;
 import ws.remote.RemoteClient;
-import ws.remote.RemoteClientInterface;
-import db.MedicalAttendantDB;
+import ws.remote.RemoteClientConstants;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -109,18 +107,18 @@ public class LoginActivity extends ActionBarActivity {
 			
 			RemoteClient rc = new RemoteClient();
 			HashMap<String,String> map = new HashMap<String,String>();
-			map.put(RemoteClientInterface.LOGIN_ID, id);
-			map.put(RemoteClientInterface.LOGIN_PW, pwd);
+			map.put(RemoteClientConstants.LOGIN_ID, id);
+			map.put(RemoteClientConstants.LOGIN_PW, pwd);
 			
 			
-			Message msg_out = new Message(null,RemoteClientInterface.LOGIN, null,map);
+			Message msg_out = new Message(null,RemoteClientConstants.LOGIN,map);
 			rc.sendOutput(msg_out);
 			
 			//hear from server. 
 			Message msg_in;
 			msg_in = rc.readInput();
 		
-			if(msg_in.getCommand().equals(RemoteClientInterface.LOGIN_FAIL))
+			if(msg_in.getCommand().equals(RemoteClientConstants.LOGIN_FAIL))
 				return false;
 			else
 				return true;

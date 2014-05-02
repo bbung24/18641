@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import ws.remote.Message;
 import ws.remote.RemoteClient;
-import ws.remote.RemoteClientInterface;
+import ws.remote.RemoteClientConstants;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -102,23 +102,23 @@ public class RegisterActivity extends ActionBarActivity {
 							.equals(pwdConfirm.getText().toString())) {
 
 						HashMap<String, String> reg_map = new HashMap<String, String>();
-						reg_map.put(RemoteClientInterface.REGISTSER_INFO_ID, id
+						reg_map.put(RemoteClientConstants.REGISTSER_INFO_ID, id
 								.getText().toString());
-						reg_map.put(RemoteClientInterface.REGISTSER_INFO_PW,
+						reg_map.put(RemoteClientConstants.REGISTSER_INFO_PW,
 								pwd.getText().toString());
-						reg_map.put(RemoteClientInterface.REGISTSER_INFO_AGE,
+						reg_map.put(RemoteClientConstants.REGISTSER_INFO_AGE,
 								pwd.getText().toString());
-						reg_map.put(RemoteClientInterface.REGISTSER_INFO_ZIP,
+						reg_map.put(RemoteClientConstants.REGISTSER_INFO_ZIP,
 								zip.getText().toString());
 
 						if (job.getCheckedRadioButtonId() == R.id.register_radio_doctor)
 							reg_map.put(
-									RemoteClientInterface.REGISTSER_INFO_JOB,
-									RemoteClientInterface.REGISTER_JOB_DOCTOR);
+									RemoteClientConstants.REGISTSER_INFO_JOB,
+									RemoteClientConstants.REGISTER_JOB_DOCTOR);
 						else if (job.getCheckedRadioButtonId() == R.id.register_radio_doctor)
 							reg_map.put(
-									RemoteClientInterface.REGISTSER_INFO_JOB,
-									RemoteClientInterface.REGISTER_JOB_PATIENT);
+									RemoteClientConstants.REGISTSER_INFO_JOB,
+									RemoteClientConstants.REGISTER_JOB_PATIENT);
 						else {
 							Toast.makeText(activity, "Please Select a Job",
 									Toast.LENGTH_LONG);
@@ -126,7 +126,7 @@ public class RegisterActivity extends ActionBarActivity {
 						}
 
 						Message msg_id = new Message(null,
-								RemoteClientInterface.REGISTER_CHECK_ID, null,
+								RemoteClientConstants.REGISTER_CHECK_ID,
 								reg_map);
 
 						// Send information to Database.
@@ -137,7 +137,7 @@ public class RegisterActivity extends ActionBarActivity {
 
 						// Valid ID -> Register on DB.
 						if (msg_id.getCommand().equals(
-								RemoteClient.REGISTER_CHECK_ID_SUCCESS)) {
+								RemoteClientConstants.REGISTER_CHECK_ID_SUCCESS)) {
 							Intent mainMenuIntent = new Intent(activity,
 									MainMenuActivity.class);
 							startActivity(mainMenuIntent);

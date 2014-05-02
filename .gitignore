@@ -29,7 +29,7 @@ proguard/
 iyong_test.pem
 
 *.classpath
-
+*.properties
 *.jar
 
 *.log

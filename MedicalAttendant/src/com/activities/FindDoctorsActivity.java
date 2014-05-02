@@ -41,14 +41,14 @@ public class FindDoctorsActivity extends Activity {
 		map = input.getMap();
 		doctorSet = map.keySet();
 		
-		for(String s :  doctorSet)
-		{
-			String docName = s;
-			int zip = Integer.parseInt(map.get(docName));
-			
-			googleMap.addMarker(new MarkerOptions().)
-			
-		}
+//		for(String s :  doctorSet)
+//		{
+//			String docName = s;
+//			int zip = Integer.parseInt(map.get(docName));
+//			
+//			googleMap.addMarker(new MarkerOptions().)
+//			
+//		}
 		
 		
 		try {
@@ -66,8 +66,8 @@ public class FindDoctorsActivity extends Activity {
 	 * */
 	private void initilizeMap() {
 		if (googleMap == null) {
-			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
-					R.id.map)).getMap();
+//			googleMap = ((MapFragment) getFragmentManager().findFragmentById(
+//					R.id.map)).getMap();
 
 			// check if map is created successfully or not
 			if (googleMap == null) {

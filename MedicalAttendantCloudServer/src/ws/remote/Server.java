@@ -1,4 +1,4 @@
-package server;
+package ws.remote;
 
 import handleConnections.DefaultSocketClient;
 
