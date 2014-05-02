@@ -8,8 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import ws.remote.Message;
+import ws.remote.RemoteClientInterface;
 
-public class DefaultSocketClient extends Thread implements SocketClientInterface, SocketClientConstants{
+public class DefaultSocketClient extends Thread implements RemoteClientInterface {
 	protected ObjectInputStream reader;
 	protected ObjectOutputStream writer;
 	

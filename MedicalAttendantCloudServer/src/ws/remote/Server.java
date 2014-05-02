@@ -5,29 +5,36 @@ import handleConnections.DefaultSocketClient;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import db.DBController;
 
 public class Server extends DefaultSocketClient{
+	private DBController md;
+	private Statement statement;
 	public Server(String strHost, int iPort) {
 		super(strHost, iPort);
-		
-		DBController md = new DBController();
+
+		md = new DBController();
 		try {
 			Connection connection = md.getConnection();
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
 
 			String tableName = "users";
-			
+
 			StringBuilder col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
+			col.append("user_id VARCHAR(100),");
 			col.append("pw VARCHAR(100),");
 			col.append("age INT,");
 			col.append("zip_code INT,");
 			col.append("is_doctor BOOLEAN");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			tableName = "checkups";
 
 			col = new StringBuilder();
@@ -38,9 +45,9 @@ public class Server extends DefaultSocketClient{
 			col.append("medication_list_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			tableName = "distantdiagnosis";
-			
+
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
 			col.append("name VARCHAR(100),");
@@ -58,7 +65,7 @@ public class Server extends DefaultSocketClient{
 			col.append("medication_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			tableName = "medications";
 
 			col = new StringBuilder();
@@ -66,7 +73,7 @@ public class Server extends DefaultSocketClient{
 			col.append("name VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			statement.close();
 			connection.close();
 		} catch (SQLException ex) {  
@@ -84,7 +91,64 @@ public class Server extends DefaultSocketClient{
 			}
 		}
 	}
-	
+
+	// This handler will have to do two tasks.
+	// One is that of saving data that was sent from android app.
+	// Another is sending data when needed by android app.
+	@Override
+	public void handleInput(Message input){
+		// TODO: Need to think of communication between 
+		// receiving data and sending data.
+		// Also, in what steps will it be done.
+		String command = input.getCommand();
+		
+		if(command.equals(RemoteClientConstants.REGISTER)){
+			HashMap<String,String> data = input.getMap();
+			StringBuilder col = new StringBuilder();
+			StringBuilder value = new StringBuilder();
+			Iterator<Entry<String, String>> it = data.entrySet().iterator();
+		    while (it.hasNext()) {
+		        Map.Entry<String, String> pairs = it.next();
+		        System.out.println(pairs.getKey() + " = " + pairs.getValue());
+		        
+			    String key = pairs.getKey();
+			    String dataValue = pairs.getValue();
+			    
+			    if(it.hasNext()){
+			    	col.append(key+",");
+			    	value.append(dataValue+",");
+			    } else {
+			    	col.append(key);
+			    	value.append(dataValue);
+			    }
+			    
+			    it.remove(); // avoids a ConcurrentModificationException
+			}
+			
+			try {
+				md.insertData("users", col.toString(), value.toString(), statement);
+			} catch (SQLException e) {
+				System.err.print(e.getStackTrace()+"\n");
+			}
+		}
+		
+		Message output = new Message("Server", "Test", null);
+		sendOutput(output);
+		
+//		if(input.getCommand().equalsIgnoreCase("BUILDAUTO")){
+//			if (DEBUG) System.out.println("BUILDAUTO");
+//			Automobile a = input.getA();
+//			if(a == null) {
+//				if (DEBUG) System.out.println
+//				("Automobile received is null");
+//			}
+//			bcmo.buildAuto(a);
+//			output.setCommand("BUILDAUTO");
+//			output.setStrMsg("1");
+//			sendOutput(output);
+//			if (DEBUG) System.out.println("BUILDAUTO - DONE");
+	}
+
 	public static void main (String arg[]){
 		/* debug main; does daytime on local host */
 		System.out.println("Server Started..");

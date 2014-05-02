@@ -110,8 +110,7 @@ public class LoginActivity extends ActionBarActivity {
 			map.put(RemoteClientConstants.LOGIN_ID, id);
 			map.put(RemoteClientConstants.LOGIN_PW, pwd);
 			
-			
-			Message msg_out = new Message(null,RemoteClientConstants.LOGIN,map);
+			Message msg_out = new Message("Client",RemoteClientConstants.LOGIN,map);
 			rc.sendOutput(msg_out);
 			
 			//hear from server. 

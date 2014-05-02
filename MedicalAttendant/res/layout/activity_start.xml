@@ -6,14 +6,4 @@
     tools:context="com.activities.StartActivity"
     tools:ignore="MergeRootFrame" >
 
-    <TextView
-        android:id="@+id/ddcu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="485dp"
-        android:gravity="center|center_horizontal"
-        android:text="@string/ddcu"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="60sp" />
-
 </FrameLayout>

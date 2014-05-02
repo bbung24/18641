@@ -85,6 +85,8 @@ public class DBController {
 		stmt.executeUpdate(command.toString());
 	}
 	
+	//public HashMap<String, String> readData(String tableName, String )
+	
 	public void showTable(String tableName,
 			Statement stmt) throws SQLException {  
 		String query = "SELECT * FROM " + tableName;
