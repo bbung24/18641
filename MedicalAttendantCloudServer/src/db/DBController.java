@@ -86,12 +86,32 @@ public class DBController {
 		stmt.executeUpdate(command.toString());
 	}
 	
-	public HashMap<String, Object> readData(String tableName, String col, String value) {
-		return null;
+	public ArrayList<HashMap<String, Object>> getAllDataString(String tableName, String col, String value,
+			Statement stmt) throws SQLException{
+		ArrayList<HashMap<String, Object>> result = new ArrayList<HashMap<String, Object>>();
+		String query = "SELECT * FROM " + tableName +" where "+ col + " = '" + value+"'";
+		ResultSet rs = stmt.executeQuery(query);
+		ResultSetMetaData rsmd = rs.getMetaData();
+		int columnCount = rsmd.getColumnCount();
+		while(rs.next()) {
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			for(int i = 1; i <= columnCount; i++){
+				data.put(rsmd.getColumnName(i), rs.getObject(i));
+			}
+			result.add(data);
+		}
+		return result;
 	}
 	
-	public HashMap<String, Object> getUser(String tableName, String col, String value) {
-		return null;
+	public HashMap<String, Object> getDataString(String tableName, String col, String value,
+			String want, Statement stmt) throws SQLException {
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		String query = "SELECT "+want+" FROM " + tableName +" where "+ col + " = '" + value+"'";
+		ResultSet rs = stmt.executeQuery(query);
+		while(rs.next()) {
+			data.put(rs.getString(1), "");
+		}
+		return data;
 	}
 	
 	public int countDataString(String tableName, String col, String value,

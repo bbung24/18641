@@ -1,14 +1,19 @@
 package com.activities;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import ws.remote.Message;
-import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
+import ws.remote.RemoteClientService;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -63,6 +68,7 @@ public class LoginActivity extends ActionBarActivity {
 		private Activity activity;
 		private EditText id;
 		private EditText pwd;
+		private Intent mServiceIntent;
 
 		public PlaceholderFragment() {
 		}
@@ -75,21 +81,14 @@ public class LoginActivity extends ActionBarActivity {
 			activity = getActivity();
 			id = (EditText) rootView.findViewById(R.id.login_id_edit);
 			pwd = (EditText) rootView.findViewById(R.id.login_pwd_edit);
-			
+
 			loginBtn = (Button) rootView.findViewById(R.id.login_btn);
 			loginBtn.setOnClickListener(new OnClickListener(){
 				public void onClick(View view){
-					Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
-					startActivity(mainMenuIntent);
-					activity.finish();
-				/*	if(checkIdPwd(id.getText().toString(), pwd.getText().toString()))
-					{	
-						Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
-						startActivity(mainMenuIntent);
-						activity.finish();
-					}
-					else
-						Toast.makeText(getActivity().getApplicationContext(), "Invalid ID or PW", Toast.LENGTH_LONG).show();*/
+					//					Intent mainMenuIntent = new Intent(activity, MainMenuActivity.class);
+					//					startActivity(mainMenuIntent);
+					//					activity.finish();
+					checkIdPwd(id.getText().toString(), pwd.getText().toString());
 				}});
 			registerBtn = (Button) rootView.findViewById(R.id.register_btn);
 			registerBtn.setOnClickListener(new OnClickListener(){
@@ -102,29 +101,70 @@ public class LoginActivity extends ActionBarActivity {
 
 			return rootView;
 		}
-		
+
 		/**
 		 * 	The method check if id and password combination is registered on db.
 		 */
-		public boolean checkIdPwd(String id, String pwd){
+		public void checkIdPwd(String id, String pwd){
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			data.put(RemoteClientConstants.LOGIN_ID, id);
+			data.put(RemoteClientConstants.LOGIN_PW, pwd);
+			Message msg = new Message("Client", RemoteClientConstants.LOGIN, data);
 			
-			RemoteClient rc = new RemoteClient();
-			HashMap<String,Object> map = new HashMap<String,Object>();
-			map.put(RemoteClientConstants.LOGIN_ID, id);
-			map.put(RemoteClientConstants.LOGIN_PW, pwd);
-			
-			Message msg_out = new Message("Client",RemoteClientConstants.LOGIN,map);
-			rc.sendOutput(msg_out);
-			
-			//hear from server. 
-			Message msg_in;
-			msg_in = rc.readInput();
-		
-			if(msg_in.getCommand().equals(RemoteClientConstants.LOGIN_FAIL))
-				return false;
-			else
-				return true;
+			mServiceIntent = new Intent(getActivity(), RemoteClientService.class);
+			mServiceIntent.putExtra("message", (Serializable) msg);
+			activity.startService(mServiceIntent);
+
+			// The filter's action is BROADCAST_ACTION
+			IntentFilter mStatusIntentFilter = new IntentFilter(
+					RemoteClientConstants.BROADCAST_ACTION);
+
+			// Adds a data filter for the HTTP scheme
+			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+			// Instantiates a new DownloadStateReceiver
+			ResponseReceiver mResponseReceiver =
+					new ResponseReceiver();
+			// Registers the DownloadStateReceiver and its intent filters
+			LocalBroadcastManager.getInstance(activity).registerReceiver(
+					mResponseReceiver,
+					mStatusIntentFilter);
+		}
+
+		// Broadcast receiver for receiving status updates from the IntentService
+		private class ResponseReceiver extends BroadcastReceiver {
+			// Prevents instantiation
+			private ResponseReceiver() {
+			}
+
+			// Called when the BroadcastReceiver gets an Intent it's registered to receive
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// Hear from Server.
+				Message msg_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+				if(msg_in == null) {
+					Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
+				} else {
+					// Valid ID and pwd --> login with that user id.
+					if (msg_in.getCommand().equals(
+							RemoteClientConstants.LOGIN_SUCCESS)) {
+						Toast.makeText(activity, "Login Success", 
+								Toast.LENGTH_LONG).show();
+						Intent mainMenuIntent = new Intent(activity,
+								MainMenuActivity.class);
+						startActivity(mainMenuIntent);
+						activity.finish();
+					}else if (msg_in.getCommand().equals(
+							RemoteClientConstants.INTERNAL_FAIL)) {
+						Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
+					}
+					// Invalid ID -> Notify using Toast
+					else {
+						Toast.makeText(activity, "ID and password does not match",
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			}
 		}
 	}
-
 }

@@ -39,17 +39,25 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 				.println("Unable to obtain stream to/from " + strHost);
 			error = true;
 		}
-		running = true;
+		if(!error){
+			running = true;
+		}
 	}
 
 	public boolean ready() {
 		while(!error && !running) {
-			System.out.println("Running");
+//			System.out.println("Running");
 		}
 		
 		if(running) {
+//			System.out.println("Return true");
+			running = false;
+			error = false;
 			return true;
 		} else {
+			running = false;
+			error = false;
+//			System.out.println("Return false");
 			return false;
 		}
 	}

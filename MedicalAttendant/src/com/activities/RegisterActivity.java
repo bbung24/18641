@@ -4,19 +4,14 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import ws.remote.Message;
-import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -28,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
@@ -80,7 +74,8 @@ public class RegisterActivity extends ActionBarActivity {
 		private Button registerBtn;
 		private Activity activity;
 		private HashMap<String, Object> reg_map;
-
+		private Intent mServiceIntent;
+		
 		public PlaceholderFragment() {
 		}
 
@@ -124,15 +119,35 @@ public class RegisterActivity extends ActionBarActivity {
 
 		public void registerBtnWork() {
 			// TODO: check if that id exists within the database.
-			if (reg_map.get(RemoteClientConstants.REGISTSER_INFO_JOB) == null){
+			System.out.println("ID: " + id.getText().toString());
+			if(id.getText().toString().equals("")){
+				Toast.makeText(activity, "Please write id", 
+						Toast.LENGTH_SHORT).show();
+				return;
+			} else if(pwd.getText().toString().equals("")){
+				Toast.makeText(activity, "Please write password", 
+						Toast.LENGTH_SHORT).show();
+				return;
+			} else if (pwdConfirm.getText().toString().equals("")){
+				Toast.makeText(activity, "Please write password confirm",
+						Toast.LENGTH_SHORT).show();
+			} else if(age.getText().toString().equals("")){
+				Toast.makeText(activity, "Please write age", 
+						Toast.LENGTH_SHORT).show();
+				return;
+			} else if(zip.getText().toString().equals("")){
+				Toast.makeText(activity, "Please write zip_code", 
+						Toast.LENGTH_SHORT).show();
+				return;
+			} else if (reg_map.get(RemoteClientConstants.REGISTSER_INFO_JOB) == null){
 				Toast.makeText(activity, "Please Select a Job",
-						Toast.LENGTH_LONG).show();
+						Toast.LENGTH_SHORT).show();
+				return;
 			}
+
 
 			if (pwd.getText().toString()
 					.equals(pwdConfirm.getText().toString())) {
-
-
 				reg_map.put(RemoteClientConstants.REGISTSER_INFO_ID, id
 						.getText().toString());
 				reg_map.put(RemoteClientConstants.REGISTSER_INFO_PW,
@@ -146,7 +161,7 @@ public class RegisterActivity extends ActionBarActivity {
 						RemoteClientConstants.REGISTER,
 						reg_map);
 
-				Intent mServiceIntent = new Intent(getActivity(), RemoteClientService.class);
+				mServiceIntent = new Intent(getActivity(), RemoteClientService.class);
 				mServiceIntent.putExtra("message", (Serializable) msg_id);
 				activity.startService(mServiceIntent);
 
@@ -168,7 +183,23 @@ public class RegisterActivity extends ActionBarActivity {
 				Toast.makeText(activity,
 						"Password and Confirm Password don't match",
 						Toast.LENGTH_LONG).show();
+				return;
 			}
+		}
+		
+		@Override
+		public void onStop() {
+			super.onStop();
+		}
+		
+		@Override
+		public void onPause() {
+			super.onPause();
+		}
+		
+		@Override
+		public void onResume() {
+			super.onResume();
 		}
 
 		// Broadcast receiver for receiving status updates from the IntentService
@@ -176,12 +207,12 @@ public class RegisterActivity extends ActionBarActivity {
 			// Prevents instantiation
 			private ResponseReceiver() {
 			}
+			
 			// Called when the BroadcastReceiver gets an Intent it's registered to receive
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// Hear from Server.
 				Message msg_id_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
-
 				if(msg_id_in == null) {
 					Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
 				} else {
@@ -195,7 +226,7 @@ public class RegisterActivity extends ActionBarActivity {
 						startActivity(mainMenuIntent);
 						activity.finish();
 					}else if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.REGISTER_SUCCESS)) {
+							RemoteClientConstants.INTERNAL_FAIL)) {
 						Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
 					}
 					// Invalid ID -> Notify using Toast
