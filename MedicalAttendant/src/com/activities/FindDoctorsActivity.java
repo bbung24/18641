@@ -91,7 +91,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 		//Request list of doctors to the server
 		rc = new RemoteClient();
 		rc.sendOutput(new Message(null,
-				RemoteClientConstants.REQEST_LIST_ALLDOC, null));
+				RemoteClientConstants.REQUEST_LIST_ALLDOC, null));
 		
 		
 		Message msg = rc.readInput();
