@@ -75,7 +75,7 @@ public class RegisterActivity extends ActionBarActivity {
 		private Activity activity;
 		private HashMap<String, Object> reg_map;
 		private Intent mServiceIntent;
-		
+
 		public PlaceholderFragment() {
 		}
 
@@ -154,7 +154,7 @@ public class RegisterActivity extends ActionBarActivity {
 						pwd.getText().toString());
 				reg_map.put(RemoteClientConstants.REGISTSER_INFO_AGE,
 						age.getText().toString());
-				reg_map.put(RemoteClientConstants.REGISTSER_INFO_ZIP,
+				reg_map.put(RemoteClientConstants.REGISTSER_INFO_ADDRESS,
 						zip.getText().toString());
 
 				Message msg_id = new Message("Client",
@@ -186,17 +186,17 @@ public class RegisterActivity extends ActionBarActivity {
 				return;
 			}
 		}
-		
+
 		@Override
 		public void onStop() {
 			super.onStop();
 		}
-		
+
 		@Override
 		public void onPause() {
 			super.onPause();
 		}
-		
+
 		@Override
 		public void onResume() {
 			super.onResume();
@@ -207,32 +207,34 @@ public class RegisterActivity extends ActionBarActivity {
 			// Prevents instantiation
 			private ResponseReceiver() {
 			}
-			
+
 			// Called when the BroadcastReceiver gets an Intent it's registered to receive
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				// Hear from Server.
-				Message msg_id_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
-				if(msg_id_in == null) {
-					Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
-				} else {
-					// Valid ID -> Register on DB.
-					if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.REGISTER_SUCCESS)) {
-						Toast.makeText(activity, "Sucessfully Registered", 
-								Toast.LENGTH_LONG).show();
-						Intent mainMenuIntent = new Intent(activity,
-								MainMenuActivity.class);
-						startActivity(mainMenuIntent);
-						activity.finish();
-					}else if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.INTERNAL_FAIL)) {
-						Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
-					}
-					// Invalid ID -> Notify using Toast
-					else {
-						Toast.makeText(activity, "ID already exists",
-								Toast.LENGTH_LONG).show();
+				if(isAdded()){ 
+					// Hear from Server.
+					Message msg_id_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+					if(msg_id_in == null) {
+						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
+					} else {
+						// Valid ID -> Register on DB.
+						if (msg_id_in.getCommand().equals(
+								RemoteClientConstants.REGISTER_SUCCESS)) {
+							Toast.makeText(activity, "Sucessfully Registered", 
+									Toast.LENGTH_LONG).show();
+							Intent mainMenuIntent = new Intent(activity,
+									MainMenuActivity.class);
+							startActivity(mainMenuIntent);
+							activity.finish();
+						}else if (msg_id_in.getCommand().equals(
+								RemoteClientConstants.INTERNAL_FAIL)) {
+							Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
+						}
+						// Invalid ID -> Notify using Toast
+						else {
+							Toast.makeText(activity, "ID already exists",
+									Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 			}

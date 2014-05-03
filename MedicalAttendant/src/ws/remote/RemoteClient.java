@@ -145,5 +145,4 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 		}
 		return null;
 	}
-
 }

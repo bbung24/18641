@@ -109,8 +109,9 @@ public class LoginActivity extends ActionBarActivity {
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			data.put(RemoteClientConstants.LOGIN_ID, id);
 			data.put(RemoteClientConstants.LOGIN_PW, pwd);
+
 			Message msg = new Message("Client", RemoteClientConstants.LOGIN, data);
-			
+
 			mServiceIntent = new Intent(getActivity(), RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg);
 			activity.startService(mServiceIntent);
@@ -140,28 +141,31 @@ public class LoginActivity extends ActionBarActivity {
 			// Called when the BroadcastReceiver gets an Intent it's registered to receive
 			@Override
 			public void onReceive(Context context, Intent intent) {
-				// Hear from Server.
-				Message msg_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
-				if(msg_in == null) {
-					Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
-				} else {
-					// Valid ID and pwd --> login with that user id.
-					if (msg_in.getCommand().equals(
-							RemoteClientConstants.LOGIN_SUCCESS)) {
-						Toast.makeText(activity, "Login Success", 
-								Toast.LENGTH_LONG).show();
-						Intent mainMenuIntent = new Intent(activity,
-								MainMenuActivity.class);
-						startActivity(mainMenuIntent);
-						activity.finish();
-					}else if (msg_in.getCommand().equals(
-							RemoteClientConstants.INTERNAL_FAIL)) {
-						Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
-					}
-					// Invalid ID -> Notify using Toast
-					else {
-						Toast.makeText(activity, "ID and password does not match",
-								Toast.LENGTH_LONG).show();
+				if(isAdded()){ 
+					// Hear from Server.
+					Message msg_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+					if(msg_in == null) {
+						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
+					} else {
+						// Valid ID and pwd --> login with that user id.
+						if (msg_in.getCommand().equals(
+								RemoteClientConstants.LOGIN_SUCCESS)) {
+							Toast.makeText(activity, "Login Success", 
+									Toast.LENGTH_LONG).show();
+							
+							Intent mainMenuIntent = new Intent(activity,
+									MainMenuActivity.class);
+							startActivity(mainMenuIntent);
+							activity.finish();
+						}else if (msg_in.getCommand().equals(
+								RemoteClientConstants.INTERNAL_FAIL)) {
+							Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
+						}
+						// Invalid ID -> Notify using Toast
+						else {
+							Toast.makeText(activity, "ID and password does not match",
+									Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 			}

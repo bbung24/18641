@@ -14,9 +14,12 @@ public class RemoteClientConstants {
 	public final static String REGISTSER_INFO_ID = "user_id";
 	public final static String REGISTSER_INFO_PW = "pw";
 	public final static String REGISTSER_INFO_AGE = "age";
-	public final static String REGISTSER_INFO_ZIP = "zip_code";
+	public final static String REGISTSER_INFO_ADDRESS = "address";
 	public final static String REGISTSER_INFO_JOB = "job";
 	
 	public final static String REGISTER_JOB_DOCTOR = "Doctor";
 	public final static String REGISTER_JOB_PATIENT = "Patient";
+	
+	public final static String REQUEST_LIST_ALLDOC = "Request all doctor";
+	public final static String REQUEST_LIST_EXAM = "Request examination records";
 }
