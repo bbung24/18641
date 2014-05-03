@@ -93,10 +93,11 @@ public class FindDoctorsActivity extends FragmentActivity implements
 		rc.sendOutput(new Message(null,
 				RemoteClientConstants.REQEST_LIST_ALLDOC, null));
 		
+		
 		Message msg = rc.readInput();
 		Set<String> docSet = msg.getMap().keySet();
-		//for loop, convert add -> LatLng addMarker
-		
+		//TODO: for loop, convert add -> LatLng addMarker.
+		//TODO: Focus on current location.
 		
 		googleMap.addMarker(new MarkerOptions().position(new LatLng(address
 				.get(0).getLatitude(), address.get(0).getLongitude())));
