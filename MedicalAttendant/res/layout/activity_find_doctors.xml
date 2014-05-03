@@ -9,6 +9,6 @@
         android:id="@+id/map_doctors"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        class="com.google.android.gms.maps.SuppportMapFragment" />
+        class="com.google.android.gms.maps.SupportMapFragment" />
 
 </LinearLayout>

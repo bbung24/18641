@@ -12,6 +12,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.app.Activity;
@@ -47,6 +48,9 @@ public class FindDoctorsActivity extends FragmentActivity {
 				.findFragmentById(R.id.map_doctors);
 		googleMap = googleMapFrag.getMap();
 
+		MarkerOptions marker = new MarkerOptions().position(new LatLng(50,50));
+			
+		
 		try {
 			// Loading map
 			initilizeMap();
@@ -55,6 +59,9 @@ public class FindDoctorsActivity extends FragmentActivity {
 			e.printStackTrace();
 		}
 
+		
+		googleMap.addMarker(marker);
+		
 	}
 
 	
