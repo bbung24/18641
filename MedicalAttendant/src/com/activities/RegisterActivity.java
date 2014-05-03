@@ -84,8 +84,8 @@ public class RegisterActivity extends ActionBarActivity {
 
 			public void onServiceConnected(ComponentName className, 
 					IBinder binder) {
-				RemoteClientService.MyBinder b = (RemoteClientService.MyBinder) binder;
-				rcs = b.getService();
+				//RemoteClientService.MyBinder b = (RemoteClientService.MyBinder) binder;
+				//rcs = b.getService();
 			}
 
 			public void onServiceDisconnected(ComponentName className) {
