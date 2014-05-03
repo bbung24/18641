@@ -26,4 +26,8 @@ public class RemoteClientConstants {
 	public final static String BROADCAST_ACTION = "com.BROADCAST";
 	public final static String BROADCAST_RECEV = "received";
 	public final static String INTERNAL_FAIL = "internal fail";
+	
+	public final static String EXAM_ID = "Exam_ID";
+	public final static String EXAM_NAME = "Exam_Name";
+	
 }

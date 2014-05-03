@@ -6,6 +6,8 @@ import java.util.HashMap;
 import ws.remote.Message;
 import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -56,7 +58,7 @@ public class CheckUpActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-
+		private Activity activity;
 		private ListView examinationList;
 		private RemoteClient rc;
 		private ArrayAdapter<String> adapter;
@@ -71,15 +73,23 @@ public class CheckUpActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_check_up,
 					container, false);
+
+			activity = getActivity();
 			examinationList = (ListView) rootView
 					.findViewById(R.id.list_of_medical_examination);
 
 			examinationList.setOnItemClickListener(new OnItemClickListener() {
-
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
-				
+					String selection = (String) parent
+							.getItemAtPosition(position);
+					Intent examIntent = new Intent(activity,
+							ExaminationActivity.class);
+					examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
+							selection);
+					startActivity(examIntent);
+					activity.finish();
 				}
 			});
 
@@ -117,10 +127,23 @@ public class CheckUpActivity extends ActionBarActivity {
 
 			adapter = new ArrayAdapter<String>(getActivity(),
 					android.R.layout.simple_list_item_1, examList);
+			
+			examinationList.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					String selection = (String) parent
+							.getItemAtPosition(position);
+					Intent examIntent = new Intent(activity,
+							ExaminationActivity.class);
+					examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
+							selection);
+					startActivity(examIntent);
+					activity.finish();
+				}
+			});
+			
 			examinationList.setAdapter(adapter);
-
-			// TODO: pull Medical Examination lists from
-			// database and put into the ListView.
 
 			return rootView;
 		}
