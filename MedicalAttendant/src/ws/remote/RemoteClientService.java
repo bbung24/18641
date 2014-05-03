@@ -1,15 +1,17 @@
 package ws.remote;
 
+import java.util.HashMap;
+
+import ws.local.BroadcastNotifier;
 import android.app.IntentService;
-import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
-import android.util.Log;
 
 public class RemoteClientService extends IntentService{
-	private String command;
 	private RemoteClient rc;
+	private Message message;
+
+	// Defines and instantiates an object for handling status updates.
+	private BroadcastNotifier mBroadcaster = new BroadcastNotifier(this);
 
 	/**
 	 * A constructor is required, and must call the super IntentService(String)
@@ -27,7 +29,17 @@ public class RemoteClientService extends IntentService{
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		rc = new RemoteClient();
-		command = intent.getStringExtra("command");
+		rc.start();
+		boolean ready = rc.ready();
+		Message m;
+		if(ready){
+			message = (Message) intent.getSerializableExtra("message");
+			sendOutput(message);
+			m = readInput();
+		} else {
+			m = new Message("Server", RemoteClientConstants.INTERNAL_FAIL, new HashMap<String, Object>());
+		}
+		mBroadcaster.broadcastIntentWithMessage(m);
 	}
 
 	public void sendOutput(Message output){

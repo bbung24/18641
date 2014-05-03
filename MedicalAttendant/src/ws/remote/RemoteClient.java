@@ -10,41 +10,48 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 	private final boolean DEBUG = true;
 	private ObjectInputStream reader;
 	private ObjectOutputStream writer;
-	// private BufferedReader stdIn;
 	private Socket sock;
 	private String strHost = "54.86.51.234";
 	private int iPort = 4444;
+	private boolean running = false;
+	private boolean error = false;
 
-	// public RemoteClient(String strHost, int iPort) {
-	// setPort(iPort);
-	// setHost(strHost);
-	// }
 
 	public void run() {
-		if (openConnection()) {
-			//handleSession();
-		}
+		openConnection();
 	}// run
 
-	public boolean openConnection() {
+	public void openConnection() {
 		try {
 			sock = new Socket(strHost, iPort);
 		} catch (IOException socketError) {
 			if (DEBUG)
 				System.err.println("Unable to connect to " + strHost);
 			socketError.printStackTrace();
+			error = true;
 		}
 		try {
 			writer = new ObjectOutputStream(sock.getOutputStream());
 			reader = new ObjectInputStream(sock.getInputStream());
-			// stdIn = new BufferedReader(new InputStreamReader(System.in));
 		} catch (Exception e) {
 			if (DEBUG)
 				System.err
-						.println("Unable to obtain stream to/from " + strHost);
+				.println("Unable to obtain stream to/from " + strHost);
+			error = true;
+		}
+		running = true;
+	}
+
+	public boolean ready() {
+		while(!error && !running) {
+			System.out.println("Running");
+		}
+		
+		if(running) {
+			return true;
+		} else {
 			return false;
 		}
-		return true;
 	}
 
 	public void handleSession() {
@@ -52,7 +59,7 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 
 		if (DEBUG)
 			System.out
-					.println("Handling session with " + strHost + ":" + iPort);
+			.println("Handling session with " + strHost + ":" + iPort);
 
 		// showMenu();
 		Message m = new Message("Client", "Test", null);
@@ -74,55 +81,14 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 		}
 	}
 
-	// public void showMenu() {
-	// CarModelOptionsIO cmo = new CarModelOptionsIO();
-	// StringBuilder sb = new StringBuilder();
-	// sb = new StringBuilder();
-	// sb.append("Available Menus:\n");
-	// sb.append("	1. Build Automobile\n");
-	// sb.append("	2. Show Automobile Information\n");
-	// sb.append("Enter your choice: ");
-	// System.out.println(sb.toString());
-	// String userInput;
-	// try {
-	// userInput = stdIn.readLine();
-	// } catch (IOException e1) {
-	// if (DEBUG) System.err.println
-	// ("System.in error");
-	// return;
-	// }
-	// System.out.println("Client: " +userInput);
-	// Message m = new Message(null, null, null, null);
-	// if (userInput.equalsIgnoreCase("1") ||
-	// userInput.equalsIgnoreCase("Build Automobile")) {
-	// sb = new StringBuilder();
-	// sb.append("Build Automobile\n");
-	// sb.append("Enter a filename which you want to build: ");
-	// System.out.println(sb.toString());
-	// try {
-	// userInput = stdIn.readLine();
-	// } catch (IOException e1) {
-	// if (DEBUG) System.err.println
-	// ("System.in error");
-	// return;
-	// }
-	// StringTokenizer st = new StringTokenizer(userInput, ".");
-	// Automobile a = cmo.buildAuto(st.nextToken(), st.nextToken());
-	// m.setA(a);
-	// m.setCommand("BUILDAUTO");
-	// sendOutput(m);
-	// } else if(userInput.equalsIgnoreCase("2") ||
-	// userInput.equalsIgnoreCase("Show Automobile Information")){
-	// m.setCommand("displayAutomobile");
-	// sendOutput(m);
-	// } else {
-	// System.out.println("Wrong Input please try again");
-	// showMenu();
-	// }
-	// }
-
 	public void sendOutput(Message output) {
 		try {
+			if(writer == null){
+				System.out.println("writer null");
+			}
+			if(output == null){
+				System.out.println("output null");
+			}
 			writer.writeObject(output);
 		} catch (IOException e) {
 			if (DEBUG)
@@ -132,55 +98,12 @@ public class RemoteClient extends Thread implements RemoteClientInterface {
 	}
 
 	public void handleInput(Message input) {
-		StringBuilder sb;
-		String userInput;
-		Message m = new Message(null, null, null);
+//		StringBuilder sb;
+//		String userInput;
+//		Message m = new Message(null, null, null);
 
 		System.out.println(input.getStrMsg());
 		System.out.println(input.getCommand());
-		// if(input.getCommand().equalsIgnoreCase("displayAutomobile")){
-		// modelList = input.getList();
-		//
-		// sb = new StringBuilder();
-		// sb.append("Show Automobile Information\n");
-		// sb.append("List of available models:\n");
-		// sb.append(modelList.toString());
-		// sb.append("\nEnter name of model you want to know:");
-		// System.out.println(sb.toString());
-		// try {
-		// userInput = stdIn.readLine();
-		// } catch (IOException e1) {
-		// if (DEBUG) System.err.println
-		// ("System.in error");
-		// return;
-		// }
-		// Message mm = new Message(null,null,null,null);
-		// mm.setCommand("getAuto");
-		// mm.setStrMsg(userInput);
-		// sendOutput(mm);
-		// try {
-		// Message strInput = (Message) reader.readObject();
-		// Automobile a = strInput.getA();
-		//
-		// if(a == null) {
-		// if (DEBUG) System.err.println
-		// ("Error receiving Automobile from server");
-		// return;
-		// }
-		// System.out.println("Information about your chosen model:");
-		// a.print();
-		// }
-		// catch (IOException e){
-		// if (DEBUG) System.out.println ("Handling session with "
-		// + strHost + ":" + iPort);
-		// } catch (ClassNotFoundException e) {
-		// if (DEBUG) System.out.println ("Handling session with "
-		// + strHost + ":" + iPort);
-		// }
-		// } else if(input.getCommand().equalsIgnoreCase("BUILDAUTO")){
-		// if(input.getStrMsg().equalsIgnoreCase("1"))
-		// System.out.println("Server: Automobile was built successfully");
-		// }
 	}
 
 	public void closeSession() {

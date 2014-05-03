@@ -22,4 +22,7 @@ public class RemoteClientConstants {
 	
 	public final static String REQEST_LIST_ALLDOC = "Request all doctor";
 	
+	public final static String BROADCAST_ACTION = "com.BROADCAST";
+	public final static String BROADCAST_RECEV = "received";
+	public final static String INTERNAL_FAIL = "internal fail";
 }

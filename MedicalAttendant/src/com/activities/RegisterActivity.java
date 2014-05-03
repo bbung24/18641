@@ -1,5 +1,6 @@
 package com.activities;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import ws.remote.Message;
@@ -7,13 +8,17 @@ import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -75,23 +80,9 @@ public class RegisterActivity extends ActionBarActivity {
 		private Button registerBtn;
 		private Activity activity;
 		private HashMap<String, Object> reg_map;
-		private RemoteClientService rcs;
 
 		public PlaceholderFragment() {
 		}
-
-		private ServiceConnection mConnection = new ServiceConnection() {
-
-			public void onServiceConnected(ComponentName className, 
-					IBinder binder) {
-				//RemoteClientService.MyBinder b = (RemoteClientService.MyBinder) binder;
-				//rcs = b.getService();
-			}
-
-			public void onServiceDisconnected(ComponentName className) {
-				rcs = null;
-			}
-		};
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,7 +112,7 @@ public class RegisterActivity extends ActionBarActivity {
 								RemoteClientConstants.REGISTER_JOB_PATIENT);
 				}
 			});
-			
+
 			registerBtn = (Button) rootView.findViewById(R.id.register);
 			registerBtn.setOnClickListener(new OnClickListener() {
 				public void onClick(View view) {
@@ -155,35 +146,64 @@ public class RegisterActivity extends ActionBarActivity {
 						RemoteClientConstants.REGISTER,
 						reg_map);
 
-				if (rcs != null) {
-					rcs.sendOutput(msg_id);
+				Intent mServiceIntent = new Intent(getActivity(), RemoteClientService.class);
+				mServiceIntent.putExtra("message", (Serializable) msg_id);
+				activity.startService(mServiceIntent);
 
-					// Hear from Server.
-					Message msg_id_in = rcs.readInput();
+				// The filter's action is BROADCAST_ACTION
+				IntentFilter mStatusIntentFilter = new IntentFilter(
+						RemoteClientConstants.BROADCAST_ACTION);
 
-					// Valid ID -> Register on DB.
-					if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.REGISTER_SUCCESS)) {
-						Intent mainMenuIntent = new Intent(activity,
-								MainMenuActivity.class);
-						startActivity(mainMenuIntent);
-						activity.finish();
-					}
-					// Invalid ID -> Notify using Toast
-					else {
-						Toast.makeText(getActivity(), "ID already exists",
-								Toast.LENGTH_LONG);
-					}
-				} else {
-					Toast.makeText(activity, "Connection to database lost", 
-							Toast.LENGTH_LONG).show();
-				}
-				// Send information to Database.
-				//				rc.sendOutput(msg_id);
+				// Adds a data filter for the HTTP scheme
+				mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+				// Instantiates a new DownloadStateReceiver
+				ResponseReceiver mResponseReceiver =
+						new ResponseReceiver();
+				// Registers the DownloadStateReceiver and its intent filters
+				LocalBroadcastManager.getInstance(activity).registerReceiver(
+						mResponseReceiver,
+						mStatusIntentFilter);
 			} else {
 				Toast.makeText(activity,
 						"Password and Confirm Password don't match",
 						Toast.LENGTH_LONG).show();
+			}
+		}
+
+		// Broadcast receiver for receiving status updates from the IntentService
+		private class ResponseReceiver extends BroadcastReceiver {
+			// Prevents instantiation
+			private ResponseReceiver() {
+			}
+			// Called when the BroadcastReceiver gets an Intent it's registered to receive
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// Hear from Server.
+				Message msg_id_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+
+				if(msg_id_in == null) {
+					Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
+				} else {
+					// Valid ID -> Register on DB.
+					if (msg_id_in.getCommand().equals(
+							RemoteClientConstants.REGISTER_SUCCESS)) {
+						Toast.makeText(activity, "Sucessfully Registered", 
+								Toast.LENGTH_LONG).show();
+						Intent mainMenuIntent = new Intent(activity,
+								MainMenuActivity.class);
+						startActivity(mainMenuIntent);
+						activity.finish();
+					}else if (msg_id_in.getCommand().equals(
+							RemoteClientConstants.REGISTER_SUCCESS)) {
+						Toast.makeText(activity, "Network Error", Toast.LENGTH_LONG).show();
+					}
+					// Invalid ID -> Notify using Toast
+					else {
+						Toast.makeText(activity, "ID already exists",
+								Toast.LENGTH_LONG).show();
+					}
+				}
 			}
 		}
 	}

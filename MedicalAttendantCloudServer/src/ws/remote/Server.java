@@ -103,7 +103,7 @@ public class Server extends DefaultSocketClient{
 		// Also, in what steps will it be done.
 		Connection connection = md.getConnection();
 		Statement statement = null;
-
+		HashMap<String, Object> response = new HashMap<String, Object>();
 		try {
 			statement = connection.createStatement();
 
@@ -149,10 +149,10 @@ public class Server extends DefaultSocketClient{
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, null);
+					Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, response);
 					sendOutput(output);
 				} else {
-					Message output = new Message("Server", RemoteClientConstants.REGISTER_FAIL, null);
+					Message output = new Message("Server", RemoteClientConstants.REGISTER_FAIL, response);
 					sendOutput(output);
 				}
 			}
