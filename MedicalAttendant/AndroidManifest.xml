@@ -91,7 +91,11 @@
             android:name="com.activities.CreateCheckUpActivity"
             android:label="@string/title_activity_create_check_up" >
         </activity>
-
+      	<service
+            android:name="ws.remote.RemoteClientService"
+            android:label="@string/title_service_remote_client"
+            android:exported="false" >
+        </service>
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDHDxnQaYmjtS_K5dSFplBIN669UJWYKyc" />

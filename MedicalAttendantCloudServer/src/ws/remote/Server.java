@@ -14,14 +14,14 @@ import db.DBController;
 
 public class Server extends DefaultSocketClient{
 	private DBController md;
-	private Statement statement;
+
 	public Server(String strHost, int iPort) {
 		super(strHost, iPort);
 
 		md = new DBController();
 		try {
 			Connection connection = md.getConnection();
-			statement = connection.createStatement();
+			Statement statement = connection.createStatement();
 
 			String tableName = "users";
 
@@ -101,53 +101,68 @@ public class Server extends DefaultSocketClient{
 		// TODO: Need to think of communication between 
 		// receiving data and sending data.
 		// Also, in what steps will it be done.
-		String command = input.getCommand();
+		Connection connection = md.getConnection();
+		Statement statement = null;
 
-		if(command.equals(RemoteClientConstants.REGISTER)){
+		try {
+			statement = connection.createStatement();
 
-			HashMap<String,String> data = input.getMap();
+			String command = input.getCommand();
 
-			int count = -1;
-			try {
-				count = md.countData("users", "user_id", data.get("user_id"), statement);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			if (count == 0){
-				StringBuilder col = new StringBuilder();
-				StringBuilder value = new StringBuilder();
-				Iterator<Entry<String, String>> it = data.entrySet().iterator();
-				while (it.hasNext()) {
-					Map.Entry<String, String> pairs = it.next();
-					System.out.println(pairs.getKey() + " = " + pairs.getValue());
+			if(command.equals(RemoteClientConstants.REGISTER)){
 
-					String key = pairs.getKey();
-					String dataValue = pairs.getValue();
+				HashMap<String,Object> data = input.getMap();
 
-					if(it.hasNext()){
-						col.append(key+",");
-						value.append(dataValue+",");
-					} else {
-						col.append(key);
-						value.append(dataValue);
-					}
-
-					it.remove(); // avoids a ConcurrentModificationException
-				}
-
+				int count = -1;
 				try {
-					md.insertData("users", col.toString(), value.toString(), statement);
+					count = md.countDataString("users", "user_id", (String)data.get("user_id"), statement);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, null);
-				sendOutput(output);
-			} else {
-				Message output = new Message("Server", RemoteClientConstants.REGISTER_FAIL, null);
-				sendOutput(output);
+				if (count == 0){
+					StringBuilder col = new StringBuilder();
+					StringBuilder value = new StringBuilder();
+					Iterator<Entry<String, Object>> it = data.entrySet().iterator();
+					while (it.hasNext()) {
+						Map.Entry<String, Object> pairs = it.next();
+						System.out.println(pairs.getKey() + " = " + pairs.getValue());
+
+						String key = pairs.getKey();
+						Object dataValue = pairs.getValue();
+						
+						if(it.hasNext() && dataValue instanceof String){
+							col.append(key+",");
+							value.append("\""+dataValue+"\",");
+						} else if(it.hasNext()){
+							col.append(key+",");
+							value.append(dataValue+",");
+						} else {
+							col.append(key);
+							value.append(dataValue);
+						}
+
+						it.remove(); // avoids a ConcurrentModificationException
+					}
+
+					try {
+						md.insertData("users", col.toString(), value.toString(), statement);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, null);
+					sendOutput(output);
+				} else {
+					Message output = new Message("Server", RemoteClientConstants.REGISTER_FAIL, null);
+					sendOutput(output);
+				}
 			}
+			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
+
 
 	public static void main (String arg[]){
 		/* debug main; does daytime on local host */

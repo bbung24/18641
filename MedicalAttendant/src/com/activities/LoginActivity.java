@@ -109,7 +109,7 @@ public class LoginActivity extends ActionBarActivity {
 		public boolean checkIdPwd(String id, String pwd){
 			
 			RemoteClient rc = new RemoteClient();
-			HashMap<String,String> map = new HashMap<String,String>();
+			HashMap<String,Object> map = new HashMap<String,Object>();
 			map.put(RemoteClientConstants.LOGIN_ID, id);
 			map.put(RemoteClientConstants.LOGIN_PW, pwd);
 			

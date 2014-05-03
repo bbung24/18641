@@ -48,5 +48,6 @@
     <string name="job">Job</string>
     <string name="doctor">Doctor</string>
     <string name="patient">Patient</string>
-
+	<string name="title_service_remote_client">Remote Client Service</string>
+	
 </resources>

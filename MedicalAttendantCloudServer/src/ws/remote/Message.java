@@ -10,9 +10,9 @@ public class Message implements Serializable {
 	private static final long serialVersionUID = 2911766101045458292L;
 	private String strMsg;
 	private String command;
-	private HashMap<String,String> map;
+	private HashMap<String,Object> map;
 	
-	public Message(String strMsg, String command, HashMap<String, String> map){
+	public Message(String strMsg, String command, HashMap<String, Object> map){
 		this.strMsg = strMsg;
 		this.command = command;
 		this.map = map;
@@ -34,13 +34,13 @@ public class Message implements Serializable {
 		this.command = command;
 	}
 
-	public void setMap(HashMap<String,String> map)
+	public void setMap(HashMap<String,Object> map)
 	{
 		this.map = map;
 	}
 	
 	
-	public HashMap<String,String> getMap()
+	public HashMap<String,Object> getMap()
 	{
 		return this.map;
 	}

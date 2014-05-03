@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DBController {  
 	public Connection getConnection() {  
@@ -85,11 +86,17 @@ public class DBController {
 		stmt.executeUpdate(command.toString());
 	}
 	
-	//public HashMap<String, String> readData(String tableName, String )
+	public HashMap<String, Object> readData(String tableName, String col, String value) {
+		return null;
+	}
 	
-	public int countData(String tableName, String col, String value,
+	public HashMap<String, Object> getUser(String tableName, String col, String value) {
+		return null;
+	}
+	
+	public int countDataString(String tableName, String col, String value,
 			Statement stmt) throws SQLException{
-		String query = "SELECT COUNT(*) FROM " + tableName +" where "+ col + " = " + value;
+		String query = "SELECT COUNT(*) FROM " + tableName +" where "+ col + " = '" + value+"'";
 		ResultSet rs = stmt.executeQuery(query);
 		rs.next();
 		return Integer.valueOf(rs.getString(1));
