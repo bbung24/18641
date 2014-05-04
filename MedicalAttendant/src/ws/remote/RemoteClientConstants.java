@@ -20,8 +20,7 @@ public class RemoteClientConstants {
 	public final static String REGISTER_JOB_DOCTOR = "Doctor";
 	public final static String REGISTER_JOB_PATIENT = "Patient";
 	
-	public final static String REQUEST_LIST_ALLDOC = "Request all doctor";
-	public final static String REQUEST_LIST_EXAM = "Request examination records";
+	
 	
 	public final static String BROADCAST_ACTION = "com.BROADCAST";
 	public final static String BROADCAST_RECEV = "received";
@@ -29,5 +28,17 @@ public class RemoteClientConstants {
 	
 	public final static String EXAM_ID = "Exam_ID";
 	public final static String EXAM_NAME = "Exam_Name";
+	
+	
+	//CHECK UP TABLE COLUMNS
+	public static final String CHECKUP_RESULT = "result";
+	public static final String CHECKUP_MED_LIST = "med_list";
+	
+	//REQUEST DEFINITIONS
+	public final static String REQUEST_LIST_ALLDOC = "Request all doctor";
+	public final static String REQUEST_LIST_EXAM = "Request examination records";
+	public static final String REQUEST_CREATE_CHECKUP = "Reqest create checkup";
+	public static final String REQUEST_MED_LIST = "Request med_list";
+
 	
 }

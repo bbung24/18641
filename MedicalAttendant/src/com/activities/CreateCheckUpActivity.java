@@ -1,22 +1,33 @@
 package com.activities;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ws.remote.Message;
+import ws.remote.RemoteClient;
+import ws.remote.RemoteClientConstants;
+import ws.remote.RemoteClientService;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.os.Build;
+import android.widget.Toast;
 
 public class CreateCheckUpActivity extends ActionBarActivity {
 
@@ -55,37 +66,157 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class PlaceholderFragment extends Fragment {
-		private EditText responseEdit;
-        private ListView medicationList;
-        private Button submitBtn;
-        private Activity activity;
-        
-        public PlaceholderFragment() {
+		private EditText resultEdit;
+		private ListView medicationList;
+		private Button submitBtn;
+		private Activity activity;
+		private RemoteClient rc;
+		private Intent mServiceIntent;
+		private HashMap<String, Object> map_create_checkup;
+		private ArrayList<String> list_med;
+		private ArrayAdapter<String> adapter_list_med;
+		public PlaceholderFragment() {
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
+
 			View rootView = inflater.inflate(R.layout.fragment_create_check_up,
 					container, false);
 			activity = getActivity();
-			responseEdit = (EditText) rootView.findViewById(R.id.response_edit);
-			medicationList = (ListView) rootView.findViewById(R.id.medication_list);
+			resultEdit = (EditText) rootView.findViewById(R.id.response_edit);
+			medicationList = (ListView) rootView
+					.findViewById(R.id.medication_list);
 			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
-			submitBtn.setOnClickListener(new OnClickListener(){
-				public void onClick(View view){
-					// TODO: when submit button is clicked, 
-					// create new Check Up data for the related patient
-					// Then go back to Main Menu Activity.
-					
-					Intent mainMenuIntent = new Intent(activity, DoctorMenuActivity.class);
-					startActivity(mainMenuIntent);
-					activity.finish();
+
+			// Request med_list and show in ListView.
+			sendMedlistRequest();
+
+			// Set up response receiver.
+			setResponseReceiver();
+			// Submit to send request ->confirm -> doctor main menu.
+			submitBtn.setOnClickListener(new OnClickListener() 
+			{
+				public void onClick(View view) 
+				{
+					sendCreateCheckUpRequest();	
 				}
 			});
-			
+
 			return rootView;
 		}
+
+		/** Send a request for list of medicine to server. */
+		private void sendMedlistRequest() {
+			// 1-1 Create Msg.
+			Message msg_req_med_list = new Message("Client",
+					RemoteClientConstants.REQUEST_MED_LIST, null);
+
+			// 1-2 Send Message
+			mServiceIntent = new Intent(activity, RemoteClientService.class);
+			mServiceIntent.putExtra("message", (Serializable) msg_req_med_list);
+			activity.startService(mServiceIntent);
+
+		}
+
+		/** Send a request with necessary info for creating checkup request. */
+		private void sendCreateCheckUpRequest() {
+			// 1. Put checkup information into amap
+			map_create_checkup = new HashMap<String, Object>();
+
+			// 1-1 Add Check Up result
+			map_create_checkup.put(RemoteClientConstants.CHECKUP_RESULT,
+					resultEdit.getText().toString());
+
+			// 1-2 Add Check Up Medication list.
+			ArrayList<String> list_med = new ArrayList<String>();
+			// add checked med to list_med
+			map_create_checkup.put(RemoteClientConstants.CHECKUP_MED_LIST,
+					list_med);
+
+			// 1-3 Create message.
+			Message msg_checkUp = new Message("Client",
+					RemoteClientConstants.REQUEST_CREATE_CHECKUP,
+					map_create_checkup);
+
+			// 1-4 Send Message
+			mServiceIntent = new Intent(activity, RemoteClientService.class);
+			mServiceIntent.putExtra("message", (Serializable) msg_checkUp);
+			activity.startService(mServiceIntent);
+
+			// The filter's action is BROADCAST_ACTION
+			IntentFilter mStatusIntentFilter = new IntentFilter(
+					RemoteClientConstants.BROADCAST_ACTION);
+
+			// Adds a data filter for the HTTP scheme
+			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+			// Instantiates a new DownloadStateReceiver
+			ResponseReceiver mResponseReceiver = new ResponseReceiver();
+			// Registers the DownloadStateReceiver and its intent filters
+			LocalBroadcastManager.getInstance(activity).registerReceiver(
+					mResponseReceiver, mStatusIntentFilter);
+
+		}
+
+		/** The method set ResponseReceiver */
+		private void setResponseReceiver() {
+			// The filter's action is BROADCAST_ACTION
+			IntentFilter mStatusIntentFilter = new IntentFilter(
+					RemoteClientConstants.BROADCAST_ACTION);
+
+			// Adds a data filter for the HTTP scheme
+			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+			// Instantiates a new DownloadStateReceiver
+			ResponseReceiver mResponseReceiver = new ResponseReceiver();
+			// Registers the DownloadStateReceiver and its intent filters
+			LocalBroadcastManager.getInstance(activity).registerReceiver(
+					mResponseReceiver, mStatusIntentFilter);
+
+		}
+
+		// Broadcast receiver for receiving status updates from the
+		// IntentService
+		private class ResponseReceiver extends BroadcastReceiver {
+			// Prevents instantiation
+			private ResponseReceiver() {
+			}
+
+			// Called when the BroadcastReceiver gets an Intent it's registered
+			// to receive
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if (isAdded()) 
+				{
+					// Hear from Server.
+					Message msg_id_in = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+					
+					// null case -> notify user.
+					if (msg_id_in == null) {
+						Toast.makeText(activity, "internal error",
+								Toast.LENGTH_LONG).show();
+					} 
+					// med_list request -> populate list view
+					else if(msg_id_in.getCommand().equals(RemoteClientConstants.REQUEST_MED_LIST)) 
+					{
+						list_med = (ArrayList<String>)msg_id_in.getMap().get(RemoteClientConstants.CHECKUP_MED_LIST);
+						adapter_list_med = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,list_med);
+						medicationList.setAdapter(adapter_list_med);
+					}
+					
+					//	create_checkup request -> toast msg -> back to doctor_main_menu.
+					else if(msg_id_in.getCommand().equals(RemoteClientConstants.REQUEST_CREATE_CHECKUP))
+					{
+						Intent mainMenuIntent = new Intent(activity,DoctorMenuActivity.class);
+						startActivity(mainMenuIntent);
+						activity.finish();
+					}
+				}
+			}
+		}
+
 	}
 
 }

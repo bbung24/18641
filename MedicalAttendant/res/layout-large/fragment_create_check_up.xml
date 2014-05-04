@@ -9,12 +9,12 @@
     tools:context="com.activities.CreateCheckUpActivity$PlaceholderFragment" >
     
     <EditText
-        android:id="@+id/response_edit"
+        android:id="@+id/result_edit"
         android:layout_width="150dp"
         android:layout_height="match_parent"
-        android:layout_alignBaseline="@+id/response_edit"
-        android:layout_alignBottom="@+id/response_edit"
-        android:layout_alignLeft="@+id/response_edit"
+        android:layout_alignBaseline="@+id/result_edit"
+        android:layout_alignBottom="@+id/result_edit"
+        android:layout_alignLeft="@+id/result_edit"
         android:ems="10"
         android:inputType="textMultiLine" >
         
@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/response_edit"
+        android:layout_toRightOf="@+id/result_edit"
         android:orientation="vertical" >
 
         <TextView

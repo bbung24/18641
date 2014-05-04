@@ -63,8 +63,10 @@ public class ExaminationActivity extends ActionBarActivity {
 					container, false);
 			checkUpList = (ListView) rootView.findViewById(R.id.check_up_list);
 			//TODO: update this list with checkUpList associated with clicked examination.
+			
 			medicationList = (ListView) rootView.findViewById(R.id.medication_list);
 			// TODO: update this list with medication that doctor put in for clicked examination.
+			
 			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
 			// TODO: put into checkUpList database for checked medications and dates.
 			// then update checkUpList.
