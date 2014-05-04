@@ -17,12 +17,15 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -75,6 +78,9 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 		private HashMap<String, Object> map_create_checkup;
 		private ArrayList<String> list_med;
 		private ArrayAdapter<String> adapter_list_med;
+		private ArrayList<String> list_med_selected;
+		
+		
 		public PlaceholderFragment() {
 		}
 
@@ -133,7 +139,7 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 			ArrayList<String> list_med = new ArrayList<String>();
 			// add checked med to list_med
 			map_create_checkup.put(RemoteClientConstants.CHECKUP_MED_LIST,
-					list_med);
+					list_med_selected);
 
 			// 1-3 Create message.
 			Message msg_checkUp = new Message("Client",
@@ -144,7 +150,7 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg_checkUp);
 			activity.startService(mServiceIntent);
-
+			
 			// The filter's action is BROADCAST_ACTION
 			IntentFilter mStatusIntentFilter = new IntentFilter(
 					RemoteClientConstants.BROADCAST_ACTION);
@@ -202,10 +208,25 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 					else if(msg_id_in.getCommand().equals(RemoteClientConstants.REQUEST_MED_LIST)) 
 					{
 						list_med = (ArrayList<String>)msg_id_in.getMap().get(RemoteClientConstants.CHECKUP_MED_LIST);
-						adapter_list_med = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1,list_med);
+						adapter_list_med = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_multiple_choice,list_med);
+						
+						medicationList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 						medicationList.setAdapter(adapter_list_med);
+						medicationList.setOnItemClickListener(new OnItemClickListener(){
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id)
+							{
+								SparseBooleanArray a = medicationList.getCheckedItemPositions();
+								
+								for(int i = 0; i < a.size(); i++)
+								{
+									if(a.valueAt(i))
+										list_med_selected.add(medicationList.getItemAtPosition(i).toString());
+								}
+							}});
 					}
-					
 					//	create_checkup request -> toast msg -> back to doctor_main_menu.
 					else if(msg_id_in.getCommand().equals(RemoteClientConstants.REQUEST_CREATE_CHECKUP))
 					{
