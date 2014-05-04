@@ -1,15 +1,18 @@
 package com.activities;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import java.io.BufferedOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
 public class DistSummActivity extends ActionBarActivity {
 
@@ -58,6 +61,33 @@ public class DistSummActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_dist_summ,
 					container, false);
 			return rootView;
+		}
+		
+		private void convertByteToFile(String filename, byte[] b){
+			BufferedOutputStream bos = null;
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(filename);
+				bos = new BufferedOutputStream(fos);
+				bos.write(b);
+			} catch (FileNotFoundException fnfe) {
+				System.err.println("File not found" + fnfe);
+				fnfe.printStackTrace();
+			} catch (IOException e){
+				System.err.println("Error while writing to file" + e);
+				e.printStackTrace();
+			} finally {
+				try {
+					if (bos != null) {
+						bos.flush();
+						bos.close();
+					}
+				} catch(IOException e){
+					System.err.println("Error while closing streams" + e);
+					e.printStackTrace();
+				}
+
+			}
 		}
 	}
 

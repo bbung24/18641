@@ -12,11 +12,6 @@ import ws.local.LocalConstants;
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,17 +19,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-import android.os.Build;
 
 public class DoctorDistActivity extends ActionBarActivity {
 
@@ -76,7 +73,6 @@ public class DoctorDistActivity extends ActionBarActivity {
 		private ListView diagnosisList;
 		private Activity activity;
 		private ArrayAdapter<String> adapter;
-		private ArrayList<String> distList;
 		private Intent mServiceIntent;
 
 		public PlaceholderFragment() {
@@ -90,74 +86,27 @@ public class DoctorDistActivity extends ActionBarActivity {
 			activity = getActivity();
 			diagnosisList = (ListView) rootView.findViewById(R.id.diagnosis_list);
 
-			requestDocList();
+			requestDistList();
 			setupResponseReceiver();
-
-			diagnosisList.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					String selection = (String) parent
-							.getItemAtPosition(position);
-					Intent examIntent = new Intent(activity,
-							.class);
-					examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
-							selection);
-					startActivity(examIntent);
-					activity.finish();
-				}
-			});
-			// TODO: add diagnosis data that was received for this current doctor user.
-			// TODO: create simple ListView with the patient's name & date(?).
-
-			// TODO: when each patient's diagnosis is clicked, it will move to 
-			// CreateCheckUpActivity with that patient's id. 
 
 			return rootView;
 		}
 
 		/** Request list of all doctors through service */
-		private void requestDocList() {
+		private void requestDistList() {
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
 			String id = settings.getString(LocalConstants.USER_ID, "none");
 			if(id.equals( "none")) {
 				System.err.print("Internal Error");
 			} else {
-				data.put(RemoteClientConstants.REQUEST_DISTS, id);
-				Message msgReqDocList = new Message("Client",
-						RemoteClientConstants.REQUEST_CHECKUPS, data);
+				data.put(RemoteClientConstants.DIST_DOC_ID, id);
+				Message msgReqDistList = new Message("Client",
+						RemoteClientConstants.REQUEST_DISTS, data);
 
 				mServiceIntent = new Intent(activity, RemoteClientService.class);
-				mServiceIntent.putExtra("message", (Serializable) msgReqDocList);
+				mServiceIntent.putExtra("message", (Serializable) msgReqDistList);
 				activity.startService(mServiceIntent);
-			}
-		}
-		
-		private void convertByteToFile(String filename, byte[] b){
-			BufferedOutputStream bos = null;
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(filename);
-				bos = new BufferedOutputStream(fos);
-				bos.write(b);
-			} catch (FileNotFoundException fnfe) {
-				System.err.println("File not found" + fnfe);
-				fnfe.printStackTrace();
-			} catch (IOException e){
-				System.err.println("Error while writing to file" + e);
-				e.printStackTrace();
-			} finally {
-				try {
-					if (bos != null) {
-						bos.flush();
-						bos.close();
-					}
-				} catch(IOException e){
-					System.err.println("Error while closing streams" + e);
-					e.printStackTrace();
-				}
-
 			}
 		}
 
@@ -190,40 +139,38 @@ public class DoctorDistActivity extends ActionBarActivity {
 			public void onReceive(Context context, Intent intent) {
 				if(isAdded()){
 					// Hear from Server.
-					Message msgIdIn = (Message) intent
+					Message msgRecived = (Message) intent
 							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
 
 					// null case -> notify user.
-					if (msgIdIn == null) {
+					if (msgRecived == null) {
 						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG)
 						.show();
-					} else if (msgIdIn.getCommand().equals(
-							RemoteClientConstants.REQUEST_CHECKUPS)) {
-						ArrayList<HashMap<String, Object>> data = 
-								(ArrayList<HashMap<String, Object>>) msgIdIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS);
+					} else if (msgRecived.getCommand().equals(
+							RemoteClientConstants.REQUEST_DISTS)) {
+						@SuppressWarnings("unchecked")
+						final ArrayList<HashMap<String, Object>> data = 
+								(ArrayList<HashMap<String, Object>>) msgRecived.getMap().get(RemoteClientConstants.REQUEST_DISTS);
 
-						examList = new ArrayList<String>();
+						ArrayList<String> distList = new ArrayList<String>();
 						for(int i = 0; i < data.size(); i++){
-							examList.add("Examination of Distant Diagnosis of " + data.get(i).get(RemoteClientConstants.CHECKUP_DATE));
+							distList.add("Distant Diagnosis Received from " + data.get(i).get(RemoteClientConstants.DIST_PATIENT_ID));
 						}
 						adapter = new ArrayAdapter<String>(getActivity(),
-								android.R.layout.simple_list_item_1, examList);
-						examinationList.setOnItemClickListener(new OnItemClickListener() {
+								android.R.layout.simple_list_item_1, distList);
+						diagnosisList.setOnItemClickListener(new OnItemClickListener() {
 							@Override
 							public void onItemClick(AdapterView<?> parent, View view,
 									int position, long id) {
-								String selection = (String) parent
-										.getItemAtPosition(position);
-								Intent examIntent = new Intent(activity,
-										ExaminationActivity.class);
-								examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
-										selection);
-								startActivity(examIntent);
+								Intent distSummIntent = new Intent(activity,
+										DistSummActivity.class);
+								distSummIntent.putExtra("data", data.get(position));
+								startActivity(distSummIntent);
 								activity.finish();
 							}
 						});
 
-						examinationList.setAdapter(adapter);
+						diagnosisList.setAdapter(adapter);
 					}
 				}
 			}
