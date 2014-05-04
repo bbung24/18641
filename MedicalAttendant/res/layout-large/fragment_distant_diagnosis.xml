@@ -2,65 +2,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
     tools:context="com.activities.DistantDiagnosisActivity$PlaceholderFragment" >
 
-        <EditText
-            android:id="@+id/symptoms_edit"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:ems="10"
-            android:gravity="top"
-            android:inputType="text"
-            android:text="@string/symptoms" >
+    <EditText
+        android:id="@+id/symptoms_edit"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:ems="10"
+        android:gravity="top"
+        android:inputType="textMultiLine"
+        android:text="@string/symptoms" >
+    </EditText>
 
-            <requestFocus android:layout_width="wrap_content" />
-        </EditText>
-
-        <RelativeLayout
-            android:id="@+id/btns_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <Button
-                android:id="@+id/picture_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/add_picture" />
-
-            <Button
-                android:id="@+id/voice_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/picture_btn"
-                android:layout_below="@+id/picture_btn"
-                android:text="@string/add_voice_record" />
-
-            <Button
-                android:id="@+id/medical_device_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/voice_btn"
-                android:layout_below="@+id/voice_btn"
-                android:text="@string/use_medical_device" />
-        </RelativeLayout>
-
-        <ListView
-            android:id="@+id/doctor_listview"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" 
-            android:layout_weight="1">
-        </ListView>
+    <RelativeLayout
+        android:id="@+id/btns_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/submit_btn"
-            android:layout_width="wrap_content"
+            android:id="@+id/picture_btn"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-			android:layout_gravity="center"
-            android:text="@string/submit" />
+            android:text="@string/add_picture" />
+
+        <Button
+            android:id="@+id/voice_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/picture_btn"
+            android:layout_below="@+id/picture_btn"
+            android:text="@string/add_voice_record" />
+
+        <Button
+            android:id="@+id/medical_device_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/voice_btn"
+            android:layout_below="@+id/voice_btn"
+            android:text="@string/use_medical_device" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/doctor_listview"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_weight="1" >
+    </ListView>
+
+    <Button
+        android:id="@+id/submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/submit" />
 
 </LinearLayout>
