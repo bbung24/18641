@@ -108,7 +108,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 	private void requestDocList() {
 		HashMap<String, Object> map_empty = new HashMap<String, Object>();
 		Message msg_req_docList = new Message("Client",
-				RemoteClientConstants.REQUEST_LIST_ALLDOC, map_empty);
+				RemoteClientConstants.REQUEST_LIST_DOC_ADD, map_empty);
 
 		mServiceIntent = new Intent(this, RemoteClientService.class);
 		mServiceIntent.putExtra("message", (Serializable) msg_req_docList);
@@ -194,7 +194,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 			}
 
 			else if (msg_id_in.getCommand().equals(
-					RemoteClientConstants.REQUEST_LIST_ALLDOC)) {
+					RemoteClientConstants.REQUEST_LIST_DOC_ADD)) {
 				map_doc_add = msg_id_in.getMap();
 				list_doc = new ArrayList<String>(map_doc_add.keySet());
 

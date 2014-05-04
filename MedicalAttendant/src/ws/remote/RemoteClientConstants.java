@@ -35,7 +35,7 @@ public class RemoteClientConstants {
 	public static final String CHECKUP_MED_LIST = "med_list";
 	
 	//REQUEST DEFINITIONS
-	public final static String REQUEST_LIST_ALLDOC = "Request all doctor";
+	public final static String REQUEST_LIST_DOC_ADD = "Request all doctor's address";
 	public final static String REQUEST_LIST_EXAM = "Request examination records";
 	public static final String REQUEST_CREATE_CHECKUP = "Reqest create checkup";
 	public static final String REQUEST_MED_LIST = "Request med_list";

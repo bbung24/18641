@@ -122,10 +122,17 @@ public class Server extends DefaultSocketClient{
 
 			String command = input.getCommand();
 
-			if(command.equals(RemoteClientConstants.REGISTER)){
+			if(command.equals(RemoteClientConstants.REGISTER))
+			{
 				register(input, statement);
-			} else if(command.equals(RemoteClientConstants.LOGIN)){
+			}
+			else if(command.equals(RemoteClientConstants.LOGIN))
+			{
 				login(input, statement);
+			}
+			else if(command.equals(RemoteClientConstants.REQUEST_LIST_DOC_ADD))
+			{
+				sendAllDocAdd(input, statement);
 			}
 			statement.close();
 			connection.close();
@@ -134,6 +141,10 @@ public class Server extends DefaultSocketClient{
 		}
 	}
 
+	/**	The method handles login command.
+	 * 	Check if the DB contains ID requested, and if so, check password. 
+	 * 	Finally send the result back to application.
+	 */
 	public void login(Message input, Statement statement){
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		Message m = new Message("Server", null, response);
@@ -164,6 +175,8 @@ public class Server extends DefaultSocketClient{
 
 	}
 
+	
+	/**	 */
 	public void register(Message input, Statement statement) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String,Object> data = input.getMap();
@@ -212,6 +225,33 @@ public class Server extends DefaultSocketClient{
 		}
 	}
 
+	public void sendAllDocAdd(Message input, Statement statement)
+	{	
+		//Map will contain <doc_name, doc_add>
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		
+		try
+		{
+			//Pull list of all doctors
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("users", RemoteClientConstants.REGISTSER_INFO_JOB, RemoteClientConstants.REGISTER_JOB_DOCTOR, statement);
+			
+			//add userID and address of all doctor.
+			for(HashMap<String, Object> map : db)
+			{
+				String doc_id = (String) map.get(RemoteClientConstants.REGISTSER_INFO_ID);
+				String doc_add = (String) map.get(RemoteClientConstants.REGISTSER_INFO_ADDRESS);
+				response.put(doc_id, doc_add);
+			}
+			Message m = new Message("Server", RemoteClientConstants.REQUEST_LIST_DOC_ADD, response);
+			sendOutput(m);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
 	
 	public static void main (String arg[]){
 		/* debug main; does daytime on local host */
