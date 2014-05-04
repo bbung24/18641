@@ -33,3 +33,5 @@ iyong_test.pem
 *.jar
 
 *.log
+
+appcompat_v7/

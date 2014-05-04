@@ -154,12 +154,14 @@ public class LoginActivity extends ActionBarActivity {
 								RemoteClientConstants.LOGIN_SUCCESS)) {
 							Toast.makeText(activity, "Login Success", 
 									Toast.LENGTH_LONG).show();
-							String id = (String) msg_in.getMap().get(RemoteClientConstants.LOGIN_ID);
+							String userId = (String) msg_in.getMap().get(RemoteClientConstants.LOGIN_ID);
 							String job = (String) msg_in.getMap().get(RemoteClientConstants.LOGIN_SUCCESS);
+							int id = (Integer) msg_in.getMap().get(RemoteClientConstants.LOGIN);
 							SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
 							SharedPreferences.Editor editor = settings.edit();
-							editor.putString(LocalConstants.USER_ID, id);
+							editor.putString(LocalConstants.USER_ID, userId);
 							editor.putString(LocalConstants.JOB, job);
+							editor.putInt(LocalConstants.ID, id);
 							editor.commit();
 							Intent mainMenuIntent;
 							if(job.equals(LocalConstants.PATIENT)){

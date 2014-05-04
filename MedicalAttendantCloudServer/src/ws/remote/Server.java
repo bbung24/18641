@@ -67,7 +67,7 @@ public class Server extends DefaultSocketClient{
 			col.append("name VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			tableName = "examination_relationships";
 
 			col = new StringBuilder();
@@ -75,7 +75,7 @@ public class Server extends DefaultSocketClient{
 			col.append("medication_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			tableName = "taken_relationships";
 
 			col = new StringBuilder();
@@ -84,7 +84,7 @@ public class Server extends DefaultSocketClient{
 			col.append("date DATETIME");
 
 			md.createTable(tableName, col.toString(), statement);
-			
+
 			statement.close();
 			connection.close();
 		} catch (SQLException ex) {  
@@ -130,6 +130,13 @@ public class Server extends DefaultSocketClient{
 			{
 				sendAllDocAdd(input, statement);
 			}
+			else if(command.equals(RemoteClientConstants.REQUEST_LIST_DOC_ID))
+			{
+				sendAllDocID(input, statement);
+			}
+			else if(command.equals(RemoteClientConstants.REQUEST_CHECKUPS)){
+				sendAllCheckups(input, statement);
+			}
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
@@ -155,10 +162,12 @@ public class Server extends DefaultSocketClient{
 				HashMap<String, Object> user = db.get(0);
 				System.out.println("input: "+ (String) data.get(RemoteClientConstants.LOGIN_PW));
 				System.out.println("db: " +(String) user.get(RemoteClientConstants.LOGIN_PW));
+				System.out.println("id: "+ user.get("id"));
 				String pwd = (String) user.get(RemoteClientConstants.LOGIN_PW);
 				if(pwd.equals((String) data.get(RemoteClientConstants.LOGIN_PW))){
 					response.put(RemoteClientConstants.LOGIN_ID, (String)data.get(RemoteClientConstants.LOGIN_ID));
 					response.put(RemoteClientConstants.LOGIN_SUCCESS, user.get("job"));
+					response.put(RemoteClientConstants.LOGIN, user.get("id"));
 					m.setCommand(RemoteClientConstants.LOGIN_SUCCESS);
 				} else {
 					m.setCommand(RemoteClientConstants.LOGIN_FAIL);
@@ -171,7 +180,7 @@ public class Server extends DefaultSocketClient{
 
 	}
 
-	
+
 	/**	 */
 	public void register(Message input, Statement statement) {
 		HashMap<String, Object> response = new HashMap<String, Object>();
@@ -213,6 +222,7 @@ public class Server extends DefaultSocketClient{
 				e.printStackTrace();
 			}
 			response.put(RemoteClientConstants.REGISTER_SUCCESS, (String) data.get("user_id"));
+			response.put(RemoteClientConstants.REGISTER, data.get("id"));
 			Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, response);
 			sendOutput(output);
 		} else {
@@ -225,17 +235,17 @@ public class Server extends DefaultSocketClient{
 	{	
 		//Map will contain <doc_name, doc_add>
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		
+
 		try
 		{
 			//Pull list of all doctors
-			ArrayList<HashMap<String, Object>> db = md.getAllDataString("users", RemoteClientConstants.REGISTSER_INFO_JOB, RemoteClientConstants.REGISTER_JOB_DOCTOR, statement);
-			
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("users", RemoteClientConstants.REGISTER_INFO_JOB, RemoteClientConstants.REGISTER_JOB_DOCTOR, statement);
+
 			//add userID and address of all doctor.
 			for(HashMap<String, Object> map : db)
 			{
-				String doc_id = (String) map.get(RemoteClientConstants.REGISTSER_INFO_ID);
-				String doc_add = (String) map.get(RemoteClientConstants.REGISTSER_INFO_ADDRESS);
+				String doc_id = (String) map.get(RemoteClientConstants.REGISTER_INFO_ID);
+				String doc_add = (String) map.get(RemoteClientConstants.REGISTER_INFO_ADDRESS);
 				response.put(doc_id, doc_add);
 			}
 			Message m = new Message("Server", RemoteClientConstants.REQUEST_LIST_DOC_ADD, response);
@@ -243,12 +253,49 @@ public class Server extends DefaultSocketClient{
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
-		
-		
 	}
-	
-	
-	
+
+	public void sendAllDocID(Message input, Statement statement){
+		//Map will contain <doc_name, doc_id>
+		HashMap<String, Object> response = new HashMap<String, Object>();
+
+		try
+		{
+			//Pull list of all doctors
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("users", RemoteClientConstants.REGISTER_INFO_JOB, RemoteClientConstants.REGISTER_JOB_DOCTOR, statement);
+
+			//add userID and address of all doctor.
+			for(HashMap<String, Object> map : db)
+			{
+				String docUserId = (String) map.get(RemoteClientConstants.REGISTER_INFO_ID);
+				String docId = (String) map.get(RemoteClientConstants.ID);
+				response.put(docUserId, docId);
+			}
+			Message m = new Message("Server", RemoteClientConstants.REQUEST_LIST_DOC_ID, response);
+			sendOutput(m);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void sendAllCheckups(Message input, Statement statement){
+		//Map will contain <REQUEST_LIST_DOC_ID, ArrayList of checkup HashMaps>
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		HashMap<String, Object> data = new HashMap<String, Object>();
+		try
+		{
+			//Pull list of all checkups for certain user
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("checkups", RemoteClientConstants.CHECKUP_PATIENT_ID, 
+					(String) data.get(RemoteClientConstants.CHECKUP_PATIENT_ID), statement);
+
+			response.put(RemoteClientConstants.REQUEST_CHECKUPS, db);
+			Message m = new Message("Server", RemoteClientConstants.REQUEST_CHECKUPS, response);
+			sendOutput(m);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
 	public static void main (String arg[]){
 		/* debug main; does daytime on local host */
 		System.out.println("Server Started..");

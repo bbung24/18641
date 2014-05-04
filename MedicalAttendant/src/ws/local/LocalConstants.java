@@ -12,4 +12,5 @@ public class LocalConstants {
 	public static final int VOICE_REQUEST = 200; 
 	public static final String VOC_FILE_LOC = Environment.getExternalStorageDirectory().getAbsolutePath()+"/audiorecord.3gp";
 	public static final int MEDIA_TYPE_IMAGE = 1;
+	public static final String ID = "id";
 }

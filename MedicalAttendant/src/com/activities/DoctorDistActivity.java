@@ -1,16 +1,24 @@
 package com.activities;
 
+import java.util.ArrayList;
+
+import ws.remote.RemoteClientConstants;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.os.Build;
 
 public class DoctorDistActivity extends ActionBarActivity {
@@ -52,6 +60,9 @@ public class DoctorDistActivity extends ActionBarActivity {
 	public static class PlaceholderFragment extends Fragment {
 		private ListView diagnosisList;
 		private Activity activity;
+		private ArrayAdapter<String> adapter;
+		private ArrayList<String> distList;
+		private Intent mServiceIntent;
 		
 		public PlaceholderFragment() {
 		}
@@ -63,6 +74,24 @@ public class DoctorDistActivity extends ActionBarActivity {
 					container, false);
 			activity = getActivity();
 			diagnosisList = (ListView) rootView.findViewById(R.id.diagnosis_list);
+			
+//			requestDocList();
+//			setupResponseReceiver();
+
+			diagnosisList.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+//					String selection = (String) parent
+//							.getItemAtPosition(position);
+//					Intent examIntent = new Intent(activity,
+//							.class);
+//					examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
+//							selection);
+//					startActivity(examIntent);
+//					activity.finish();
+				}
+			});
 			// TODO: add diagnosis data that was received for this current doctor user.
 			// TODO: create simple ListView with the patient's name & date(?).
 			

@@ -1,15 +1,22 @@
 package com.activities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ws.local.LocalConstants;
 import ws.remote.Message;
-import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
+import ws.remote.RemoteClientService;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class CheckUpActivity extends ActionBarActivity {
 
@@ -30,7 +38,7 @@ public class CheckUpActivity extends ActionBarActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
@@ -60,10 +68,9 @@ public class CheckUpActivity extends ActionBarActivity {
 	public static class PlaceholderFragment extends Fragment {
 		private Activity activity;
 		private ListView examinationList;
-		private RemoteClient rc;
 		private ArrayAdapter<String> adapter;
 		private ArrayList<String> examList;
-		private HashMap<String, Object> map;
+		private Intent mServiceIntent;
 
 		public PlaceholderFragment() {
 		}
@@ -75,9 +82,13 @@ public class CheckUpActivity extends ActionBarActivity {
 					container, false);
 
 			activity = getActivity();
+
 			examinationList = (ListView) rootView
 					.findViewById(R.id.list_of_medical_examination);
 
+			requestDocList();
+			setupResponseReceiver();
+
 			examinationList.setOnItemClickListener(new OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
@@ -92,60 +103,94 @@ public class CheckUpActivity extends ActionBarActivity {
 					activity.finish();
 				}
 			});
-
-			map = new HashMap<String, Object>();
-			rc = new RemoteClient();
-			// User ID
-			// map.put(RemoteClientConstants.REGISTSER_INFO_ID, userID);
-			// rc.sendOutput( new Message(null,
-			// RemoteClientConstants.REQUEST_LIST_EXAM,map) );
-
-			// Message msg = rc.readInput();
-			// examList = new ArrayList<String>(msg.getMap().keySet());
-			examList = new ArrayList<String>();
-			examList.add("1");
-			examList.add("2");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-			examList.add("3");
-
-			adapter = new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, examList);
-			
-			examinationList.setOnItemClickListener(new OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					String selection = (String) parent
-							.getItemAtPosition(position);
-					Intent examIntent = new Intent(activity,
-							ExaminationActivity.class);
-					examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
-							selection);
-					startActivity(examIntent);
-					activity.finish();
-				}
-			});
-			
-			examinationList.setAdapter(adapter);
 
 			return rootView;
+		}
+
+		/** Request list of all doctors through service */
+		private void requestDocList() {
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
+			int id = settings.getInt(LocalConstants.ID, -1);
+			if(id == -1) {
+				System.err.print("Internal Error");
+			} else {
+				data.put(RemoteClientConstants.CHECKUP_PATIENT_ID, id);
+				Message msgReqDocList = new Message("Client",
+						RemoteClientConstants.REQUEST_CHECKUPS, data);
+
+				mServiceIntent = new Intent(activity, RemoteClientService.class);
+				mServiceIntent.putExtra("message", (Serializable) msgReqDocList);
+				activity.startService(mServiceIntent);
+			}
+		}
+
+		private void setupResponseReceiver() {
+			// The filter's action is BROADCAST_ACTION
+			IntentFilter mStatusIntentFilter = new IntentFilter(
+					RemoteClientConstants.BROADCAST_ACTION);
+
+			// Adds a data filter for the HTTP scheme
+			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+			// Instantiates a new DownloadStateReceiver
+			ResponseReceiver mResponseReceiver = new ResponseReceiver();
+			// Registers the DownloadStateReceiver and its intent filters
+			LocalBroadcastManager.getInstance(activity).registerReceiver(
+					mResponseReceiver, mStatusIntentFilter);
+
+		}
+
+		// Broadcast receiver for receiving status updates from the
+		// IntentService
+		private class ResponseReceiver extends BroadcastReceiver {
+			// Prevents instantiation
+			private ResponseReceiver() {
+			}
+
+			// Called when the BroadcastReceiver gets an Intent it's registered
+			// to receive
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				if(isAdded()){
+					// Hear from Server.
+					Message msgIdIn = (Message) intent
+							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+
+					// null case -> notify user.
+					if (msgIdIn == null) {
+						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG)
+						.show();
+					} else if (msgIdIn.getCommand().equals(
+							RemoteClientConstants.REQUEST_CHECKUPS)) {
+						ArrayList<HashMap<String, Object>> data = 
+								(ArrayList<HashMap<String, Object>>) msgIdIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS);
+
+						examList = new ArrayList<String>();
+						for(int i = 0; i < data.size(); i++){
+							examList.add("Examination of Distant Diagnosis of " + data.get(i).get(RemoteClientConstants.CHECKUP_DATE));
+						}
+						adapter = new ArrayAdapter<String>(getActivity(),
+								android.R.layout.simple_list_item_1, examList);
+						examinationList.setOnItemClickListener(new OnItemClickListener() {
+							@Override
+							public void onItemClick(AdapterView<?> parent, View view,
+									int position, long id) {
+								String selection = (String) parent
+										.getItemAtPosition(position);
+								Intent examIntent = new Intent(activity,
+										ExaminationActivity.class);
+								examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
+										selection);
+								startActivity(examIntent);
+								activity.finish();
+							}
+						});
+
+						examinationList.setAdapter(adapter);
+					}
+				}
+			}
 		}
 	}
 

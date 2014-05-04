@@ -110,6 +110,10 @@
             android:name="com.activities.VoiceRecordActivity"
             android:label="@string/title_activity_voice_record" >
         </activity>
+        <activity
+            android:name="com.activities.DistSummActivity"
+            android:label="@string/title_activity_dist_summ" >
+        </activity>
     </application>
 
 </manifest>

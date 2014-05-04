@@ -101,11 +101,11 @@ public class RegisterActivity extends ActionBarActivity {
 				public void onCheckedChanged(RadioGroup group, int checkedId) {
 					if (checkedId == R.id.register_radio_doctor)
 						reg_map.put(
-								RemoteClientConstants.REGISTSER_INFO_JOB,
+								RemoteClientConstants.REGISTER_INFO_JOB,
 								RemoteClientConstants.REGISTER_JOB_DOCTOR);
 					else if (checkedId == R.id.register_radio_patient)
 						reg_map.put(
-								RemoteClientConstants.REGISTSER_INFO_JOB,
+								RemoteClientConstants.REGISTER_INFO_JOB,
 								RemoteClientConstants.REGISTER_JOB_PATIENT);
 				}
 			});
@@ -141,7 +141,7 @@ public class RegisterActivity extends ActionBarActivity {
 				Toast.makeText(activity, "Please write zip_code", 
 						Toast.LENGTH_SHORT).show();
 				return;
-			} else if (reg_map.get(RemoteClientConstants.REGISTSER_INFO_JOB) == null){
+			} else if (reg_map.get(RemoteClientConstants.REGISTER_INFO_JOB) == null){
 				Toast.makeText(activity, "Please Select a Job",
 						Toast.LENGTH_SHORT).show();
 				return;
@@ -150,13 +150,13 @@ public class RegisterActivity extends ActionBarActivity {
 
 			if (pwd.getText().toString()
 					.equals(pwdConfirm.getText().toString())) {
-				reg_map.put(RemoteClientConstants.REGISTSER_INFO_ID, id
+				reg_map.put(RemoteClientConstants.REGISTER_INFO_ID, id
 						.getText().toString());
-				reg_map.put(RemoteClientConstants.REGISTSER_INFO_PW,
+				reg_map.put(RemoteClientConstants.REGISTER_INFO_PW,
 						pwd.getText().toString());
-				reg_map.put(RemoteClientConstants.REGISTSER_INFO_AGE,
+				reg_map.put(RemoteClientConstants.REGISTER_INFO_AGE,
 						age.getText().toString());
-				reg_map.put(RemoteClientConstants.REGISTSER_INFO_ADDRESS,
+				reg_map.put(RemoteClientConstants.REGISTER_INFO_ADDRESS,
 						zip.getText().toString());
 
 				Message msg_id = new Message("Client",
@@ -224,12 +224,13 @@ public class RegisterActivity extends ActionBarActivity {
 								RemoteClientConstants.REGISTER_SUCCESS)) {
 							Toast.makeText(activity, "Sucessfully Registered", 
 									Toast.LENGTH_LONG).show();
-							String id = (String) reg_map.get(RemoteClientConstants.REGISTSER_INFO_ID);
-							String job = (String) reg_map.get(RemoteClientConstants.REGISTSER_INFO_JOB);
-							
+							String userId = (String) reg_map.get(RemoteClientConstants.REGISTER_INFO_ID);
+							String job = (String) reg_map.get(RemoteClientConstants.REGISTER_INFO_JOB);
+							int id = (Integer) reg_map.get(RemoteClientConstants.LOGIN);
 							SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
 							SharedPreferences.Editor editor = settings.edit();
-							editor.putString(LocalConstants.USER_ID, id);
+							editor.putString(LocalConstants.USER_ID, userId);
+							editor.putInt(LocalConstants.ID, id);
 							editor.putString(LocalConstants.JOB, job);
 							editor.commit();
 
