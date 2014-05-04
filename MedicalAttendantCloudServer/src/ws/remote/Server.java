@@ -2,6 +2,12 @@ package ws.remote;
 
 import handleConnections.DefaultSocketClient;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,7 +47,7 @@ public class Server extends DefaultSocketClient{
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
 			col.append("patient_id INT,");
-			col.append("date TIMESTAMP,");
+			col.append("date VARCHAR(100),");
 			col.append("result VARCHAR(100),");
 			col.append("doctor_id INT");
 
@@ -56,7 +62,7 @@ public class Server extends DefaultSocketClient{
 			col.append("symptom VARCHAR(100),");
 			col.append("pic_loc VARCHAR(100),");
 			col.append("voc_loc VARCHAR(100),");
-			col.append("date TIMESTAMP");
+			col.append("date VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -81,7 +87,7 @@ public class Server extends DefaultSocketClient{
 			col = new StringBuilder();
 			col.append("check_up_id INT,");
 			col.append("medication_id INT,");
-			col.append("date DATETIME");
+			col.append("date VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -137,6 +143,13 @@ public class Server extends DefaultSocketClient{
 			else if(command.equals(RemoteClientConstants.REQUEST_CHECKUPS)){
 				sendAllCheckups(input, statement);
 			}
+			else if(command.equals(RemoteClientConstants.SAVE_DIST)){
+				saveDist(input, statement);
+			}
+			else if(command.equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR)){
+				sendAllCheckupsDoctorID(input, statement);
+			}
+				
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
@@ -268,7 +281,7 @@ public class Server extends DefaultSocketClient{
 			for(HashMap<String, Object> map : db)
 			{
 				String docUserId = (String) map.get(RemoteClientConstants.REGISTER_INFO_ID);
-				String docId = (String) map.get(RemoteClientConstants.ID);
+				int docId = (Integer) map.get(RemoteClientConstants.ID);
 				response.put(docUserId, docId);
 			}
 			Message m = new Message("Server", RemoteClientConstants.REQUEST_LIST_DOC_ID, response);
@@ -281,7 +294,7 @@ public class Server extends DefaultSocketClient{
 	public void sendAllCheckups(Message input, Statement statement){
 		//Map will contain <REQUEST_LIST_DOC_ID, ArrayList of checkup HashMaps>
 		HashMap<String, Object> response = new HashMap<String, Object>();
-		HashMap<String, Object> data = new HashMap<String, Object>();
+		HashMap<String, Object> data = input.getMap();
 		try
 		{
 			//Pull list of all checkups for certain user
@@ -294,6 +307,100 @@ public class Server extends DefaultSocketClient{
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void sendAllCheckupsDoctorID(Message input, Statement statement){
+		//Map will contain <REQUEST_LIST_DOC_ID, ArrayList of checkup HashMaps>
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		HashMap<String, Object> data = input.getMap();
+		try
+		{
+			//Pull list of all checkups for certain user
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("checkups", RemoteClientConstants.CHECKUP_DOCTOR_ID, 
+					(String) data.get(RemoteClientConstants.CHECKUP_DOCTOR_ID), statement);
+
+			response.put(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, db);
+			Message m = new Message("Server", RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, response);
+			sendOutput(m);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void saveDist(Message input, Statement statement){
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		HashMap<String,Object> data = input.getMap();
+
+		try {
+			File f = (File) data.get(RemoteClientConstants.DIST_PIC_FILE);
+			Reader fr = new FileReader(f);
+			Writer fw = new FileWriter((String) data.get(RemoteClientConstants.DIST_PIC_LOC));
+			copy(fr,fw);
+			fw.close();
+			fr.close();
+
+			f = (File) data.get(RemoteClientConstants.DIST_VOC_FILE);
+			fr = new FileReader(f);
+			fw = new FileWriter((String) data.get(RemoteClientConstants.DIST_VOC_LOC));
+			copy(fr, fw);
+			fw.close();
+			fr.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+			Message output = new Message("Server", RemoteClientConstants.SAVE_FAIL, response);
+			sendOutput(output);
+			return;
+		}
+
+		StringBuilder col = new StringBuilder();
+		StringBuilder value = new StringBuilder();
+		Iterator<Entry<String, Object>> it = data.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<String, Object> pairs = it.next();
+			System.out.println(pairs.getKey() + " = " + pairs.getValue());
+
+			String key = pairs.getKey();
+			Object dataValue = pairs.getValue();
+
+			if(!key.equals(RemoteClientConstants.DIST_PIC_FILE) ||
+					!key.equals(RemoteClientConstants.DIST_VOC_FILE)){
+				if(it.hasNext() && dataValue instanceof String){
+					col.append(key+",");
+					value.append("\""+dataValue+"\",");
+				} else if(it.hasNext()){
+					col.append(key+",");
+					value.append(dataValue+",");
+				} else {
+					col.append(key);
+					value.append(dataValue);
+				}
+			}
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+
+		try {
+			md.insertData("distantdiagnosis", col.toString(), value.toString(), statement);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			Message output = new Message("Server", RemoteClientConstants.SAVE_FAIL, response);
+			sendOutput(output);
+			return;
+		}
+
+		Message output = new Message("Server", RemoteClientConstants.SAVE_SUCCESS, response);
+		sendOutput(output);
+		return;
+	}
+	
+	public long copy (Reader input, Writer output) throws IOException {
+	    char[] buffer = new char[8192];
+	    long count = 0;
+	    int n;
+	    while ((n = input.read( buffer )) != -1) {
+	        output.write( buffer, 0, n );
+	        count += n;
+	    }
+	    return count;
 	}
 
 	public static void main (String arg[]){

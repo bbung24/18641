@@ -10,7 +10,7 @@ public class LocalConstants {
 	public static final String JOB = "job";
 	public static final int CAMERA_REQUEST = 100; 
 	public static final int VOICE_REQUEST = 200; 
-	public static final String VOC_FILE_LOC = Environment.getExternalStorageDirectory().getAbsolutePath()+"/audiorecord.3gp";
+	public static final String VOC_FILE_LOC = Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
 	public static final int MEDIA_TYPE_IMAGE = 1;
 	public static final String ID = "id";
 }

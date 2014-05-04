@@ -102,9 +102,9 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		private Bitmap photo;
 		private Intent mServiceIntent;
 		private ArrayList<String> doctors;
-
+		private String id;
 		private CheckBoxListViewAdapter doctorListAdapter;
-
+		private String docSelected;
 		public PlaceholderFragment()
 		{
 		}
@@ -121,7 +121,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 					.findViewById(R.id.doctor_listview);
 			SharedPreferences settings = activity.getSharedPreferences(
 					LocalConstants.PREFS_NAME, 0);
-			String id = settings.getString("user_id", "none");
+			id = settings.getString("user_id", "none");
 			if (id.equals("none"))
 			{
 				System.out.println("User ID not passed here : " + id);
@@ -143,18 +143,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 					Intent cameraIntent = new Intent(
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
-					fileUri = getOutputMediaFileUri(LocalConstants.MEDIA_TYPE_IMAGE); // create
-					// a
-					// file
-					// to
-					// save
-					// the
-					// image
-					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set
-					// the
-					// image
-					// file
-					// name
+					fileUri = getOutputMediaFileUri(LocalConstants.MEDIA_TYPE_IMAGE);
+					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
 
 					startActivityForResult(cameraIntent,
 							LocalConstants.CAMERA_REQUEST);
@@ -165,10 +155,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			{
 				public void onClick(View view)
 				{
-					// TODO: add voice intent also with specification where to
-					// save file.
-					// Also, this needs to be included with the report into the
-					// database.
 					Intent vocRecIntent = new Intent(activity,
 							VoiceRecordActivity.class);
 					startActivityForResult(vocRecIntent,
@@ -190,19 +176,21 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 				public void onClick(View view)
 				{
 
-					String docSelected = doctorListAdapter.getSelectedDoctor();
+					docSelected = doctorListAdapter.getSelectedDoctor();
 					if (docSelected == null)
 						Toast.makeText(activity, "Please Selected a doctor",
 								Toast.LENGTH_LONG).show();
-
 					else
 					{
 						//TODO: Send information to database. 
+						
+						saveDist();
 						Intent mainMenuIntent = new Intent(activity,
 								MainMenuActivity.class);
 						startActivity(mainMenuIntent);
 						activity.finish();
-						Toast.makeText(activity, "DistantDiagnosis form was successfully sent", Toast.LENGTH_LONG);
+						Toast.makeText(activity, "DistantDiagnosis form was successfully sent", 
+								Toast.LENGTH_LONG).show();
 					}
 				}
 			});
@@ -215,10 +203,38 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		{
 			HashMap<String, Object> mapEmpty = new HashMap<String, Object>();
 			Message msgReqDocList = new Message("Client",
-					RemoteClientConstants.REQUEST_LIST_DOC_ADD, mapEmpty);
+					RemoteClientConstants.REQUEST_LIST_DOC_ID, mapEmpty);
 
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msgReqDocList);
+			activity.startService(mServiceIntent);
+		}
+		
+		private void saveDist(){
+			HashMap<String, Object> data = new HashMap<String, Object>();
+			File image = new File(fileUri.toString());
+			data.put(RemoteClientConstants.DIST_PIC_FILE, image);
+			File voice = new File(LocalConstants.VOC_FILE_LOC);
+			data.put(RemoteClientConstants.DIST_VOC_FILE, voice);
+			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText());
+			if(id.equals("none")) {
+				Toast.makeText(activity, "Error in the system", Toast.LENGTH_LONG).show();
+				return;
+			} else {
+				data.put(RemoteClientConstants.DIST_PATIENT_ID, id);
+			}
+			data.put(RemoteClientConstants.DIST_DOC_ID, docSelected);
+			String timeStamp = new SimpleDateFormat("yyyy:MM:dd_HH:mm:ss",
+					Locale.US).format(new Date());
+			data.put(RemoteClientConstants.DIST_DATE, timeStamp);
+			data.put(RemoteClientConstants.DIST_PIC_LOC, "/"+id+"/IMG_" + timeStamp + ".jpg");
+			data.put(RemoteClientConstants.DIST_VOC_LOC, "/"+id+timeStamp+"_voc.3gp");
+			
+			Message msgSaveDist = new Message("Client",
+					RemoteClientConstants.SAVE_DIST, data);
+
+			mServiceIntent = new Intent(activity, RemoteClientService.class);
+			mServiceIntent.putExtra("message", (Serializable) msgSaveDist);
 			activity.startService(mServiceIntent);
 		}
 
@@ -271,7 +287,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			}
 
 			// Create a media file name
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
+			String timeStamp = new SimpleDateFormat("yyyy:MM:dd_HH:mm:ss",
 					Locale.US).format(new Date());
 			File mediaFile;
 			if (type == LocalConstants.MEDIA_TYPE_IMAGE)
@@ -292,10 +308,18 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			if (requestCode == LocalConstants.CAMERA_REQUEST
 					&& resultCode == RESULT_OK)
 			{
-				photo = (Bitmap) data.getExtras().get("data");
-				imageView.setImageBitmap(photo);
+//				photo = (Bitmap) data.getExtras().get("data");
+//				imageView.setImageBitmap(photo);
 				Toast.makeText(activity,
 						"Photo Successfully added to Diagnosis",
+						Toast.LENGTH_SHORT).show();
+			} else if (requestCode == LocalConstants.VOICE_REQUEST
+					&& resultCode == RESULT_OK)
+			{
+//				photo = (Bitmap) data.getExtras().get("data");
+//				imageView.setImageBitmap(photo);
+				Toast.makeText(activity,
+						"Vocie Record Successfully added to Diagnosis",
 						Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -325,7 +349,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 						Toast.makeText(activity, "internal error",
 								Toast.LENGTH_LONG).show();
 					} else if (msgIdIn.getCommand().equals(
-							RemoteClientConstants.REQUEST_LIST_DOC_ADD))
+							RemoteClientConstants.REQUEST_LIST_DOC_ID))
 					{
 						doctors = new ArrayList<String>(msgIdIn.getMap().keySet());
 						doctorListAdapter = new CheckBoxListViewAdapter(
@@ -342,7 +366,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 							{
 								doctorListAdapter.setChecked(position);
 								doctorListAdapter.notifyDataSetChanged();
-
 							}
 						});
 					}
