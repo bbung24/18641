@@ -1,10 +1,12 @@
 package com.activities;
 
+import ws.local.LocalConstants;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 import android.os.Build;
 
 public class DoctorMenuActivity extends ActionBarActivity {
@@ -54,6 +57,7 @@ public class DoctorMenuActivity extends ActionBarActivity {
 	public static class PlaceholderFragment extends Fragment {
 		private Button distantBtn;
 		private Button patientsBtn;
+		private Button logoutBtn;
 		private Activity activity;
 		
 		public PlaceholderFragment() {
@@ -78,6 +82,20 @@ public class DoctorMenuActivity extends ActionBarActivity {
 				public void onClick(View view){
 					Intent patientsIntent = new Intent(activity, PatientsActivity.class);
 					startActivity(patientsIntent);
+				}
+			});
+			logoutBtn = (Button) rootView.findViewById(R.id.logout_btn);
+			logoutBtn.setOnClickListener(new OnClickListener(){
+				public void onClick(View view){
+					SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
+					SharedPreferences.Editor editor = settings.edit();
+					editor.remove("user_id");
+					editor.remove("job");
+					editor.commit();
+					Toast.makeText(activity, "Successfully logout", Toast.LENGTH_SHORT).show();
+					Intent startIntent = new Intent(activity, StartActivity.class);
+					startActivity(startIntent);
+					activity.finish();
 				}
 			});
 			return rootView;

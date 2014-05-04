@@ -1,7 +1,9 @@
 package com.activities;
 
+import ws.local.LocalConstants;
 import ws.remote.RemoteClient;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -59,17 +61,33 @@ public class StartActivity extends ActionBarActivity {
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_start, container, false);
-			
-			createTimer();
+			if(isAdded()){
+				SharedPreferences settings = getActivity().getSharedPreferences(LocalConstants.PREFS_NAME,0);
+				String id = settings.getString(LocalConstants.USER_ID, "none");
+				String job = settings.getString(LocalConstants.JOB, "none");
+				if(id.equals("none")){
+					System.out.println("User ID not passed here : " + id);
+					Intent mainIntent = new Intent(getActivity(), LoginActivity.class);
+					createTimer(mainIntent);
+				} else {
+					System.out.println("User ID is here :" + id);
+					Intent mainIntent;
+					if(job.equals(LocalConstants.PATIENT)){
+						mainIntent = new Intent(getActivity(), MainMenuActivity.class);
+					} else {
+						mainIntent = new Intent(getActivity(), DoctorMenuActivity.class);
+					}
+					createTimer(mainIntent);
+				}
+			}
 			return rootView;
 		}
 
-		public void createTimer(){
+		public void createTimer(final Intent intent){
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					Intent mainIntent = new Intent(getActivity(), LoginActivity.class);
-					startActivity(mainIntent);
+					startActivity(intent);
 					getActivity().finish();
 				}
 			}, 3000);

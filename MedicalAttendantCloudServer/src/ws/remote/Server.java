@@ -31,7 +31,7 @@ public class Server extends DefaultSocketClient{
 			col.append("user_id VARCHAR(100),");
 			col.append("pw VARCHAR(100),");
 			col.append("age INT,");
-			col.append("adress VARCHAR(100),");
+			col.append("address VARCHAR(100),");
 			col.append("job VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
@@ -43,7 +43,8 @@ public class Server extends DefaultSocketClient{
 			col.append("patient_id INT,");
 			col.append("date TIMESTAMP,");
 			col.append("result VARCHAR(100),");
-			col.append("medication_list_id INT");
+			col.append("doctor_id INT,");
+			col.append("sync BOOLEAN");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -51,20 +52,13 @@ public class Server extends DefaultSocketClient{
 
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-			col.append("name VARCHAR(100),");
+			col.append("patient_id INT,");
+			col.append("doctor_id INT,");
 			col.append("symptom VARCHAR(100),");
 			col.append("pic_loc VARCHAR(100),");
 			col.append("voc_loc VARCHAR(100),");
-			col.append("doctor_id INT");
-
-			md.createTable(tableName, col.toString(), statement);
-
-			tableName = "medication_list";
-
-			col = new StringBuilder();
-			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-			col.append("check_up_id INT,");
-			col.append("medication_id INT");
+			col.append("date TIMESTAMP,");
+			col.append("sync BOOLEAN");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -75,7 +69,26 @@ public class Server extends DefaultSocketClient{
 			col.append("name VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
+			
+			tableName = "examination_relationships";
 
+			col = new StringBuilder();
+			col.append("check_up_id INT,");
+			col.append("medication_id INT,");
+			col.append("sync BOOLEAN");
+
+			md.createTable(tableName, col.toString(), statement);
+			
+			tableName = "taken_relationships";
+
+			col = new StringBuilder();
+			col.append("check_up_id INT,");
+			col.append("medication_id INT,");
+			col.append("date DATETIME,");
+			col.append("sync BOOLEAN");
+
+			md.createTable(tableName, col.toString(), statement);
+			
 			statement.close();
 			connection.close();
 		} catch (SQLException ex) {  
@@ -137,6 +150,8 @@ public class Server extends DefaultSocketClient{
 				System.out.println("db: " +(String) user.get(RemoteClientConstants.LOGIN_PW));
 				String pwd = (String) user.get(RemoteClientConstants.LOGIN_PW);
 				if(pwd.equals((String) data.get(RemoteClientConstants.LOGIN_PW))){
+					response.put(RemoteClientConstants.LOGIN_ID, (String)data.get(RemoteClientConstants.LOGIN_ID));
+					response.put(RemoteClientConstants.LOGIN_SUCCESS, user.get("job"));
 					m.setCommand(RemoteClientConstants.LOGIN_SUCCESS);
 				} else {
 					m.setCommand(RemoteClientConstants.LOGIN_FAIL);
@@ -188,6 +203,7 @@ public class Server extends DefaultSocketClient{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			response.put(RemoteClientConstants.REGISTER_SUCCESS, (String) data.get("user_id"));
 			Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, response);
 			sendOutput(output);
 		} else {
@@ -196,7 +212,7 @@ public class Server extends DefaultSocketClient{
 		}
 	}
 
-
+	
 	public static void main (String arg[]){
 		/* debug main; does daytime on local host */
 		System.out.println("Server Started..");

@@ -9,21 +9,29 @@
     tools:context="com.activities.DoctorMenuActivity$PlaceholderFragment" >
 
     <Button
-        android:id="@+id/distant_diagnosis_report_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:id="@+id/patient_statistics_btn"
+        android:layout_width="500dp"
+        android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="108dp"
+        android:layout_centerVertical="true"
+        android:text="@string/patient_summary" />
+
+    <Button
+        android:id="@+id/distant_diagnosis_report_btn"
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:layout_above="@+id/patient_statistics_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
         android:text="@string/distant_diagnosis_report" />
 
     <Button
-        android:id="@+id/patient_statistics_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/distant_diagnosis_report_btn"
+        android:id="@+id/logout_btn"
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        android:layout_below="@+id/patient_statistics_btn"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="78dp"
-        android:text="@string/patient_summary" />
+        android:layout_marginTop="31dp"
+        android:text="@string/logout" />
 
 </RelativeLayout>

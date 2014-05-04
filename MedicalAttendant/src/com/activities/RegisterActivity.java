@@ -3,6 +3,7 @@ package com.activities;
 import java.io.Serializable;
 import java.util.HashMap;
 
+import ws.local.LocalConstants;
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
@@ -11,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -222,8 +224,21 @@ public class RegisterActivity extends ActionBarActivity {
 								RemoteClientConstants.REGISTER_SUCCESS)) {
 							Toast.makeText(activity, "Sucessfully Registered", 
 									Toast.LENGTH_LONG).show();
-							Intent mainMenuIntent = new Intent(activity,
-									MainMenuActivity.class);
+							String id = (String) reg_map.get(RemoteClientConstants.REGISTSER_INFO_ID);
+							String job = (String) reg_map.get(RemoteClientConstants.REGISTSER_INFO_JOB);
+							
+							SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putString(LocalConstants.USER_ID, id);
+							editor.putString(LocalConstants.JOB, job);
+							editor.commit();
+
+							Intent mainMenuIntent;
+							if(job.equals(LocalConstants.PATIENT)){
+								mainMenuIntent = new Intent(activity, MainMenuActivity.class);
+							} else {
+								mainMenuIntent = new Intent(activity, DoctorMenuActivity.class);
+							}
 							startActivity(mainMenuIntent);
 							activity.finish();
 						}else if (msg_id_in.getCommand().equals(

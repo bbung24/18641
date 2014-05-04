@@ -22,4 +22,5 @@ public class RemoteClientConstants {
 	
 	public final static String REQUEST_LIST_ALLDOC = "Request all doctor";
 	public final static String REQUEST_LIST_EXAM = "Request examination records";
+	
 }

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import ws.local.LocalConstants;
 import ws.remote.Message;
 import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -83,6 +85,13 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 					R.layout.fragment_distant_diagnosis, container, false);
 			activity = getActivity();
 			
+			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
+			String id = settings.getString("user_id", "none");
+			if(id.equals("none")){
+				System.out.println("User ID not passed here : " + id);
+			} else {
+				System.out.println("User ID is here :" + id);
+			}
 			
 
 			//Set listView for doctors.

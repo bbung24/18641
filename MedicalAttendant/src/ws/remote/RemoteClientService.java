@@ -40,7 +40,9 @@ public class RemoteClientService extends IntentService{
 			m = new Message("Server", RemoteClientConstants.INTERNAL_FAIL, new HashMap<String, Object>());
 		}
 		mBroadcaster.broadcastIntentWithMessage(m);
-		rc.closeSession();
+		if(ready){
+			rc.closeSession();
+		}
 	}
 
 	public void sendOutput(Message output){

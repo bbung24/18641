@@ -103,13 +103,13 @@ public class DBController {
 		return result;
 	}
 	
-	public HashMap<String, Object> getDataString(String tableName, String col, String value,
+	public ArrayList<String> getDataString(String tableName, String col, String value,
 			String want, Statement stmt) throws SQLException {
-		HashMap<String, Object> data = new HashMap<String, Object>();
+		ArrayList<String> data = new ArrayList<String>();
 		String query = "SELECT "+want+" FROM " + tableName +" where "+ col + " = '" + value+"'";
 		ResultSet rs = stmt.executeQuery(query);
 		while(rs.next()) {
-			data.put(rs.getString(1), "");
+			data.add(rs.getString(1));
 		}
 		return data;
 	}
