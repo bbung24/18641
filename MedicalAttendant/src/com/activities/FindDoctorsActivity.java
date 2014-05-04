@@ -1,26 +1,19 @@
 package com.activities;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import ws.remote.Message;
-import ws.remote.RemoteClient;
 import ws.remote.RemoteClientConstants;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-
+import ws.remote.RemoteClientService;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -28,28 +21,22 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListView;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class FindDoctorsActivity extends FragmentActivity implements
 		LocationListener {
 
-	private RemoteClient rc;
-	private ListView doctorsList;
 	private GoogleMap googleMap;
-	private ArrayList<String> dArrayList;
-	private HashMap<String, String> map;
-	private Set<String> doctorSet;
+	private ArrayList<String> list_doc;
+	private HashMap<String, Object> map_doc_add;
 	private Geocoder coder;
 	private List<Address> address;
 	private Location myLoc;
@@ -57,15 +44,24 @@ public class FindDoctorsActivity extends FragmentActivity implements
 	private String provider;
 	private Criteria criteria;
 	private SupportMapFragment googleMapFrag;
+	private Intent mServiceIntent;
+	private Activity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		activity = this;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_doctors);
 
 		googleMapFrag = (SupportMapFragment) getSupportFragmentManager()
 				.findFragmentById(R.id.map_doctors);
 		googleMap = googleMapFrag.getMap();
+		
+		if (googleMap == null) {
+			Toast.makeText(getApplicationContext(),
+					"Sorry! unable to create a map", Toast.LENGTH_SHORT)
+					.show();
+		}
 
 		googleMap.setMyLocationEnabled(true);
 
@@ -79,53 +75,62 @@ public class FindDoctorsActivity extends FragmentActivity implements
 
 		coder = new Geocoder(this);
 
-		// TEST
-		String strAdd = "3 Bayard Rd Pittsburgh PA 15213";
-		try {
-			address = coder.getFromLocationName(strAdd, 1);
+		// Request list of all doctors.
+		requestDocList();
+		setupResponseReceiver();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		//Request list of doctors to the server
-		rc = new RemoteClient();
-		rc.sendOutput(new Message(null,
-				RemoteClientConstants.REQUEST_LIST_ALLDOC, null));
-		
-		
-		Message msg = rc.readInput();
-		Set<String> docSet = msg.getMap().keySet();
-		//TODO: for loop, convert add -> LatLng addMarker.
-		//TODO: Focus on current location.
-		
-		googleMap.addMarker(new MarkerOptions().position(new LatLng(address
-				.get(0).getLatitude(), address.get(0).getLongitude())));
-
+		/*
+		 * String strAdd = "3 Bayard Rd Pittsburgh PA 15213"; try { address =
+		 * coder.getFromLocationName(strAdd, 1);
+		 * 
+		 * } catch (IOException e) { e.printStackTrace(); }
+		 * 
+		 * // Request list of doctors to the server rc = new RemoteClient();
+		 * rc.sendOutput(new Message(null,
+		 * RemoteClientConstants.REQUEST_LIST_ALLDOC, null));
+		 * 
+		 * Message msg = rc.readInput(); Set<String> docSet =
+		 * msg.getMap().keySet(); // 
+		 * addMarker. 
+		 * 
+		 * 
+		 * googleMap.addMarker(new MarkerOptions().position(new LatLng(address
+		 * .get(0).getLatitude(), address.get(0).getLongitude())));
+		 */
+		// TODO: Focus on current location.
 		if (myLoc != null) {
 			onLocationChanged(myLoc);
 		}
 
 	}
 
-	/**
-	 * function to load map. If map is not created it will create it for you
-	 * */
-	private void initilizeMap() {
-		if (googleMap == null) {
+	/** Request list of all doctors through service */
+	private void requestDocList() {
+		HashMap<String, Object> map_empty = new HashMap<String, Object>();
+		Message msg_req_docList = new Message("Client",
+				RemoteClientConstants.REQUEST_LIST_ALLDOC, map_empty);
 
-			googleMapFrag = (SupportMapFragment) getSupportFragmentManager()
-					.findFragmentById(R.id.map_doctors);
-			googleMap = googleMapFrag.getMap();
-			// check if map is created successfully or not
-			if (googleMap == null) {
-				Toast.makeText(getApplicationContext(),
-						"Sorry! unable to create maps", Toast.LENGTH_SHORT)
-						.show();
-			}
-		}
+		mServiceIntent = new Intent(this, RemoteClientService.class);
+		mServiceIntent.putExtra("message", (Serializable) msg_req_docList);
+		this.startService(mServiceIntent);
+	}
+
+	private void setupResponseReceiver() {
+		// The filter's action is BROADCAST_ACTION
+		IntentFilter mStatusIntentFilter = new IntentFilter(
+				RemoteClientConstants.BROADCAST_ACTION);
+
+		// Adds a data filter for the HTTP scheme
+		mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+		// Instantiates a new DownloadStateReceiver
+		ResponseReceiver mResponseReceiver = new ResponseReceiver();
+		// Registers the DownloadStateReceiver and its intent filters
+		LocalBroadcastManager.getInstance(activity).registerReceiver(
+				mResponseReceiver, mStatusIntentFilter);
 
 	}
+
 
 	@Override
 	protected void onResume() {
@@ -150,7 +155,6 @@ public class FindDoctorsActivity extends FragmentActivity implements
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -167,4 +171,50 @@ public class FindDoctorsActivity extends FragmentActivity implements
 
 	}
 
+	// Broadcast receiver for receiving status updates from the
+	// IntentService
+	private class ResponseReceiver extends BroadcastReceiver {
+		// Prevents instantiation
+		private ResponseReceiver() {
+		}
+
+		// Called when the BroadcastReceiver gets an Intent it's registered
+		// to receive
+		@Override
+		public void onReceive(Context context, Intent intent) {
+
+			// Hear from Server.
+			Message msg_id_in = (Message) intent
+					.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
+
+			// null case -> notify user.
+			if (msg_id_in == null) {
+				Toast.makeText(activity, "internal error", Toast.LENGTH_LONG)
+						.show();
+			}
+
+			else if (msg_id_in.getCommand().equals(
+					RemoteClientConstants.REQUEST_LIST_ALLDOC)) {
+				map_doc_add = msg_id_in.getMap();
+				list_doc = new ArrayList<String>(map_doc_add.keySet());
+
+				for (String doc : list_doc) {
+					String str_add = (String) map_doc_add.get(doc);
+					try {
+						List<Address> list_add_latlng = coder
+								.getFromLocationName(str_add, 1);
+						googleMap.addMarker(new MarkerOptions()
+								.position(new LatLng(list_add_latlng.get(0)
+										.getLatitude(), address.get(0)
+										.getLongitude())));
+					} catch (IOException e) {
+						e.printStackTrace();
+						Toast.makeText(getApplicationContext(),
+								"Could not locate: " + str_add,
+								Toast.LENGTH_LONG).show();
+					}
+				}
+			}
+		}
+	}
 }
