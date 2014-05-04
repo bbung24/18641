@@ -148,7 +148,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 
 			googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-			googleMap.animateCamera(CameraUpdateFactory.zoomTo(5));
+			googleMap.animateCamera(CameraUpdateFactory.zoomTo(11));
 		}
 
 	}
@@ -205,7 +205,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 								.getFromLocationName(str_add, 1);
 						googleMap.addMarker(new MarkerOptions()
 								.position(new LatLng(list_add_latlng.get(0)
-										.getLatitude(), address.get(0)
+										.getLatitude(), list_add_latlng.get(0)
 										.getLongitude())));
 					} catch (IOException e) {
 						e.printStackTrace();
