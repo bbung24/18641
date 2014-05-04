@@ -3,16 +3,12 @@ package com.activities;
 import java.io.IOException;
 
 import ws.local.LocalConstants;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.app.Activity;
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
-import android.os.Environment;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +16,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.os.Build;
 
 public class VoiceRecordActivity extends ActionBarActivity {
 
@@ -78,8 +73,7 @@ public class VoiceRecordActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_voice_record,
 					container, false);
 			activity = getActivity();
-			mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-			mFileName += "/audiorecord.3gp";
+			mFileName = LocalConstants.VOC_FILE_LOC;
 			recordBtn = (Button) rootView.findViewById(R.id.record_btn);
 			recordBtn.setText("Start recording");
 			recordBtn.setOnClickListener(new OnClickListener() {
@@ -109,7 +103,7 @@ public class VoiceRecordActivity extends ActionBarActivity {
 			doneBtn = (Button) rootView.findViewById(R.id.done_btn);
 			doneBtn.setOnClickListener(new OnClickListener(){
 				public void onClick(View v){
-					activity.finish();
+					activity.finishActivity(LocalConstants.VOICE_REQUEST);
 				}
 			});
 			return rootView;
