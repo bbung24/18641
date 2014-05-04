@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import ws.local.LocalConstants;
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
@@ -77,9 +78,11 @@ public class PatientsActivity extends ActionBarActivity
 		private Intent mServiceIntent;
 		private Activity activity;
 		private ListView checkUpListView;
-		private ArrayList<String> dateList, checkUpList;
+		//private ArrayList<String> dateList, checkUpList;
 		private ArrayAdapter<String> checkUpListAdapter;
-
+		private ArrayList<HashMap<String,Object>> checkupList;
+		
+		
 		public PlaceholderFragment()
 		{
 		}
@@ -101,7 +104,8 @@ public class PatientsActivity extends ActionBarActivity
 		{
 			//Map contains userid of doctor
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, value)
+			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, activity.getSharedPreferences(LocalConstants.USER_ID, 0));
+			
 			
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
@@ -147,13 +151,13 @@ public class PatientsActivity extends ActionBarActivity
 					else if(msgIn.getCommand().equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR))
 					{
 						//ArrayList of HashMap(Rows associated with doctor) 
-						ArrayList<HashMap<String,Object>> checkupList = (ArrayList<HashMap<String, Object>>) msgIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
+						checkupList = (ArrayList<HashMap<String, Object>>) msgIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
 						
 						
 						
 						//Date keyset <-> Value patient ID
-						dateList = new ArrayList<String>( msgIn.getMap().keySet());
-						checkUpList = new ArrayList<String>();
+						//dateList = new ArrayList<String>( msgIn.getMap().keySet());
+						//checkUpList = new ArrayList<String>();
 						for(String date : dateList)
 						{
 							String patient = (String) msgIn.getMap().get(date);
