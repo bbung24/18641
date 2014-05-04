@@ -4,6 +4,7 @@ import handleConnections.DefaultSocketClient;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -147,6 +148,9 @@ public class Server extends DefaultSocketClient{
 			}
 			else if(command.equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR)){
 				sendAllCheckupsDoctorID(input, statement);
+			}
+			else if(command.equals(RemoteClientConstants.REQUEST_DISTS)){
+				sendAllDists(input, statement);
 			}
 
 			statement.close();
@@ -393,6 +397,53 @@ public class Server extends DefaultSocketClient{
 		Message output = new Message("Server", RemoteClientConstants.SAVE_SUCCESS, response);
 		sendOutput(output);
 		return;
+	}
+
+	public void sendAllDists(Message input, Statement statement){
+		//Map will contain <REQUEST_LIST_DOC_ID, ArrayList of checkup HashMaps>
+		HashMap<String, Object> response = new HashMap<String, Object>();
+		HashMap<String, Object> data = input.getMap();
+		try
+		{
+			//Pull list of all distants for certain user
+			ArrayList<HashMap<String, Object>> db = md.getAllDataString("distantdiagnosis", RemoteClientConstants.DIST_DOC_ID, 
+					(String) data.get(RemoteClientConstants.DIST_DOC_ID), statement);
+			
+			for(int i = 0; i < db.size(); i++){
+				HashMap<String, Object> temp = db.get(i);
+				String imageLoc = (String) temp.get(RemoteClientConstants.DIST_PIC_LOC);
+				File imageFile = new File(imageLoc);
+				byte[] imageByte = convertFileToByte(imageFile);
+				temp.put(RemoteClientConstants.DIST_PIC_FILE, imageByte);
+				String voiceLoc = (String) temp.get(RemoteClientConstants.DIST_VOC_LOC);
+				File voiceFile = new File(voiceLoc);
+				byte[] voiceByte = convertFileToByte(voiceFile);
+				temp.put(RemoteClientConstants.DIST_VOC_FILE, voiceByte);
+			}
+			
+			response.put(RemoteClientConstants.REQUEST_DISTS, db);
+			Message m = new Message("Server", RemoteClientConstants.REQUEST_DISTS, response);
+			sendOutput(m);
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	private byte[] convertFileToByte(File file){
+		FileInputStream fileInputStream=null;
+
+		byte[] bFile = new byte[(int) file.length()];
+
+		try {
+			//convert file into array of bytes
+			fileInputStream = new FileInputStream(file);
+			fileInputStream.read(bFile);
+			fileInputStream.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+		return bFile;
 	}
 
 	private void convertByteToFile(String filename, byte[] b){

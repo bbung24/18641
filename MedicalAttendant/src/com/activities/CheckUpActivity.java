@@ -111,8 +111,8 @@ public class CheckUpActivity extends ActionBarActivity {
 		private void requestDocList() {
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
-			int id = settings.getInt(LocalConstants.USER_ID, -1);
-			if(id == -1) {
+			String id = settings.getString(LocalConstants.USER_ID, "none");
+			if(id.equals("none")) {
 				System.err.print("Internal Error");
 			} else {
 				data.put(RemoteClientConstants.CHECKUP_PATIENT_ID, id);
