@@ -111,7 +111,7 @@ public class CheckUpActivity extends ActionBarActivity {
 		private void requestDocList() {
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
-			int id = settings.getInt(LocalConstants.ID, -1);
+			int id = settings.getInt(LocalConstants.USER_ID, -1);
 			if(id == -1) {
 				System.err.print("Internal Error");
 			} else {

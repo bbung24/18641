@@ -60,6 +60,4 @@ public class RemoteClientConstants {
 	public static final String SAVE_TAKEN = "Save taken medication";
 	public static final String SAVE_SUCCESS = "save successful";
 	public static final String SAVE_FAIL = "save failed";
-	
-	public final static String ID = "id";
 }

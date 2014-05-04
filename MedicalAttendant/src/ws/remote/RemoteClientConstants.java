@@ -54,12 +54,11 @@ public class RemoteClientConstants {
 	public static final String REQUEST_CHECKUPS = "Request patient's checkups";
 	public static final String REQUEST_DISTS = "Request doctor's dists";
 	public static final String REQUEST_CHECKUPS_DOCTOR = "Request check ups for doctors";
+	public static final String REQUEST_LIST_PATIENT ="Request patients list";
 	
 	public static final String SAVE_DIST = "Save Distant Diagnosis";
 	public static final String SAVE_CHECKUPS = "Save Check ups";
 	public static final String SAVE_TAKEN = "Save taken medication";
 	public static final String SAVE_SUCCESS = "save successful";
 	public static final String SAVE_FAIL = "save failed";
-	
-	public final static String ID = "id";
 }

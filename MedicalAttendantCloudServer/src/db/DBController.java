@@ -60,6 +60,7 @@ public class DBController
 		command.append(" VALUES (");
 		command.append(value);
 		command.append(");");
+		System.out.println(command.toString());
 		stmt.executeUpdate(command.toString());
 	}
 

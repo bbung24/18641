@@ -2,12 +2,11 @@ package ws.remote;
 
 import handleConnections.DefaultSocketClient;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.Writer;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,10 +45,10 @@ public class Server extends DefaultSocketClient{
 
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-			col.append("patient_id INT,");
+			col.append("patient_id VARCHAR(100),");
 			col.append("date VARCHAR(100),");
 			col.append("result VARCHAR(100),");
-			col.append("doctor_id INT");
+			col.append("doctor_id VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -57,8 +56,8 @@ public class Server extends DefaultSocketClient{
 
 			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
-			col.append("patient_id INT,");
-			col.append("doctor_id INT,");
+			col.append("patient_id VARCHAR(100),");
+			col.append("doctor_id VARCHAR(100),");
 			col.append("symptom VARCHAR(100),");
 			col.append("pic_loc VARCHAR(100),");
 			col.append("voc_loc VARCHAR(100),");
@@ -149,7 +148,7 @@ public class Server extends DefaultSocketClient{
 			else if(command.equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR)){
 				sendAllCheckupsDoctorID(input, statement);
 			}
-				
+
 			statement.close();
 			connection.close();
 		} catch (SQLException e) {
@@ -221,6 +220,9 @@ public class Server extends DefaultSocketClient{
 				} else if(it.hasNext()){
 					col.append(key+",");
 					value.append(dataValue+",");
+				} else if(dataValue instanceof String){
+					col.append(key);
+					value.append("\""+dataValue+"\"");
 				} else {
 					col.append(key);
 					value.append(dataValue);
@@ -235,7 +237,6 @@ public class Server extends DefaultSocketClient{
 				e.printStackTrace();
 			}
 			response.put(RemoteClientConstants.REGISTER_SUCCESS, (String) data.get("user_id"));
-			response.put(RemoteClientConstants.REGISTER, data.get("id"));
 			Message output = new Message("Server", RemoteClientConstants.REGISTER_SUCCESS, response);
 			sendOutput(output);
 		} else {
@@ -281,8 +282,7 @@ public class Server extends DefaultSocketClient{
 			for(HashMap<String, Object> map : db)
 			{
 				String docUserId = (String) map.get(RemoteClientConstants.REGISTER_INFO_ID);
-				int docId = (Integer) map.get(RemoteClientConstants.ID);
-				response.put(docUserId, docId);
+				response.put(docUserId, "");
 			}
 			Message m = new Message("Server", RemoteClientConstants.REQUEST_LIST_DOC_ID, response);
 			sendOutput(m);
@@ -308,7 +308,7 @@ public class Server extends DefaultSocketClient{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void sendAllCheckupsDoctorID(Message input, Statement statement){
 		//Map will contain <REQUEST_LIST_DOC_ID, ArrayList of checkup HashMaps>
 		HashMap<String, Object> response = new HashMap<String, Object>();
@@ -331,29 +331,25 @@ public class Server extends DefaultSocketClient{
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String,Object> data = input.getMap();
 
-		try {
-			File f = (File) data.get(RemoteClientConstants.DIST_PIC_FILE);
-			Reader fr = new FileReader(f);
-			Writer fw = new FileWriter((String) data.get(RemoteClientConstants.DIST_PIC_LOC));
-			copy(fr,fw);
-			fw.close();
-			fr.close();
+		byte[] imageByte = (byte[]) data.get(RemoteClientConstants.DIST_PIC_FILE);
+		String imageLoc = (String) data.get(RemoteClientConstants.DIST_PIC_LOC);
+		File imageFile = new File(imageLoc);
+		File parent = imageFile.getParentFile();
+		if(!parent.exists())
+			parent.mkdirs();
+		convertByteToFile(imageLoc, imageByte);
 
-			f = (File) data.get(RemoteClientConstants.DIST_VOC_FILE);
-			fr = new FileReader(f);
-			fw = new FileWriter((String) data.get(RemoteClientConstants.DIST_VOC_LOC));
-			copy(fr, fw);
-			fw.close();
-			fr.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			Message output = new Message("Server", RemoteClientConstants.SAVE_FAIL, response);
-			sendOutput(output);
-			return;
-		}
+		byte[] voiceByte = (byte[]) data.get(RemoteClientConstants.DIST_VOC_FILE);
+		String voiceLoc = (String) data.get(RemoteClientConstants.DIST_VOC_LOC);
+		File voiceFile = new File(voiceLoc);
+		parent = voiceFile.getParentFile();
+		if(!parent.exists())
+			parent.mkdirs();
+		convertByteToFile(voiceLoc, voiceByte);
 
 		StringBuilder col = new StringBuilder();
 		StringBuilder value = new StringBuilder();
+		int count = 0;
 		Iterator<Entry<String, Object>> it = data.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, Object> pairs = it.next();
@@ -362,17 +358,24 @@ public class Server extends DefaultSocketClient{
 			String key = pairs.getKey();
 			Object dataValue = pairs.getValue();
 
-			if(!key.equals(RemoteClientConstants.DIST_PIC_FILE) ||
-					!key.equals(RemoteClientConstants.DIST_VOC_FILE)){
-				if(it.hasNext() && dataValue instanceof String){
+			if(!(key.equals(RemoteClientConstants.DIST_PIC_FILE) ||
+					key.equals(RemoteClientConstants.DIST_VOC_FILE))){
+				if(count < 5 && dataValue instanceof String){
 					col.append(key+",");
 					value.append("\""+dataValue+"\",");
-				} else if(it.hasNext()){
+					count++;
+				} else if(count < 5){
 					col.append(key+",");
 					value.append(dataValue+",");
+					count++;
+				} else if (dataValue instanceof String){
+					col.append(key);
+					value.append("\""+dataValue+"\"");
+					count++;
 				} else {
 					col.append(key);
 					value.append(dataValue);
+					count++;
 				}
 			}
 			it.remove(); // avoids a ConcurrentModificationException
@@ -391,16 +394,32 @@ public class Server extends DefaultSocketClient{
 		sendOutput(output);
 		return;
 	}
-	
-	public long copy (Reader input, Writer output) throws IOException {
-	    char[] buffer = new char[8192];
-	    long count = 0;
-	    int n;
-	    while ((n = input.read( buffer )) != -1) {
-	        output.write( buffer, 0, n );
-	        count += n;
-	    }
-	    return count;
+
+	private void convertByteToFile(String filename, byte[] b){
+		BufferedOutputStream bos = null;
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(filename);
+			bos = new BufferedOutputStream(fos);
+			bos.write(b);
+		} catch (FileNotFoundException fnfe) {
+			System.err.println("File not found" + fnfe);
+			fnfe.printStackTrace();
+		} catch (IOException e){
+			System.err.println("Error while writing to file" + e);
+			e.printStackTrace();
+		} finally {
+			try {
+				if (bos != null) {
+					bos.flush();
+					bos.close();
+				}
+			} catch(IOException e){
+				System.err.println("Error while closing streams" + e);
+				e.printStackTrace();
+			}
+
+		}
 	}
 
 	public static void main (String arg[]){

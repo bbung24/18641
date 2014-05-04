@@ -226,11 +226,9 @@ public class RegisterActivity extends ActionBarActivity {
 									Toast.LENGTH_LONG).show();
 							String userId = (String) reg_map.get(RemoteClientConstants.REGISTER_INFO_ID);
 							String job = (String) reg_map.get(RemoteClientConstants.REGISTER_INFO_JOB);
-							int id = (Integer) reg_map.get(RemoteClientConstants.LOGIN);
 							SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
 							SharedPreferences.Editor editor = settings.edit();
 							editor.putString(LocalConstants.USER_ID, userId);
-							editor.putInt(LocalConstants.ID, id);
 							editor.putString(LocalConstants.JOB, job);
 							editor.commit();
 

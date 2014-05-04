@@ -1,6 +1,9 @@
 package com.activities;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Files;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
@@ -183,11 +187,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 					else
 					{
 						//TODO: Send information to database. 
-						
+
 						saveDist();
-						Intent mainMenuIntent = new Intent(activity,
-								MainMenuActivity.class);
-						startActivity(mainMenuIntent);
 						activity.finish();
 						Toast.makeText(activity, "DistantDiagnosis form was successfully sent", 
 								Toast.LENGTH_LONG).show();
@@ -210,13 +211,32 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			activity.startService(mServiceIntent);
 		}
 		
+		private byte[] convertFileToByte(File file){
+			FileInputStream fileInputStream=null;
+
+			byte[] bFile = new byte[(int) file.length()];
+
+			try {
+				//convert file into array of bytes
+				fileInputStream = new FileInputStream(file);
+				fileInputStream.read(bFile);
+				fileInputStream.close();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			return bFile;
+		}
+
 		private void saveDist(){
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			File image = new File(fileUri.toString());
-			data.put(RemoteClientConstants.DIST_PIC_FILE, image);
+			byte[] imageByte = convertFileToByte(image);
+			data.put(RemoteClientConstants.DIST_PIC_FILE, imageByte);
 			File voice = new File(LocalConstants.VOC_FILE_LOC);
-			data.put(RemoteClientConstants.DIST_VOC_FILE, voice);
-			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText());
+			byte[] voiceByte = convertFileToByte(voice);
+			data.put(RemoteClientConstants.DIST_VOC_FILE, voiceByte);
+			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText().toString());
 			if(id.equals("none")) {
 				Toast.makeText(activity, "Error in the system", Toast.LENGTH_LONG).show();
 				return;
@@ -224,12 +244,12 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 				data.put(RemoteClientConstants.DIST_PATIENT_ID, id);
 			}
 			data.put(RemoteClientConstants.DIST_DOC_ID, docSelected);
-			String timeStamp = new SimpleDateFormat("yyyy:MM:dd_HH:mm:ss",
+			String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss",
 					Locale.US).format(new Date());
 			data.put(RemoteClientConstants.DIST_DATE, timeStamp);
 			data.put(RemoteClientConstants.DIST_PIC_LOC, "/"+id+"/IMG_" + timeStamp + ".jpg");
-			data.put(RemoteClientConstants.DIST_VOC_LOC, "/"+id+timeStamp+"_voc.3gp");
-			
+			data.put(RemoteClientConstants.DIST_VOC_LOC, "/"+id+"/"+timeStamp+"_voc.3gp");
+
 			Message msgSaveDist = new Message("Client",
 					RemoteClientConstants.SAVE_DIST, data);
 
@@ -287,7 +307,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			}
 
 			// Create a media file name
-			String timeStamp = new SimpleDateFormat("yyyy:MM:dd_HH:mm:ss",
+			String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss",
 					Locale.US).format(new Date());
 			File mediaFile;
 			if (type == LocalConstants.MEDIA_TYPE_IMAGE)
@@ -308,16 +328,16 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			if (requestCode == LocalConstants.CAMERA_REQUEST
 					&& resultCode == RESULT_OK)
 			{
-//				photo = (Bitmap) data.getExtras().get("data");
-//				imageView.setImageBitmap(photo);
+				//				photo = (Bitmap) data.getExtras().get("data");
+				//				imageView.setImageBitmap(photo);
 				Toast.makeText(activity,
 						"Photo Successfully added to Diagnosis",
 						Toast.LENGTH_SHORT).show();
 			} else if (requestCode == LocalConstants.VOICE_REQUEST
 					&& resultCode == RESULT_OK)
 			{
-//				photo = (Bitmap) data.getExtras().get("data");
-//				imageView.setImageBitmap(photo);
+				//				photo = (Bitmap) data.getExtras().get("data");
+				//				imageView.setImageBitmap(photo);
 				Toast.makeText(activity,
 						"Vocie Record Successfully added to Diagnosis",
 						Toast.LENGTH_SHORT).show();
