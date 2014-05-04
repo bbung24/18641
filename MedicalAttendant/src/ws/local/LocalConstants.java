@@ -6,4 +6,6 @@ public class LocalConstants {
 	public static final String DOCTOR = "Doctor";
 	public static final String USER_ID = "user_id";
 	public static final String JOB = "job";
+	public static final int CAMERA_REQUEST = 100; 
+	public static final int VOICE_REQUEST = 200; 
 }
