@@ -136,7 +136,6 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 					resultEdit.getText().toString());
 
 			// 1-2 Add Check Up Medication list.
-			ArrayList<String> list_med = new ArrayList<String>();
 			// add checked med to list_med
 			map_create_checkup.put(RemoteClientConstants.CHECKUP_MED_LIST,
 					list_med_selected);
@@ -151,18 +150,7 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 			mServiceIntent.putExtra("message", (Serializable) msg_checkUp);
 			activity.startService(mServiceIntent);
 			
-			// The filter's action is BROADCAST_ACTION
-			IntentFilter mStatusIntentFilter = new IntentFilter(
-					RemoteClientConstants.BROADCAST_ACTION);
-
-			// Adds a data filter for the HTTP scheme
-			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
-
-			// Instantiates a new DownloadStateReceiver
-			ResponseReceiver mResponseReceiver = new ResponseReceiver();
-			// Registers the DownloadStateReceiver and its intent filters
-			LocalBroadcastManager.getInstance(activity).registerReceiver(
-					mResponseReceiver, mStatusIntentFilter);
+			
 
 		}
 
