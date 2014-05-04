@@ -11,7 +11,10 @@ import ws.remote.RemoteClientConstants;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -23,7 +26,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class DistantDiagnosisActivity extends ActionBarActivity {
 
@@ -34,7 +39,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+			.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
@@ -75,6 +80,9 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 		private ArrayList<String> doc_list;
 		private ArrayAdapter<String> adapter;
 		
+		private ImageView imageView;
+		private Bitmap photo;
+
 		public PlaceholderFragment() {
 		}
 
@@ -84,7 +92,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(
 					R.layout.fragment_distant_diagnosis, container, false);
 			activity = getActivity();
-			
+			imageView = (ImageView) rootView.findViewById(R.id.imageView1);
+
 			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME,0);
 			String id = settings.getString("user_id", "none");
 			if(id.equals("none")){
@@ -92,46 +101,41 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 			} else {
 				System.out.println("User ID is here :" + id);
 			}
-			
 
 			//Set listView for doctors.
-			
+
 			doctorsList = (ListView) rootView.findViewById(R.id.doctor_listview);
 			doctorsList.setAdapter(adapter);
 			//Request a list of all doctor in DB
-			
+
 			/*rc.sendOutput(new Message(null,
 					RemoteClientConstants.REQEST_LIST_ALLDOC, null));
-			*/
+			 */
 			//Receive the message containing the list.
 			// Key->UserID Value -> dbID
 			/*
 			Message msg_docList = rc.readInput();
 			docSet = msg_docList.getMap().keySet();
-			*/
+			 */
 			//doc_list = new ArrayList<String>(docSet);
-			
+
 			doc_list = new ArrayList<String>();
 			doc_list.add("1");
 			doc_list.add("2");
 			doc_list.add("3");
 			doc_list.add("4");
-			
+
 			adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1,doc_list);
 			doctorsList.setAdapter(adapter);
-			
-			
-			
+
+
+
 			symptomText = (EditText) rootView.findViewById(R.id.symptoms_edit);
 			addPicBtn = (Button) rootView.findViewById(R.id.picture_btn);
 			addPicBtn.setOnClickListener(new OnClickListener() {
 				public void onClick(View view) {
-
-					// TODO: add picture intent but with specification where to
-					// save picture.
-					// Also, need to include this saved picture to be saved with
-					// this report
-					// into the database.
+					Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
+					startActivityForResult(cameraIntent, LocalConstants.CAMERA_REQUEST);
 				}
 			});
 			addVocBtn = (Button) rootView.findViewById(R.id.voice_btn);
@@ -141,6 +145,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 					// save file.
 					// Also, this needs to be included with the report into the
 					// database.
+					Intent vocRecIntent = new Intent(activity, VoiceRecordActivity.class);
+					startActivity(vocRecIntent);
 				}
 			});
 			medicalDevBtn = (Button) rootView
@@ -168,6 +174,15 @@ public class DistantDiagnosisActivity extends ActionBarActivity {
 
 			return rootView;
 		}
+
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {  
+			if (requestCode == LocalConstants.CAMERA_REQUEST && resultCode == RESULT_OK) {  
+				photo = (Bitmap) data.getExtras().get("data"); 
+				imageView.setImageBitmap(photo);
+				Toast.makeText(activity, "Photo Successfully added to Diagnosis", 
+						Toast.LENGTH_SHORT).show();
+			}  
+		} 
 	}
 
 }

@@ -43,8 +43,7 @@ public class Server extends DefaultSocketClient{
 			col.append("patient_id INT,");
 			col.append("date TIMESTAMP,");
 			col.append("result VARCHAR(100),");
-			col.append("doctor_id INT,");
-			col.append("sync BOOLEAN");
+			col.append("doctor_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -57,8 +56,7 @@ public class Server extends DefaultSocketClient{
 			col.append("symptom VARCHAR(100),");
 			col.append("pic_loc VARCHAR(100),");
 			col.append("voc_loc VARCHAR(100),");
-			col.append("date TIMESTAMP,");
-			col.append("sync BOOLEAN");
+			col.append("date TIMESTAMP");
 
 			md.createTable(tableName, col.toString(), statement);
 
@@ -74,8 +72,7 @@ public class Server extends DefaultSocketClient{
 
 			col = new StringBuilder();
 			col.append("check_up_id INT,");
-			col.append("medication_id INT,");
-			col.append("sync BOOLEAN");
+			col.append("medication_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
 			
@@ -84,8 +81,7 @@ public class Server extends DefaultSocketClient{
 			col = new StringBuilder();
 			col.append("check_up_id INT,");
 			col.append("medication_id INT,");
-			col.append("date DATETIME,");
-			col.append("sync BOOLEAN");
+			col.append("date DATETIME");
 
 			md.createTable(tableName, col.toString(), statement);
 			

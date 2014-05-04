@@ -48,6 +48,10 @@
     <string name="job">Job</string>
     <string name="doctor">Doctor</string>
     <string name="patient">Patient</string>
-	<string name="title_service_remote_client">Remote Client Service</string>
-	<string name="logout">Logout</string>
+    <string name="title_service_remote_client">Remote Client Service</string>
+    <string name="logout">Logout</string>
+    <string name="title_activity_voice_record">VoiceRecordActivity</string>
+	<string name="record">Record</string>
+	<string name="play">Play</string>
+	<string name="done">Done</string>
 </resources>

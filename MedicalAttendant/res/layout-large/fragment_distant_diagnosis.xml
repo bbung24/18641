@@ -69,4 +69,9 @@
             android:text="@string/submit" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </RelativeLayout>
