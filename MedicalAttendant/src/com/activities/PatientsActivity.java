@@ -99,9 +99,12 @@ public class PatientsActivity extends ActionBarActivity
 
 		private void sendPatientListRequest()
 		{
+			//Map contains userid of doctor
 			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, value)
+			
 			Message msg = new Message("Client",
-					RemoteClientConstants.REQUEST_LIST_PATIENT, map);
+					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
 			
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg);
@@ -141,9 +144,11 @@ public class PatientsActivity extends ActionBarActivity
 					{
 						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
 					}
-					else if(msgIn.getCommand().equals(RemoteClientConstants.REQUEST_LIST_PATIENT))
+					else if(msgIn.getCommand().equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR))
 					{
-						ArrayList<HashMap<String,Object>> checkupList = msgIn.getMap().get(RemoteClientConstants.CHECKUP_DOCTOR_ID);
+						//ArrayList of HashMap(Rows associated with doctor) 
+						ArrayList<HashMap<String,Object>> checkupList = (ArrayList<HashMap<String, Object>>) msgIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
+						
 						
 						
 						//Date keyset <-> Value patient ID
