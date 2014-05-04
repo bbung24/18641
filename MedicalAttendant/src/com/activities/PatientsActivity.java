@@ -78,11 +78,12 @@ public class PatientsActivity extends ActionBarActivity
 		private Intent mServiceIntent;
 		private Activity activity;
 		private ListView checkUpListView;
-		//private ArrayList<String> dateList, checkUpList;
+		// private ArrayList<String> dateList, checkUpList;
 		private ArrayAdapter<String> checkUpListAdapter;
-		private ArrayList<HashMap<String,Object>> checkupList;
-		
-		
+		private ArrayList<HashMap<String, Object>> checkupList;
+		private HashMap<String, String> checkUpLabelIdMap;
+		private ArrayList<String> labelList;
+
 		public PlaceholderFragment()
 		{
 		}
@@ -102,22 +103,23 @@ public class PatientsActivity extends ActionBarActivity
 
 		private void sendPatientListRequest()
 		{
-			//Map contains userid of doctor
+			// Map contains userid of doctor
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, activity.getSharedPreferences(LocalConstants.USER_ID, 0));
-			
-			
+			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID,
+					activity.getSharedPreferences(LocalConstants.USER_ID, 0));
+
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
-			
+
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg);
 			activity.startService(mServiceIntent);
-			
+
 		}
-		
+
 		/** The method set ResponseReceiver */
-		private void setResponseReceiver() {
+		private void setResponseReceiver()
+		{
 			// The filter's action is BROADCAST_ACTION
 			IntentFilter mStatusIntentFilter = new IntentFilter(
 					RemoteClientConstants.BROADCAST_ACTION);
@@ -132,65 +134,89 @@ public class PatientsActivity extends ActionBarActivity
 					mResponseReceiver, mStatusIntentFilter);
 
 		}
-		
+
 		private class ResponseReceiver extends BroadcastReceiver
 		{
 
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{
-				if(isAdded())
+				if (isAdded())
 				{
-					//Hear from Server
-					Message msgIn = (Message) intent.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
-					
-					if(msgIn == null)
-					{
-						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG).show();
-					}
-					else if(msgIn.getCommand().equals(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR))
-					{
-						//ArrayList of HashMap(Rows associated with doctor) 
-						checkupList = (ArrayList<HashMap<String, Object>>) msgIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
-						
-						
-						
-						//Date keyset <-> Value patient ID
-						//dateList = new ArrayList<String>( msgIn.getMap().keySet());
-						//checkUpList = new ArrayList<String>();
-						for(String date : dateList)
-						{
-							String patient = (String) msgIn.getMap().get(date);
-							checkUpList.add(patient + " : " + date);
-						}
-						
-						//Set ArrayList adapter to show. 
-						checkUpListAdapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, checkUpList);
-						checkUpListView.setOnItemClickListener(new OnItemClickListener(){
+					// Hear from Server
+					Message msgIn = (Message) intent
+							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
 
-							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id)
-							{
-								Intent patSummIntent = new Intent(activity, PatientSummActivity.class);
-								String userid  = (String) parent.getItemAtPosition(position);								
-								patSummIntent.putExtra(RemoteClientConstants.REGISTER_INFO_ID, parent.getItemAtPosition(position));
-							}});
-						
+					if (msgIn == null)
+					{
+						Toast.makeText(activity, "internal error",
+								Toast.LENGTH_LONG).show();
+					} else if (msgIn.getCommand().equals(
+							RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR))
+					{
+						// ArrayList of HashMap(Rows associated with doctor)
+						checkupList = (ArrayList<HashMap<String, Object>>) msgIn
+								.getMap()
+								.get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
+
+						// Map to store <CHeckUPLabel, CheckUpID>
+						checkUpLabelIdMap = new HashMap<String, String>();
+
+						for (HashMap<String, Object> map : checkupList)
+						{
+							String patientID = (String) map
+									.get(RemoteClientConstants.CHECKUP_PATIENT_ID);
+							String checkUpDate = (String) map
+									.get(RemoteClientConstants.CHECKUP_DATE);
+
+							// KEY -> patientID + checkUpDate
+							String label = "Patient: " + patientID + " Date: "
+									+ checkUpDate;
+							// VALUE -> id of checkUp
+							String checkUpID = (String) map
+									.get(RemoteClientConstants.CHECKUP_ID);
+
+							checkUpLabelIdMap.put(label, checkUpID);
+						}
+						labelList = new ArrayList<String>(
+								checkUpLabelIdMap.keySet());
+
+						// Set ArrayList adapter to show.
+						checkUpListAdapter = new ArrayAdapter<String>(activity,
+								android.R.layout.simple_list_item_1, labelList);
+						checkUpListView
+								.setOnItemClickListener(new OnItemClickListener()
+								{
+
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View view,
+											int position, long id)
+									{
+										Intent patSummIntent = new Intent(
+												activity,
+												PatientSummActivity.class);
+										String label = (String) parent
+												.getItemAtPosition(position);
+										String checkUpID = checkUpLabelIdMap
+												.get(label);
+
+										Toast.makeText(activity, "Selected:"
+												+ label, Toast.LENGTH_LONG);
+										patSummIntent
+												.putExtra(
+														RemoteClientConstants.CHECKUP_ID,
+														checkUpID);
+									}
+								});
+
 						checkUpListView.setAdapter(checkUpListAdapter);
-						
-						
-						
-						
-						
-						
+
 					}
-					
-					
-					
+
 				}
 			}
-			
+
 		}
 
 	}

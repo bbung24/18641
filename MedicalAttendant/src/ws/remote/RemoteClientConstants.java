@@ -28,6 +28,7 @@ public class RemoteClientConstants {
 	public final static String EXAM_NAME = "Exam_Name";
 	
 	//CHECK UP TABLE COLUMNS
+	public static final String CHECKUP_ID = "id";
 	public static final String CHECKUP_RESULT = "result";
 	public static final String CHECKUP_MED_LIST = "med_list";
 	public static final String CHECKUP_PATIENT_ID = "patient_id";
