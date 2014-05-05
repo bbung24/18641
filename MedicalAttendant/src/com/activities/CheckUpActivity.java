@@ -29,21 +29,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class CheckUpActivity extends ActionBarActivity {
+public class CheckUpActivity extends ActionBarActivity
+{
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_check_up);
 
-		if (savedInstanceState == null) {
+		if (savedInstanceState == null)
+		{
 			getSupportFragmentManager().beginTransaction()
-			.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.check_up, menu);
@@ -51,12 +55,14 @@ public class CheckUpActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_settings)
+		{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -65,19 +71,23 @@ public class CheckUpActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment
+	{
 		private Activity activity;
 		private ListView examinationList;
 		private ArrayAdapter<String> adapter;
 		private ArrayList<String> examList;
 		private Intent mServiceIntent;
+		private HashMap<String, Integer> examMap;// <examList, checkUpID>
 
-		public PlaceholderFragment() {
+		public PlaceholderFragment()
+		{
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
+				Bundle savedInstanceState)
+		{
 			View rootView = inflater.inflate(R.layout.fragment_check_up,
 					container, false);
 
@@ -89,10 +99,12 @@ public class CheckUpActivity extends ActionBarActivity {
 			requestDocList();
 			setupResponseReceiver();
 
-			examinationList.setOnItemClickListener(new OnItemClickListener() {
+			examinationList.setOnItemClickListener(new OnItemClickListener()
+			{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
+						int position, long id)
+				{
 					String selection = (String) parent
 							.getItemAtPosition(position);
 					Intent examIntent = new Intent(activity,
@@ -108,24 +120,30 @@ public class CheckUpActivity extends ActionBarActivity {
 		}
 
 		/** Request list of all doctors through service */
-		private void requestDocList() {
+		private void requestDocList()
+		{
 			HashMap<String, Object> data = new HashMap<String, Object>();
-			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
+			SharedPreferences settings = activity.getSharedPreferences(
+					LocalConstants.PREFS_NAME, 0);
 			String id = settings.getString(LocalConstants.USER_ID, "none");
-			if(id.equals("none")) {
+			if (id.equals("none"))
+			{
 				System.err.print("Internal Error");
-			} else {
+			} else
+			{
 				data.put(RemoteClientConstants.CHECKUP_PATIENT_ID, id);
 				Message msgReqDocList = new Message("Client",
 						RemoteClientConstants.REQUEST_CHECKUPS, data);
 
 				mServiceIntent = new Intent(activity, RemoteClientService.class);
-				mServiceIntent.putExtra("message", (Serializable) msgReqDocList);
+				mServiceIntent
+						.putExtra("message", (Serializable) msgReqDocList);
 				activity.startService(mServiceIntent);
 			}
 		}
 
-		private void setupResponseReceiver() {
+		private void setupResponseReceiver()
+		{
 			// The filter's action is BROADCAST_ACTION
 			IntentFilter mStatusIntentFilter = new IntentFilter(
 					RemoteClientConstants.BROADCAST_ACTION);
@@ -143,50 +161,74 @@ public class CheckUpActivity extends ActionBarActivity {
 
 		// Broadcast receiver for receiving status updates from the
 		// IntentService
-		private class ResponseReceiver extends BroadcastReceiver {
+		private class ResponseReceiver extends BroadcastReceiver
+		{
 			// Prevents instantiation
-			private ResponseReceiver() {
+			private ResponseReceiver()
+			{
 			}
 
 			// Called when the BroadcastReceiver gets an Intent it's registered
 			// to receive
 			@Override
-			public void onReceive(Context context, Intent intent) {
-				if(isAdded()){
+			public void onReceive(Context context, Intent intent)
+			{
+				if (isAdded())
+				{
 					// Hear from Server.
 					Message msgIdIn = (Message) intent
 							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
 
 					// null case -> notify user.
-					if (msgIdIn == null) {
-						Toast.makeText(activity, "internal error", Toast.LENGTH_LONG)
-						.show();
+					if (msgIdIn == null)
+					{
+						Toast.makeText(activity, "internal error",
+								Toast.LENGTH_LONG).show();
 					} else if (msgIdIn.getCommand().equals(
-							RemoteClientConstants.REQUEST_CHECKUPS)) {
-						ArrayList<HashMap<String, Object>> data = 
-								(ArrayList<HashMap<String, Object>>) msgIdIn.getMap().get(RemoteClientConstants.REQUEST_CHECKUPS);
+							RemoteClientConstants.REQUEST_CHECKUPS))
+					{
+						ArrayList<HashMap<String, Object>> data = (ArrayList<HashMap<String, Object>>) msgIdIn
+								.getMap().get(
+										RemoteClientConstants.REQUEST_CHECKUPS);
 
 						examList = new ArrayList<String>();
-						for(int i = 0; i < data.size(); i++){
-							examList.add("Examination of Distant Diagnosis of " + data.get(i).get(RemoteClientConstants.CHECKUP_DATE));
+						for (int i = 0; i < data.size(); i++)
+						{
+							Integer checkUpID = (Integer) data.get(i).get(
+									RemoteClientConstants.CHECKUP_ID);
+							String date = (String) data.get(i).get(
+									RemoteClientConstants.CHECKUP_DATE);
+							String label = "Examinatin from " + date;
+							examList.add(label);
+							examMap.put(label, checkUpID);
 						}
 						adapter = new ArrayAdapter<String>(getActivity(),
 								android.R.layout.simple_list_item_1, examList);
-						examinationList.setOnItemClickListener(new OnItemClickListener() {
-							@Override
-							public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
-								String selection = (String) parent
-										.getItemAtPosition(position);
-								Intent examIntent = new Intent(activity,
-										ExaminationActivity.class);
-								examIntent.putExtra(RemoteClientConstants.EXAM_NAME,
-										selection);
-								startActivity(examIntent);
-								activity.finish();
-							}
-						});
+						examinationList
+								.setOnItemClickListener(new OnItemClickListener()
+								{
+									@Override
+									public void onItemClick(
+											AdapterView<?> parent, View view,
+											int position, long id)
+									{
+										String label = (String) parent
+												.getItemAtPosition(position);
 
+										Integer checkUpID = examMap.get(label);
+
+										Intent examIntent = new Intent(
+												activity,
+												ExaminationActivity.class);
+
+										examIntent
+												.putExtra(
+														RemoteClientConstants.CHECKUP_ID,
+														String.valueOf(checkUpID));
+										startActivity(examIntent);
+										activity.finish();
+									}
+								});
 						examinationList.setAdapter(adapter);
 					}
 				}

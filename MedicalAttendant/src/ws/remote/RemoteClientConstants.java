@@ -88,7 +88,7 @@ public class RemoteClientConstants
 	public static final String REQUEST_LIST_PATIENT = "Request patients list";
 	public static final String REQUEST_MED_SUG = "Request suggested medicine";
 	public static final String REQUEST_MED_HIST = "Request history of dosage";
-
+	public static final String REQUEST_ADD_TAKEN = "Request to add medicine taken";
 	// ETC
 	public static final String MED_CHECKUP_SELECTED = "medines selected in create checkup";
 

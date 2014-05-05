@@ -297,7 +297,7 @@ public class CreateCheckUpActivity extends ActionBarActivity
 			}
 		}
 
-		/** Custom Adapter to show list with checkbox and allow one selection. */
+		/** Custom Adapter to show list with checkbox and allow multiple selection. */
 		private class MultiCheckBoxAdapter extends BaseAdapter
 		{
 			private ViewHolder viewHolder = null;
@@ -377,5 +377,5 @@ public class CreateCheckUpActivity extends ActionBarActivity
 			private CheckBox cBox = null;
 		}
 	}
-
+	
 }

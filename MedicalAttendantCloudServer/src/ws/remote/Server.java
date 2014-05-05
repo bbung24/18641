@@ -234,6 +234,9 @@ public class Server extends DefaultSocketClient
 			} else if (cmd.equals(RemoteClientConstants.REQUEST_CREATE_CHECKUP))
 			{
 				createCheckUp(input, stmt);
+			} else if (cmd.equals(RemoteClientConstants.REQUEST_ADD_TAKEN))
+			{
+				addMedTaken(input, stmt);
 			}
 
 			stmt.close();
@@ -476,7 +479,6 @@ public class Server extends DefaultSocketClient
 		ArrayList<HashMap<String, Object>> db;
 		HashMap<String, Object> response;
 		ArrayList<String> medSugList;
-
 		checkUpID = (String) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
 
@@ -515,6 +517,8 @@ public class Server extends DefaultSocketClient
 		String checkUpID;
 		// DB query result
 		ArrayList<HashMap<String, Object>> db;
+
+		ArrayList<HashMap<String, Object>> medDB;
 		// Reponse map to client.
 		HashMap<String, Object> response;
 
@@ -526,11 +530,12 @@ public class Server extends DefaultSocketClient
 			// ArrayList of examination_relationship table row.
 			db = md.getAllDataString(RemoteClientConstants.TABLE_TAKEN,
 					RemoteClientConstants.TAKEN_CHECKUP_ID, checkUpID, stmt);
+			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
 			response.put(RemoteClientConstants.REQUEST_MED_HIST, db);
-
+			response.put(RemoteClientConstants.TABLE_MED, medDB);
 			// attach the map
 			Message msg = new Message("Server",
 					RemoteClientConstants.REQUEST_MED_HIST, response);
@@ -688,7 +693,7 @@ public class Server extends DefaultSocketClient
 	{
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> data = input.getMap();
-		//auto increment col-> set garbage val.
+		// auto increment col-> set garbage val.
 		data.put(RemoteClientConstants.CHECKUP_ID, 0);
 		Integer checkUpID = -1;
 
@@ -791,7 +796,7 @@ public class Server extends DefaultSocketClient
 			StringBuilder examCol = new StringBuilder();
 			StringBuilder examVal = new StringBuilder();
 			Iterator<Entry<String, Integer>> examIt = m.entrySet().iterator();
-			
+
 			while (examIt.hasNext())
 			{
 				Map.Entry<String, Integer> pairs = examIt.next();
@@ -820,10 +825,11 @@ public class Server extends DefaultSocketClient
 
 				examIt.remove(); // avoids a ConcurrentModificationException
 			}
-			
+
 			try
 			{
-				md.insertData(RemoteClientConstants.TABLE_EXAMINATION, examCol.toString(), examVal.toString(), stmt);
+				md.insertData(RemoteClientConstants.TABLE_EXAMINATION,
+						examCol.toString(), examVal.toString(), stmt);
 			} catch (SQLException e)
 			{
 				// TODO Auto-generated catch block
@@ -831,12 +837,60 @@ public class Server extends DefaultSocketClient
 			}
 
 		}
-		
-		
+
 		Message output = new Message("Server",
 				RemoteClientConstants.REQUEST_CREATE_CHECKUP, response);
 		sendOutput(output);
-		
+
+	}
+
+	public void addMedTaken(Message input, Statement stmt)
+	{
+		ArrayList<HashMap<String, Object>> takenRows = new ArrayList<HashMap<String, Object>>();
+
+		for (HashMap<String, Object> row : takenRows)
+		{
+			StringBuilder col = new StringBuilder();
+			StringBuilder value = new StringBuilder();
+			Iterator<Entry<String, Object>> it = row.entrySet().iterator();
+			while (it.hasNext())
+			{
+				Map.Entry<String, Object> pairs = it.next();
+				System.out.println(pairs.getKey() + " = " + pairs.getValue());
+
+				String key = pairs.getKey();
+				Object dataValue = pairs.getValue();
+
+				if (it.hasNext() && dataValue instanceof String)
+				{
+					col.append(key + ",");
+					value.append("\"" + dataValue + "\",");
+				} else if (it.hasNext())
+				{
+					col.append(key + ",");
+					value.append(dataValue + ",");
+				} else if (dataValue instanceof String)
+				{
+					col.append(key);
+					value.append("\"" + dataValue + "\"");
+				} else
+				{
+					col.append(key);
+					value.append(dataValue);
+				}
+
+				it.remove(); // avoids a ConcurrentModificationException
+			}
+			
+			try
+			{
+				md.insertData("users", col.toString(), value.toString(), stmt);
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	private byte[] convertFileToByte(File file)
