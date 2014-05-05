@@ -2,5 +2,6 @@
 <lint>
     <issue id="UseSparseArrays">
         <ignore path="src/com/activities/CreateCheckUpActivity.java" />
+        <ignore path="src/com/activities/ExaminationActivity.java" />
     </issue>
 </lint>

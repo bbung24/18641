@@ -170,6 +170,7 @@ public class CheckUpActivity extends ActionBarActivity
 
 			// Called when the BroadcastReceiver gets an Intent it's registered
 			// to receive
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{

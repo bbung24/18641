@@ -111,7 +111,8 @@ public class ExaminationActivity extends ActionBarActivity
 			// require checkupID, taken_relationship
 
 			medLV = (ListView) rootView.findViewById(R.id.medication_list);
-
+			requestMedSug();
+			setResponseReceiver();
 			// TODO: update this list with medication that doctor put in for
 			// clicked examination.
 			// Require -> Checkup ID in examination relationship.
@@ -130,7 +131,7 @@ public class ExaminationActivity extends ActionBarActivity
 			// TODO: put into checkUpList database for checked medications and
 			// dates.
 			// then update checkUpList.
-			requestMedSug();
+			
 
 			return rootView;
 		}
@@ -191,6 +192,7 @@ public class ExaminationActivity extends ActionBarActivity
 		private class ResponseReceiver extends BroadcastReceiver
 		{
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{

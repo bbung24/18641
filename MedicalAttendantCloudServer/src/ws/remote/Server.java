@@ -498,7 +498,7 @@ public class Server extends DefaultSocketClient
 			{
 				
 				Integer i = ((Integer) row.get(RemoteClientConstants.EXAMINATION_MED_ID));
-				
+				medSugList.add(i);
 			}
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
@@ -519,7 +519,7 @@ public class Server extends DefaultSocketClient
 	public void sendMedHist(Message input, Statement stmt)
 	{
 		// Get checkUpID for search.
-		String checkUpID;
+		Integer checkUpID;
 		// DB query result
 		ArrayList<HashMap<String, Object>> db;
 
@@ -527,14 +527,14 @@ public class Server extends DefaultSocketClient
 		// Reponse map to client.
 		HashMap<String, Object> response;
 
-		checkUpID = (String) input.getMap().get(
+		checkUpID = (Integer) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
 
 		try
 		{
 			// ArrayList of examination_relationship table row.
 			db = md.getAllDataString(RemoteClientConstants.TABLE_TAKEN,
-					RemoteClientConstants.TAKEN_CHECKUP_ID, checkUpID, stmt);
+					RemoteClientConstants.TAKEN_CHECKUP_ID, String.valueOf(checkUpID), stmt);
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 
 			// put arraylist of suggested medicine to map
@@ -704,8 +704,7 @@ public class Server extends DefaultSocketClient
 
 		String docID = (String) data
 				.get(RemoteClientConstants.CHECKUP_DOCTOR_ID);
-		String patID = (String) data
-				.get(RemoteClientConstants.CHECKUP_PATIENT_ID);
+		
 		String date = (String) data.get(RemoteClientConstants.CHECKUP_DATE);
 
 		StringBuilder col = new StringBuilder();
