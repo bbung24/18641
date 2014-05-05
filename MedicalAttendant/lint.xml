@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
+    <issue id="UseSparseArrays">
+        <ignore path="src/com/activities/CreateCheckUpActivity.java" />
+    </issue>
 </lint>

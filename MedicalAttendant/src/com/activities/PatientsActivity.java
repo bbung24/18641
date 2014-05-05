@@ -91,7 +91,7 @@ public class PatientsActivity extends ActionBarActivity
 		private ArrayList<String> labelList;
 		private Intent patSummIntent;
 		private String userID;
-
+		
 		public PlaceholderFragment()
 		{
 		}
@@ -122,7 +122,7 @@ public class PatientsActivity extends ActionBarActivity
 			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, userID);
 
 			Message msg = new Message("Client",
-					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
+					RemoteClientConstants.REQUEST_CHECKUPS_DOC, map);
 
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg);
@@ -165,12 +165,12 @@ public class PatientsActivity extends ActionBarActivity
 						Toast.makeText(activity, "internal error",
 								Toast.LENGTH_LONG).show();
 					} else if (msgIn.getCommand().equals(
-							RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR))
+							RemoteClientConstants.REQUEST_CHECKUPS_DOC))
 					{
 						// ArrayList of HashMap(Rows associated with doctor)
 						checkupList = (ArrayList<HashMap<String, Object>>) msgIn
 								.getMap()
-								.get(RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR);
+								.get(RemoteClientConstants.REQUEST_CHECKUPS_DOC);
 
 						// Map to store <CHeckUPLabel, CheckUpID>
 						checkUpLabelIdMap = new HashMap<String, String>();

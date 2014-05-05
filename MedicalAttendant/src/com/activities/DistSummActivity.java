@@ -28,21 +28,25 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DistSummActivity extends ActionBarActivity {
+public class DistSummActivity extends ActionBarActivity
+{
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dist_summ);
 
-		if (savedInstanceState == null) {
+		if (savedInstanceState == null)
+		{
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.dist_summ, menu);
@@ -50,12 +54,14 @@ public class DistSummActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_settings)
+		{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -64,7 +70,8 @@ public class DistSummActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment
+	{
 		private Activity activity;
 		private TextView symptoms;
 		private ImageView picView;
@@ -72,106 +79,141 @@ public class DistSummActivity extends ActionBarActivity {
 		private Button createCheckUpBtn;
 		private boolean mStartPlaying = true;
 		private MediaPlayer mPlayer = null;
-		
-		public PlaceholderFragment() {
+
+		public PlaceholderFragment()
+		{
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
+				Bundle savedInstanceState)
+		{
 			View rootView = inflater.inflate(R.layout.fragment_dist_summ,
 					container, false);
 			activity = getActivity();
 			@SuppressWarnings("unchecked")
-			final HashMap<String, Object> m = 
-					(HashMap<String, Object>) activity.getIntent().getSerializableExtra("data");
-			
+			final HashMap<String, Object> m = (HashMap<String, Object>) activity
+					.getIntent().getSerializableExtra("data");
+
 			symptoms = (TextView) rootView.findViewById(R.id.symptom_summ);
 			picView = (ImageView) rootView.findViewById(R.id.pic_view);
 			vocViewBtn = (Button) rootView.findViewById(R.id.voc_view);
-			createCheckUpBtn = (Button) rootView.findViewById(R.id.create_checkups);
-			createCheckUpBtn.setOnClickListener(new OnClickListener(){
-				public void onClick(View view){
-					Intent ccu = new Intent(activity, CreateCheckUpActivity.class);
+			createCheckUpBtn = (Button) rootView
+					.findViewById(R.id.create_checkups);
+			createCheckUpBtn.setOnClickListener(new OnClickListener()
+			{
+				public void onClick(View view)
+				{
+					Intent ccu = new Intent(activity,
+							CreateCheckUpActivity.class);
 					// Need to pass patient id to create checkups.
-					String patient_id = (String) m.get(RemoteClientConstants.DIST_PATIENT_ID);
-					ccu.putExtra("patient_id", patient_id);
+					String patient_id = (String) m
+							.get(RemoteClientConstants.DIST_PATIENT_ID);
+					ccu.putExtra(RemoteClientConstants.CHECKUP_PATIENT_ID,
+							patient_id);
 					startActivity(ccu);
 					activity.finish();
 				}
 			});
-			symptoms.setText("Symptoms: " +(String) m.get(RemoteClientConstants.DIST_SYMPTOM));
-			byte[] imageByte = (byte[]) m.get(RemoteClientConstants.DIST_PIC_FILE);
-			convertByteToFile(LocalConstants.PIC_FILE_LOC+"test.jpg", imageByte);
-			File imgFile = new  File(LocalConstants.PIC_FILE_LOC+"test.jpg");
-			if(imgFile.exists()){
-			    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-			    picView.setImageBitmap(myBitmap);
+			symptoms.setText("Symptoms: "
+					+ (String) m.get(RemoteClientConstants.DIST_SYMPTOM));
+			byte[] imageByte = (byte[]) m
+					.get(RemoteClientConstants.DIST_PIC_FILE);
+			convertByteToFile(LocalConstants.PIC_FILE_LOC + "test.jpg",
+					imageByte);
+			File imgFile = new File(LocalConstants.PIC_FILE_LOC + "test.jpg");
+			if (imgFile.exists())
+			{
+				Bitmap myBitmap = BitmapFactory.decodeFile(imgFile
+						.getAbsolutePath());
+				picView.setImageBitmap(myBitmap);
 			}
-			byte[] voiceByte = (byte[]) m.get(RemoteClientConstants.DIST_VOC_FILE);
-			convertByteToFile(LocalConstants.PIC_FILE_LOC+"test.3pg", voiceByte);
-			File vocFile = new File(LocalConstants.PIC_FILE_LOC+"test.3pg");
-			if(vocFile.exists()){
-			    vocViewBtn.setOnClickListener(new OnClickListener(){
-			    	public void onClick(View v){
-			    		onPlay(mStartPlaying);
-						if (mStartPlaying) {
+			byte[] voiceByte = (byte[]) m
+					.get(RemoteClientConstants.DIST_VOC_FILE);
+			convertByteToFile(LocalConstants.PIC_FILE_LOC + "test.3pg",
+					voiceByte);
+			File vocFile = new File(LocalConstants.PIC_FILE_LOC + "test.3pg");
+			if (vocFile.exists())
+			{
+				vocViewBtn.setOnClickListener(new OnClickListener()
+				{
+					public void onClick(View v)
+					{
+						onPlay(mStartPlaying);
+						if (mStartPlaying)
+						{
 							vocViewBtn.setText("Stop playing");
-						} else {
+						} else
+						{
 							vocViewBtn.setText("Start playing");
 						}
 						mStartPlaying = !mStartPlaying;
-			    	}
-			    });
+					}
+				});
 			}
-			
+
 			return rootView;
 		}
-		
-		private void onPlay(boolean start) {
-			if (start) {
+
+		private void onPlay(boolean start)
+		{
+			if (start)
+			{
 				startPlaying();
-			} else {
+			} else
+			{
 				stopPlaying();
 			}
 		}
-		
-		private void startPlaying() {
+
+		private void startPlaying()
+		{
 			mPlayer = new MediaPlayer();
-			try {
-				mPlayer.setDataSource(LocalConstants.PIC_FILE_LOC+"test.3pg");
+			try
+			{
+				mPlayer.setDataSource(LocalConstants.PIC_FILE_LOC + "test.3pg");
 				mPlayer.prepare();
 				mPlayer.start();
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				System.err.print("prepare() failed");
 			}
 		}
 
-		private void stopPlaying() {
+		private void stopPlaying()
+		{
 			mPlayer.release();
 			mPlayer = null;
 		}
-		
-		private void convertByteToFile(String filename, byte[] b){
+
+		private void convertByteToFile(String filename, byte[] b)
+		{
 			BufferedOutputStream bos = null;
 			FileOutputStream fos = null;
-			try {
+			try
+			{
 				fos = new FileOutputStream(filename);
 				bos = new BufferedOutputStream(fos);
 				bos.write(b);
-			} catch (FileNotFoundException fnfe) {
+			} catch (FileNotFoundException fnfe)
+			{
 				System.err.println("File not found" + fnfe);
 				fnfe.printStackTrace();
-			} catch (IOException e){
+			} catch (IOException e)
+			{
 				System.err.println("Error while writing to file" + e);
 				e.printStackTrace();
-			} finally {
-				try {
-					if (bos != null) {
+			} finally
+			{
+				try
+				{
+					if (bos != null)
+					{
 						bos.flush();
 						bos.close();
 					}
-				} catch(IOException e){
+				} catch (IOException e)
+				{
 					System.err.println("Error while closing streams" + e);
 					e.printStackTrace();
 				}

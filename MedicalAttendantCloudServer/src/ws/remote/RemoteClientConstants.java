@@ -2,6 +2,10 @@ package ws.remote;
 
 public class RemoteClientConstants
 {
+	private RemoteClientConstants()
+	{
+	};
+
 	public final static String LOGIN = "Login";
 	public final static String LOGIN_FAIL = "Login failed";
 	public final static String LOGIN_SUCCESS = "Login success";
@@ -80,7 +84,7 @@ public class RemoteClientConstants
 	public static final String REQUEST_LIST_DOC_ID = "Request all doctor's ids";
 	public static final String REQUEST_CHECKUPS = "Request patient's checkups";
 	public static final String REQUEST_DISTS = "Request doctor's dists";
-	public static final String REQUEST_CHECKUPS_DOCTOR = "Request check ups for doctors";
+	public static final String REQUEST_CHECKUPS_DOC = "Request check ups for doctors";
 	public static final String REQUEST_LIST_PATIENT = "Request patients list";
 	public static final String REQUEST_MED_SUG = "Request suggested medicine";
 	public static final String REQUEST_MED_HIST = "Request history of dosage";
