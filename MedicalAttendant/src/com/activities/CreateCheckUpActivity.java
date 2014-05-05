@@ -163,6 +163,9 @@ public class CreateCheckUpActivity extends ActionBarActivity
 
 			//	1-2 Add Check Up Medication list.
 			// Convert Names in ID for DB add purpose.
+			medSels = mAdapter.getSelected();
+			
+			
 			medSelIDs = new ArrayList<Integer>();
 			for (String s : medSels)
 			{
