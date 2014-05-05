@@ -106,16 +106,6 @@ public class ExaminationActivity extends ActionBarActivity
 			checkUpID = Integer.parseInt((String) intent.getExtras().get(
 					RemoteClientConstants.CHECKUP_ID));
 
-			medMap = new HashMap<Integer, String>();
-			medTable = (ArrayList<HashMap<Integer, String>>) intent.getExtras()
-					.get(RemoteClientConstants.TABLE_MED);
-			for (HashMap<Integer, String> map : medTable)
-			{
-				Integer medID = Integer.parseInt((String)(map.get(RemoteClientConstants.MED_ID)));
-				String  medName = map.get(RemoteClientConstants.MED_NAME);
-				medMap.put(medID, medName);
-			}
-
 			// TODO: update this list with checkUpList associated with clicked
 			// examination.
 			// require checkupID, taken_relationship
@@ -218,17 +208,29 @@ public class ExaminationActivity extends ActionBarActivity
 					else if (msg.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_SUG))
 					{
+						medTable = (ArrayList<HashMap<Integer, String>>) msg
+								.getMap().get(RemoteClientConstants.TABLE_MED);
+						medMap = new HashMap<Integer, String>();
+
+						for (HashMap<Integer, String> map : medTable)
+						{
+							Integer medID = Integer.parseInt((String) (map
+									.get(RemoteClientConstants.MED_ID)));
+							String medName = map
+									.get(RemoteClientConstants.MED_NAME);
+							medMap.put(medID, medName);
+						}
+
 						medIdList = (ArrayList<Integer>) msg.getMap().get(
 								RemoteClientConstants.REQUEST_MED_SUG);
-						
+
 						medList = new ArrayList<String>();
-						
-						for(Integer i: medIdList)
+
+						for (Integer i : medIdList)
 						{
 							medList.add(medMap.get(i));
 						}
-						
-						
+
 						medAdapter = new ListCheckAdapter(activity, medList);
 
 						medLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);

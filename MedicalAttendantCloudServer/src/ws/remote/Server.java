@@ -479,6 +479,9 @@ public class Server extends DefaultSocketClient
 		ArrayList<HashMap<String, Object>> db;
 		HashMap<String, Object> response;
 		ArrayList<String> medSugList;
+		ArrayList<HashMap<String, Object>> medDB;
+		
+		
 		checkUpID = (String) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
 
@@ -488,7 +491,8 @@ public class Server extends DefaultSocketClient
 			db = md.getAllDataString(RemoteClientConstants.TABLE_EXAMINATION,
 					RemoteClientConstants.EXAMINATION_CHECKUP_ID, checkUpID,
 					stmt);
-
+			
+			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 			medSugList = new ArrayList<String>();
 			for (HashMap<String, Object> row : db)
 			{
@@ -498,7 +502,7 @@ public class Server extends DefaultSocketClient
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
 			response.put(RemoteClientConstants.REQUEST_MED_SUG, medSugList);
-
+			response.put(RemoteClientConstants.TABLE_MED, medDB);
 			// attach the map
 			Message msg = new Message("Server",
 					RemoteClientConstants.REQUEST_MED_SUG, response);
@@ -881,7 +885,7 @@ public class Server extends DefaultSocketClient
 
 				it.remove(); // avoids a ConcurrentModificationException
 			}
-			
+
 			try
 			{
 				md.insertData("users", col.toString(), value.toString(), stmt);
