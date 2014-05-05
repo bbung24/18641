@@ -3,27 +3,29 @@ package com.activities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class PatientSummActivity extends ActionBarActivity
 {
@@ -70,14 +72,18 @@ public class PatientSummActivity extends ActionBarActivity
 	public static class PlaceholderFragment extends Fragment
 	{
 		private Activity activity;
-		private ListView medSugLV, medHistLV;
+		private ListView medSugLV, dateLV;
 		private TextView resultTV;
-		private ArrayList<String> medSugList;
+		private ArrayList<String> medSugList, histDateList;
 		private Intent mIntent;
 		private Intent mServiceIntent;
 		private HashMap<String, Object> checkUp;
 		private HashMap<String, Object> reqMap;
+		private HashMap<String, ArrayList<String>> dateMedMap;
 		private String checkUpID, result;
+		private ArrayAdapter<String> medSugAdapter, dateListAdapter;
+		private ArrayList<HashMap<String, Object>> medHistMap;
+		private ArrayList<String> histLabel;
 
 		// TODO: suggested medicine list
 		// 1. Request and Receive suggested medicine list
@@ -101,7 +107,7 @@ public class PatientSummActivity extends ActionBarActivity
 			activity = getActivity();
 			medSugLV = (ListView) activity
 					.findViewById(R.id.lv_patient_summ_med_sugg);
-			medHistLV = (ListView) activity
+			dateLV = (ListView) activity
 					.findViewById(R.id.lv_patient_summ_med_history);
 			resultTV = (TextView) activity
 					.findViewById(R.id.tv_patient_summ_result);
@@ -153,6 +159,23 @@ public class PatientSummActivity extends ActionBarActivity
 
 		}
 
+		private void setupResponseReceiver()
+		{
+			// The filter's action is BROADCAST_ACTION
+			IntentFilter mStatusIntentFilter = new IntentFilter(
+					RemoteClientConstants.BROADCAST_ACTION);
+
+			// Adds a data filter for the HTTP scheme
+			mStatusIntentFilter.addCategory(Intent.CATEGORY_DEFAULT);
+
+			// Instantiates a new DownloadStateReceiver
+			ResponseReceiver mResponseReceiver = new ResponseReceiver();
+			// Registers the DownloadStateReceiver and its intent filters
+			LocalBroadcastManager.getInstance(activity).registerReceiver(
+					mResponseReceiver, mStatusIntentFilter);
+
+		}
+
 		private class ResponseReceiver extends BroadcastReceiver
 		{
 			// Prevents instantiation
@@ -174,10 +197,80 @@ public class PatientSummActivity extends ActionBarActivity
 					else if (msgIn.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_SUG))
 					{
+						medSugList = (ArrayList<String>) msgIn.getMap().get(
+								RemoteClientConstants.REQUEST_MED_SUG);
+
+						medSugAdapter = new ArrayAdapter<String>(activity,
+								android.R.layout.simple_list_item_1, medSugList);
+
+						// Set Listener to show dates for each medicine.
+						medSugLV.setOnItemClickListener(new OnItemClickListener()
+						{
+
+							@Override
+							public void onItemClick(AdapterView<?> parent,
+									View view, int position, long id)
+							{
+								dateLV.setEmptyView(activity
+										.findViewById(android.R.id.empty));
+
+								String med = medSugList.get(position);
+								if (dateMedMap.containsKey(med))
+								{
+									dateListAdapter = new ArrayAdapter<String>(
+											activity,
+											android.R.layout.simple_list_item_1,
+											dateMedMap.get(med));
+									dateLV.setAdapter(dateListAdapter);
+								} else
+								{
+									dateListAdapter = new ArrayAdapter<String>(
+											activity,
+											android.R.layout.simple_list_item_1,
+											new ArrayList());
+									dateLV.setAdapter(dateListAdapter);
+								}
+
+							}
+						});
 						
+						medSugLV.setAdapter(medSugAdapter);
+
+
 					} else if (msgIn.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_HIST))
 					{
+						// Rows of taken_relationship
+						medHistMap = (ArrayList<HashMap<String, Object>>) msgIn
+								.getMap().get(
+										RemoteClientConstants.REQUEST_MED_HIST);
+
+						// HashMap<date, list of med taken>
+						dateMedMap = new HashMap<String, ArrayList<String>>();
+
+						for (HashMap<String, Object> row : medHistMap)
+						{
+							String med = (String) row
+									.get(RemoteClientConstants.TAKEN_MED_ID);
+
+							// If date is not added, add date and medicine
+							if (!dateMedMap.keySet().contains(med))
+							{
+								dateMedMap
+										.put(med,
+												new ArrayList<String>(
+														(Integer) row
+																.get(RemoteClientConstants.TAKEN_DATE)));
+							}
+							// add medicine on date
+							else if (dateMedMap.keySet().contains(med))
+							{
+								dateMedMap
+										.get(med)
+										.add((String) row
+												.get(RemoteClientConstants.TAKEN_DATE));
+							}
+						}
 
 					} else
 					{

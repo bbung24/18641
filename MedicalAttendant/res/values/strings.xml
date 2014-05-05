@@ -55,7 +55,10 @@
     <string name="play">Play</string>
     <string name="done">Done</string>
     <string name="title_activity_dist_summ">DistSummActivity</string>
-	<string name="pic_view">Picture</string>
-	<string name="voc_view">Start Playing</string>
-	<string name="create_checkups">Create Check Up</string>
+    <string name="pic_view">Picture</string>
+    <string name="voc_view">Start Playing</string>
+    <string name="create_checkups">Create Check Up</string>
+    <string name="suggested_medication"> Suggested Medication to take</string>
+    <string name="medication_history"> History of medication dosage</string>
+
 </resources>
