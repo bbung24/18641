@@ -478,7 +478,7 @@ public class Server extends DefaultSocketClient
 		Integer checkUpID;
 		ArrayList<HashMap<String, Object>> db;
 		HashMap<String, Object> response;
-		ArrayList<String> medSugList;
+		ArrayList<Integer> medSugList;
 		ArrayList<HashMap<String, Object>> medDB;
 		
 		
@@ -493,11 +493,12 @@ public class Server extends DefaultSocketClient
 					stmt);
 			
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
-			medSugList = new ArrayList<String>();
+			medSugList = new ArrayList<Integer>();
 			for (HashMap<String, Object> row : db)
 			{
-				medSugList.add((String) row
-						.get(RemoteClientConstants.EXAMINATION_MED_ID));
+				
+				Integer i = ((Integer) row.get(RemoteClientConstants.EXAMINATION_MED_ID));
+				
 			}
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
