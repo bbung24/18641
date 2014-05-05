@@ -81,8 +81,13 @@ public class PatientsActivity extends ActionBarActivity
 		// private ArrayList<String> dateList, checkUpList;
 		private ArrayAdapter<String> checkUpListAdapter;
 		private ArrayList<HashMap<String, Object>> checkupList;
+		// <label, checkupid >
 		private HashMap<String, String> checkUpLabelIdMap;
+
+		// <checkUpID, entire rowcheckups>
+		private HashMap<String, Object> checkUpMap;
 		private ArrayList<String> labelList;
+		private Intent patSummIntent;
 
 		public PlaceholderFragment()
 		{
@@ -176,6 +181,7 @@ public class PatientsActivity extends ActionBarActivity
 							String checkUpID = (String) map
 									.get(RemoteClientConstants.CHECKUP_ID);
 
+							checkUpMap.put(checkUpID, map);
 							checkUpLabelIdMap.put(label, checkUpID);
 						}
 						labelList = new ArrayList<String>(
@@ -193,20 +199,24 @@ public class PatientsActivity extends ActionBarActivity
 											AdapterView<?> parent, View view,
 											int position, long id)
 									{
-										Intent patSummIntent = new Intent(
-												activity,
+										patSummIntent = new Intent(activity,
 												PatientSummActivity.class);
+										
 										String label = (String) parent
 												.getItemAtPosition(position);
 										String checkUpID = checkUpLabelIdMap
 												.get(label);
 
+										HashMap<String, Object> checkUp = (HashMap<String, Object>) checkUpMap
+												.get(checkUpID);
+
 										Toast.makeText(activity, "Selected:"
 												+ label, Toast.LENGTH_LONG);
+
 										patSummIntent
 												.putExtra(
-														RemoteClientConstants.CHECKUP_ID,
-														checkUpID);
+														RemoteClientConstants.CHECK_UP_ROW,
+														checkUp);
 									}
 								});
 
