@@ -61,7 +61,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		if (savedInstanceState == null)
 		{
 			getSupportFragmentManager().beginTransaction()
-			.add(R.id.container, new PlaceholderFragment()).commit();
+					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
@@ -99,14 +99,15 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		private Button addVocBtn;
 		private Button medicalDevBtn;
 		private EditText symptomText;
-		private ListView doctorsList;
+		private ListView docLV;
 		private Activity activity;
 		private Uri fileUri;
 		private Intent mServiceIntent;
 		private ArrayList<String> doctors;
 		private String id;
-		private CheckBoxListViewAdapter doctorListAdapter;
+		private CheckBoxListViewAdapter docListAdapter;
 		private String docSelected;
+
 		public PlaceholderFragment()
 		{
 		}
@@ -118,8 +119,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			View rootView = inflater.inflate(
 					R.layout.fragment_distant_diagnosis, container, false);
 			activity = getActivity();
-			doctorsList = (ListView) rootView
-					.findViewById(R.id.doctor_listview);
+			docLV = (ListView) rootView.findViewById(R.id.doctor_listview);
 			SharedPreferences settings = activity.getSharedPreferences(
 					LocalConstants.PREFS_NAME, 0);
 			id = settings.getString("user_id", "none");
@@ -145,7 +145,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 
 					fileUri = getOutputMediaFileUri(LocalConstants.MEDIA_TYPE_IMAGE);
-					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); 
+					cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
 
 					startActivityForResult(cameraIntent,
 							LocalConstants.CAMERA_REQUEST);
@@ -176,18 +176,18 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			{
 				public void onClick(View view)
 				{
-
-					docSelected = doctorListAdapter.getSelectedDoctor();
+					docSelected = docListAdapter.getSelectedDoctor();
 					if (docSelected == null)
 						Toast.makeText(activity, "Please Selected a doctor",
 								Toast.LENGTH_LONG).show();
 					else
 					{
-						//TODO: Send information to database. 
+						// TODO: Send information to database.
 
 						saveDist();
 						activity.finish();
-						Toast.makeText(activity, "DistantDiagnosis form was successfully sent", 
+						Toast.makeText(activity,
+								"DistantDiagnosis form was successfully sent",
 								Toast.LENGTH_LONG).show();
 					}
 				}
@@ -207,45 +207,55 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			mServiceIntent.putExtra("message", (Serializable) msgReqDocList);
 			activity.startService(mServiceIntent);
 		}
-		
-		private byte[] convertFileToByte(File file){
-			FileInputStream fileInputStream=null;
+
+		private byte[] convertFileToByte(File file)
+		{
+			FileInputStream fileInputStream = null;
 
 			byte[] bFile = new byte[(int) file.length()];
 
-			try {
-				//convert file into array of bytes
+			try
+			{
+				// convert file into array of bytes
 				fileInputStream = new FileInputStream(file);
 				fileInputStream.read(bFile);
 				fileInputStream.close();
-			}catch(Exception e){
+			} catch (Exception e)
+			{
 				e.printStackTrace();
 			}
-			
+
 			return bFile;
 		}
 
-		private void saveDist(){
+		private void saveDist()
+		{
 			HashMap<String, Object> data = new HashMap<String, Object>();
 			File image = new File(fileUri.getPath());
 			byte[] imageByte = convertFileToByte(image);
 			data.put(RemoteClientConstants.DIST_PIC_FILE, imageByte);
-			File voice = new File(LocalConstants.VOC_FILE_LOC+"temp_voc.3gp");
+			File voice = new File(LocalConstants.VOC_FILE_LOC + "temp_voc.3gp");
 			byte[] voiceByte = convertFileToByte(voice);
 			data.put(RemoteClientConstants.DIST_VOC_FILE, voiceByte);
-			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText().toString());
-			if(id.equals("none")) {
-				Toast.makeText(activity, "Error in the system", Toast.LENGTH_LONG).show();
+			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText()
+					.toString());
+			if (id.equals("none"))
+			{
+				Toast.makeText(activity, "Error in the system",
+						Toast.LENGTH_LONG).show();
 				return;
-			} else {
+			} else
+			{
 				data.put(RemoteClientConstants.DIST_PATIENT_ID, id);
 			}
 			data.put(RemoteClientConstants.DIST_DOC_ID, docSelected);
 			String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss",
 					Locale.US).format(new Date());
 			data.put(RemoteClientConstants.DIST_DATE, timeStamp);
-			data.put(RemoteClientConstants.DIST_PIC_LOC, "/"+id+"/IMG_" + timeStamp + ".jpg");
-			data.put(RemoteClientConstants.DIST_VOC_LOC, "/"+id+"/"+timeStamp+"_voc.3gp");
+			data.put(RemoteClientConstants.DIST_PIC_LOC, "/" + id + "/IMG_"
+					+ timeStamp + ".jpg");
+			data.put(RemoteClientConstants.DIST_VOC_LOC, "/" + id + "/"
+					+ timeStamp + "_voc.3gp");
 
 			Message msgSaveDist = new Message("Client",
 					RemoteClientConstants.SAVE_DIST, data);
@@ -286,7 +296,7 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 
 			File mediaStorageDir = new File(
 					Environment
-					.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
 					"MyCameraApp");
 			// This location works best if you want the created images to be
 			// shared
@@ -325,16 +335,16 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			if (requestCode == LocalConstants.CAMERA_REQUEST
 					&& resultCode == RESULT_OK)
 			{
-				//				photo = (Bitmap) data.getExtras().get("data");
-				//				imageView.setImageBitmap(photo);
+				// photo = (Bitmap) data.getExtras().get("data");
+				// imageView.setImageBitmap(photo);
 				Toast.makeText(activity,
 						"Photo Successfully added to Diagnosis",
 						Toast.LENGTH_SHORT).show();
 			} else if (requestCode == LocalConstants.VOICE_REQUEST
 					&& resultCode == RESULT_OK)
 			{
-				//				photo = (Bitmap) data.getExtras().get("data");
-				//				imageView.setImageBitmap(photo);
+				// photo = (Bitmap) data.getExtras().get("data");
+				// imageView.setImageBitmap(photo);
 				Toast.makeText(activity,
 						"Vocie Record Successfully added to Diagnosis",
 						Toast.LENGTH_SHORT).show();
@@ -355,7 +365,8 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{
-				if(isAdded()){
+				if (isAdded())
+				{
 					// Hear from Server.
 					Message msgIdIn = (Message) intent
 							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
@@ -368,21 +379,21 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 					} else if (msgIdIn.getCommand().equals(
 							RemoteClientConstants.REQUEST_LIST_DOC_ID))
 					{
-						doctors = new ArrayList<String>(msgIdIn.getMap().keySet());
-						doctorListAdapter = new CheckBoxListViewAdapter(
+						doctors = new ArrayList<String>(msgIdIn.getMap()
+								.keySet());
+						docListAdapter = new CheckBoxListViewAdapter(
 								getActivity(), doctors);
 
-						doctorsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-						doctorsList.setAdapter(doctorListAdapter);
-						doctorsList
-						.setOnItemClickListener(new OnItemClickListener()
+						docLV.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+						docLV.setAdapter(docListAdapter);
+						docLV.setOnItemClickListener(new OnItemClickListener()
 						{
 							@Override
 							public void onItemClick(AdapterView<?> arg0,
 									View arg1, int position, long arg3)
 							{
-								doctorListAdapter.setChecked(position);
-								doctorListAdapter.notifyDataSetChanged();
+								docListAdapter.setChecked(position);
+								docListAdapter.notifyDataSetChanged();
 							}
 						});
 					}

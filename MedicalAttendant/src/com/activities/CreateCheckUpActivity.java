@@ -27,26 +27,32 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class CreateCheckUpActivity extends ActionBarActivity {
+public class CreateCheckUpActivity extends ActionBarActivity
+{
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState)
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_create_check_up);
 
-		if (savedInstanceState == null) {
+		if (savedInstanceState == null)
+		{
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_check_up, menu);
@@ -54,12 +60,14 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.action_settings)
+		{
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -68,7 +76,8 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class PlaceholderFragment extends Fragment
+	{
 		private EditText resultEdit;
 		private ListView medLV;
 		private Button submitBtn;
@@ -76,17 +85,19 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 		private Intent mServiceIntent;
 		private HashMap<String, Object> map_create_checkup;
 		private ArrayList<HashMap<String, Object>> medTable;
-		private ArrayAdapter<String> medListAdapter;
 		private ArrayList<String> medSelected;
 		private HashMap<Integer, String> medMap;
 		private ArrayList<String> medList;
+		private MultiCheckBoxAdapter mAdapter;
 
-		public PlaceholderFragment() {
+		public PlaceholderFragment()
+		{
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
+				Bundle savedInstanceState)
+		{
 
 			View rootView = inflater.inflate(R.layout.fragment_create_check_up,
 					container, false);
@@ -101,8 +112,10 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 			// Set up response receiver.
 			setResponseReceiver();
 			// Submit to send request ->confirm -> doctor main menu.
-			submitBtn.setOnClickListener(new OnClickListener() {
-				public void onClick(View view) {
+			submitBtn.setOnClickListener(new OnClickListener()
+			{
+				public void onClick(View view)
+				{
 					sendCreateCheckUpRequest();
 				}
 			});
@@ -111,7 +124,8 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 		}
 
 		/** Send a request for list of medicine to server. */
-		private void sendMedlistRequest() {
+		private void sendMedlistRequest()
+		{
 			// 1-1 Create Msg.
 			Message msg_req_med_list = new Message("Client",
 					RemoteClientConstants.REQUEST_MED_LIST, null);
@@ -124,7 +138,8 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 		}
 
 		/** Send a request with necessary info for creating checkup request. */
-		private void sendCreateCheckUpRequest() {
+		private void sendCreateCheckUpRequest()
+		{
 			// 1. Put checkup information into amap
 			map_create_checkup = new HashMap<String, Object>();
 
@@ -134,7 +149,7 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 
 			// 1-2 Add Check Up Medication list.
 			// add checked med to medTable
-			map_create_checkup.put(RemoteClientConstants.CHECKUP_MED_LIST,
+			map_create_checkup.put(RemoteClientConstants.MED_CHECKUP_SELECTED,
 					medSelected);
 
 			// 1-3 Create message.
@@ -150,7 +165,8 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 		}
 
 		/** The method set ResponseReceiver */
-		private void setResponseReceiver() {
+		private void setResponseReceiver()
+		{
 			// The filter's action is BROADCAST_ACTION
 			IntentFilter mStatusIntentFilter = new IntentFilter(
 					RemoteClientConstants.BROADCAST_ACTION);
@@ -168,28 +184,34 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 
 		// Broadcast receiver for receiving status updates from the
 		// IntentService
-		private class ResponseReceiver extends BroadcastReceiver {
+		private class ResponseReceiver extends BroadcastReceiver
+		{
 			// Prevents instantiation
-			private ResponseReceiver() {
+			private ResponseReceiver()
+			{
 			}
 
 			// Called when the BroadcastReceiver gets an Intent it's registered
 			// to receive
 			@Override
-			public void onReceive(Context context, Intent intent) {
-				if (isAdded()) {
+			public void onReceive(Context context, Intent intent)
+			{
+				if (isAdded())
+				{
 					// Hear from Server.
 					Message msg_id_in = (Message) intent
 							.getSerializableExtra(RemoteClientConstants.BROADCAST_RECEV);
 
 					// null case -> notify user.
-					if (msg_id_in == null) {
+					if (msg_id_in == null)
+					{
 						Toast.makeText(activity, "internal error",
 								Toast.LENGTH_LONG).show();
 					}
 					// med_list request -> populate list view
 					else if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.REQUEST_MED_LIST)) {
+							RemoteClientConstants.REQUEST_MED_LIST))
+					{
 						medTable = (ArrayList<HashMap<String, Object>>) msg_id_in
 								.getMap().get(
 										RemoteClientConstants.REQUEST_MED_LIST);
@@ -198,7 +220,8 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 						medMap = new HashMap<Integer, String>();
 						medList = new ArrayList<String>();
 
-						for (HashMap<String, Object> row : medTable) {
+						for (HashMap<String, Object> row : medTable)
+						{
 							Integer medID = (Integer) row
 									.get(RemoteClientConstants.MED_ID);
 							String medName = (String) row
@@ -207,34 +230,26 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 							medMap.put(medID, medName);
 						}
 
-						medListAdapter = new ArrayAdapter<String>(
-								activity,
-								android.R.layout.simple_list_item_multiple_choice,
-								medList);
+						mAdapter = new MultiCheckBoxAdapter(activity, medList);
 
 						medLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-						medLV.setAdapter(medListAdapter);
-						medLV.setOnItemClickListener(new OnItemClickListener() {
-
+						medLV.setAdapter(mAdapter);
+						medLV.setOnItemClickListener((new OnItemClickListener()
+						{
 							@Override
-							public void onItemClick(AdapterView<?> parent,
-									View view, int position, long id) {
-								SparseBooleanArray a = medLV
-										.getCheckedItemPositions();
-
-								for (int i = 0; i < a.size(); i++) {
-									if (a.valueAt(i))
-										medSelected.add(medLV
-												.getItemAtPosition(i)
-												.toString());
-								}
+							public void onItemClick(AdapterView<?> arg0,
+									View arg1, int position, long arg3)
+							{
+								mAdapter.setChecked(position);
+								mAdapter.notifyDataSetChanged();
 							}
-						});
+						}));
 					}
 					// create_checkup request -> toast msg -> back to
 					// doctor_main_menu.
 					else if (msg_id_in.getCommand().equals(
-							RemoteClientConstants.REQUEST_CREATE_CHECKUP)) {
+							RemoteClientConstants.REQUEST_CREATE_CHECKUP))
+					{
 						Intent mainMenuIntent = new Intent(activity,
 								DoctorMenuActivity.class);
 						startActivity(mainMenuIntent);
@@ -244,6 +259,87 @@ public class CreateCheckUpActivity extends ActionBarActivity {
 			}
 		}
 
+		/** Custom Adapter to show list with checkbox and allow one selection. */
+		private class MultiCheckBoxAdapter extends BaseAdapter
+		{
+			private ViewHolder viewHolder = null;
+			private LayoutInflater inflater = null;
+			private ArrayList<String> list = new ArrayList<String>();
+			private boolean[] isCheckedConfirm;// Keep track of checked box
+
+			public MultiCheckBoxAdapter(Context c, ArrayList<String> list)
+			{
+				inflater = LayoutInflater.from(c);
+				this.list = list;
+				this.isCheckedConfirm = new boolean[list.size()];
+			}
+
+			public void setChecked(int position)
+			{
+				// turn off if already checked
+				if (isCheckedConfirm[position])
+					isCheckedConfirm[position] = !isCheckedConfirm[position];
+			}
+
+			public ArrayList<String> getSelected()
+			{
+				ArrayList<String> selection = new ArrayList<String>();
+				for (int i = 0; i < isCheckedConfirm.length; i++)
+				{
+					if (isCheckedConfirm[i])
+						selection.add(list.get(i));
+				}
+				return selection;
+			}
+
+			@Override
+			public int getCount()
+			{
+				return list.size();
+			}
+
+			@Override
+			public Object getItem(int arg0)
+			{
+				return null;
+			}
+
+			@Override
+			public long getItemId(int arg0)
+			{
+				return 0;
+			}
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent)
+			{
+				View v = convertView;
+				if (v == null)
+				{
+					viewHolder = new ViewHolder();
+					// inflate the row view.
+					v = inflater.inflate(R.layout.row, null);
+					viewHolder.cBox = (CheckBox) v
+							.findViewById(R.id.main_check_box);
+					v.setTag(viewHolder);
+				} else
+					viewHolder = (ViewHolder) v.getTag();
+
+				// Disable Checkbox event listener
+				viewHolder.cBox.setClickable(false);
+				viewHolder.cBox.setFocusable(false);
+
+				// Set text to be input list, and initialize to false.
+				viewHolder.cBox.setText(list.get(position));
+				viewHolder.cBox.setChecked(isCheckedConfirm[position]);
+				return v;
+			}
+		}
+
+		private class ViewHolder
+		{
+			private CheckBox cBox = null;
+		}
 	}
 
 }

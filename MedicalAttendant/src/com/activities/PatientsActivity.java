@@ -45,8 +45,7 @@ public class PatientsActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		
-		
+
 	}
 
 	@Override
@@ -92,6 +91,7 @@ public class PatientsActivity extends ActionBarActivity
 		private ArrayList<String> labelList;
 		private Intent patSummIntent;
 		private String userID;
+
 		public PlaceholderFragment()
 		{
 		}
@@ -106,11 +106,12 @@ public class PatientsActivity extends ActionBarActivity
 			checkUpListView = (ListView) rootView
 					.findViewById(R.id.patients_list);
 
-			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
+			SharedPreferences settings = activity.getSharedPreferences(
+					LocalConstants.PREFS_NAME, 0);
 			userID = settings.getString("user_id", "none");
 			sendPatientListRequest();
 			setResponseReceiver();
-			
+
 			return rootView;
 		}
 
@@ -118,8 +119,7 @@ public class PatientsActivity extends ActionBarActivity
 		{
 			// Map contains userid of doctor
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID,
-					userID);
+			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID, userID);
 
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
@@ -209,7 +209,7 @@ public class PatientsActivity extends ActionBarActivity
 									{
 										patSummIntent = new Intent(activity,
 												PatientSummActivity.class);
-										
+
 										String label = (String) parent
 												.getItemAtPosition(position);
 										String checkUpID = checkUpLabelIdMap
