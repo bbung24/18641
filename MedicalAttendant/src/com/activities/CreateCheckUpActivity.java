@@ -276,9 +276,7 @@ public class CreateCheckUpActivity extends ActionBarActivity
 
 			public void setChecked(int position)
 			{
-				// turn off if already checked
-				if (isCheckedConfirm[position])
-					isCheckedConfirm[position] = !isCheckedConfirm[position];
+				isCheckedConfirm[position] = !isCheckedConfirm[position];
 			}
 
 			public ArrayList<String> getSelected()
