@@ -44,6 +44,8 @@ public class PatientsActivity extends ActionBarActivity
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		
 	}
 
 	@Override
@@ -103,6 +105,9 @@ public class PatientsActivity extends ActionBarActivity
 			checkUpListView = (ListView) rootView
 					.findViewById(R.id.patients_list);
 
+			sendPatientListRequest();
+			setResponseReceiver();
+			
 			return rootView;
 		}
 

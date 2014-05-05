@@ -126,6 +126,9 @@ public class PatientSummActivity extends ActionBarActivity
 			// Request suggested medicine.
 			requestMedSug();
 			requestMedHist();
+			setupResponseReceiver();
+			
+			
 			// Request dosage history of medicine
 			return rootView;
 		}
