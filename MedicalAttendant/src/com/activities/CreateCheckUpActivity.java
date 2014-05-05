@@ -277,6 +277,7 @@ public class CreateCheckUpActivity extends ActionBarActivity
 			public void setChecked(int position)
 			{
 				isCheckedConfirm[position] = !isCheckedConfirm[position];
+				Toast.makeText(activity, "selected: " +  String.valueOf(position) + ": " + !isCheckedConfirm[position], Toast.LENGTH_LONG).show();
 			}
 
 			public ArrayList<String> getSelected()
