@@ -1,9 +1,5 @@
 package com.activities;
 
-import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -154,7 +150,9 @@ public class DoctorDistActivity extends ActionBarActivity {
 
 						ArrayList<String> distList = new ArrayList<String>();
 						for(int i = 0; i < data.size(); i++){
-							distList.add("Distant Diagnosis Received from " + data.get(i).get(RemoteClientConstants.DIST_PATIENT_ID));
+							distList.add("Distant Diagnosis Received from " + 
+									data.get(i).get(RemoteClientConstants.DIST_PATIENT_ID)+ " on " +
+									data.get(i).get(RemoteClientConstants.DIST_DATE));
 						}
 						adapter = new ArrayAdapter<String>(getActivity(),
 								android.R.layout.simple_list_item_1, distList);

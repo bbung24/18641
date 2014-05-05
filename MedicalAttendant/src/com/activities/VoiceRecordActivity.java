@@ -1,9 +1,6 @@
 package com.activities;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import ws.local.LocalConstants;
 import android.app.Activity;
@@ -76,9 +73,7 @@ public class VoiceRecordActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_voice_record,
 					container, false);
 			activity = getActivity();
-			String timeStamp = new SimpleDateFormat("yyyy:MM:dd_HH:mm:ss",
-					Locale.US).format(new Date());
-			mFileName = LocalConstants.VOC_FILE_LOC+timeStamp+"_voc.3gp";
+			mFileName = LocalConstants.VOC_FILE_LOC+"temp_voc.3gp";
 			recordBtn = (Button) rootView.findViewById(R.id.record_btn);
 			recordBtn.setText("Start recording");
 			recordBtn.setOnClickListener(new OnClickListener() {

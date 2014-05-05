@@ -24,15 +24,21 @@ public class Server extends DefaultSocketClient{
 
 	public Server(String strHost, int iPort) {
 		super(strHost, iPort);
-
+		
+		String tableName;
+		StringBuilder col;
 		md = new DBController();
+		Connection connection = md.getConnection();
+		Statement statement = null;
 		try {
-			Connection connection = md.getConnection();
-			Statement statement = connection.createStatement();
+			statement = connection.createStatement();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		try {
+			tableName = "users";
 
-			String tableName = "users";
-
-			StringBuilder col = new StringBuilder();
+			col = new StringBuilder();
 			col.append("id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,");
 			col.append("user_id VARCHAR(100),");
 			col.append("pw VARCHAR(100),");
@@ -41,7 +47,21 @@ public class Server extends DefaultSocketClient{
 			col.append("job VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-
+		} catch (SQLException ex) {  
+			System.out.println ("SQLException:");
+			while (ex != null)
+			{  
+				System.out.println ("SQLState: "
+						+ ex.getSQLState());
+				System.out.println ("Message:  "
+						+ ex.getMessage());
+				System.out.println ("Vendor:   "
+						+ ex.getErrorCode());
+				ex = ex.getNextException();
+				System.out.println ("");
+			}
+		}
+		try {
 			tableName = "checkups";
 
 			col = new StringBuilder();
@@ -52,7 +72,21 @@ public class Server extends DefaultSocketClient{
 			col.append("doctor_id VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-
+		} catch (SQLException ex) {  
+			System.out.println ("SQLException:");
+			while (ex != null)
+			{  
+				System.out.println ("SQLState: "
+						+ ex.getSQLState());
+				System.out.println ("Message:  "
+						+ ex.getMessage());
+				System.out.println ("Vendor:   "
+						+ ex.getErrorCode());
+				ex = ex.getNextException();
+				System.out.println ("");
+			}
+		}
+		try{
 			tableName = "distantdiagnosis";
 
 			col = new StringBuilder();
@@ -65,7 +99,21 @@ public class Server extends DefaultSocketClient{
 			col.append("date VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-
+		} catch (SQLException ex) {  
+			System.out.println ("SQLException:");
+			while (ex != null)
+			{  
+				System.out.println ("SQLState: "
+						+ ex.getSQLState());
+				System.out.println ("Message:  "
+						+ ex.getMessage());
+				System.out.println ("Vendor:   "
+						+ ex.getErrorCode());
+				ex = ex.getNextException();
+				System.out.println ("");
+			}
+		}
+		try {
 			tableName = "medications";
 
 			col = new StringBuilder();
@@ -73,7 +121,21 @@ public class Server extends DefaultSocketClient{
 			col.append("name VARCHAR(100)");
 
 			md.createTable(tableName, col.toString(), statement);
-
+		} catch (SQLException ex) {  
+			System.out.println ("SQLException:");
+			while (ex != null)
+			{  
+				System.out.println ("SQLState: "
+						+ ex.getSQLState());
+				System.out.println ("Message:  "
+						+ ex.getMessage());
+				System.out.println ("Vendor:   "
+						+ ex.getErrorCode());
+				ex = ex.getNextException();
+				System.out.println ("");
+			}
+		}
+		try {
 			tableName = "examination_relationships";
 
 			col = new StringBuilder();
@@ -81,7 +143,21 @@ public class Server extends DefaultSocketClient{
 			col.append("medication_id INT");
 
 			md.createTable(tableName, col.toString(), statement);
-
+		} catch (SQLException ex) {  
+			System.out.println ("SQLException:");
+			while (ex != null)
+			{  
+				System.out.println ("SQLState: "
+						+ ex.getSQLState());
+				System.out.println ("Message:  "
+						+ ex.getMessage());
+				System.out.println ("Vendor:   "
+						+ ex.getErrorCode());
+				ex = ex.getNextException();
+				System.out.println ("");
+			}
+		}
+		try {
 			tableName = "taken_relationships";
 
 			col = new StringBuilder();

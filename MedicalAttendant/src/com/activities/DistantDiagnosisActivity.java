@@ -102,8 +102,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		private ListView doctorsList;
 		private Activity activity;
 		private Uri fileUri;
-		private ImageView imageView;
-		private Bitmap photo;
 		private Intent mServiceIntent;
 		private ArrayList<String> doctors;
 		private String id;
@@ -120,7 +118,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 			View rootView = inflater.inflate(
 					R.layout.fragment_distant_diagnosis, container, false);
 			activity = getActivity();
-			imageView = (ImageView) rootView.findViewById(R.id.imageView1);
 			doctorsList = (ListView) rootView
 					.findViewById(R.id.doctor_listview);
 			SharedPreferences settings = activity.getSharedPreferences(
@@ -230,10 +227,10 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 
 		private void saveDist(){
 			HashMap<String, Object> data = new HashMap<String, Object>();
-			File image = new File(fileUri.toString());
+			File image = new File(fileUri.getPath());
 			byte[] imageByte = convertFileToByte(image);
 			data.put(RemoteClientConstants.DIST_PIC_FILE, imageByte);
-			File voice = new File(LocalConstants.VOC_FILE_LOC);
+			File voice = new File(LocalConstants.VOC_FILE_LOC+"temp_voc.3gp");
 			byte[] voiceByte = convertFileToByte(voice);
 			data.put(RemoteClientConstants.DIST_VOC_FILE, voiceByte);
 			data.put(RemoteClientConstants.DIST_SYMPTOM, symptomText.getText().toString());

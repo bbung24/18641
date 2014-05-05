@@ -87,8 +87,10 @@ public class StartActivity extends ActionBarActivity {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					startActivity(intent);
-					getActivity().finish();
+					if(isAdded()) {
+						startActivity(intent);
+						getActivity().finish();
+					}
 				}
 			}, 3000);
 		}
