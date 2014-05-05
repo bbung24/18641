@@ -76,6 +76,12 @@ public class RemoteClientConstants {
 	public static final String REQUEST_MED_SUG = "Request suggested medicine";
 	public static final String REQUEST_MED_HIST = "Request history of dosage";
 	
+	//MEDICATION TABLE 
+	public static final String TABLE_MED = "medications";
+	public static final String MED_ID = "id";
+	public static final String MED_NAME = "name";
+
+	
 	
 	
 	public static final String SAVE_DIST = "Save Distant Diagnosis";
