@@ -475,21 +475,21 @@ public class Server extends DefaultSocketClient
 	public void sendMedSug(Message input, Statement stmt)
 	{
 		// Get checkUpID for search.
-		String checkUpID;
+		Integer checkUpID;
 		ArrayList<HashMap<String, Object>> db;
 		HashMap<String, Object> response;
 		ArrayList<String> medSugList;
 		ArrayList<HashMap<String, Object>> medDB;
 		
 		
-		checkUpID = (String) input.getMap().get(
+		checkUpID = (Integer) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
 
 		try
 		{
 			// ArrayList of examination_relationship table row.
 			db = md.getAllDataString(RemoteClientConstants.TABLE_EXAMINATION,
-					RemoteClientConstants.EXAMINATION_CHECKUP_ID, checkUpID,
+					RemoteClientConstants.EXAMINATION_CHECKUP_ID, String.valueOf(checkUpID),
 					stmt);
 			
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);

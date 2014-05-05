@@ -127,8 +127,7 @@ public class PatientSummActivity extends ActionBarActivity
 			requestMedSug();
 			requestMedHist();
 			setupResponseReceiver();
-			
-			
+
 			// Request dosage history of medicine
 			return rootView;
 		}
@@ -236,9 +235,8 @@ public class PatientSummActivity extends ActionBarActivity
 
 							}
 						});
-						
-						medSugLV.setAdapter(medSugAdapter);
 
+						medSugLV.setAdapter(medSugAdapter);
 
 					} else if (msgIn.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_HIST))
