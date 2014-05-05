@@ -17,6 +17,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -90,7 +91,7 @@ public class PatientsActivity extends ActionBarActivity
 		private HashMap<String, Object> checkUpMap;
 		private ArrayList<String> labelList;
 		private Intent patSummIntent;
-
+		private String userID;
 		public PlaceholderFragment()
 		{
 		}
@@ -105,6 +106,8 @@ public class PatientsActivity extends ActionBarActivity
 			checkUpListView = (ListView) rootView
 					.findViewById(R.id.patients_list);
 
+			SharedPreferences settings = activity.getSharedPreferences(LocalConstants.PREFS_NAME, 0);
+			userID = settings.getString("user_id", "none");
 			sendPatientListRequest();
 			setResponseReceiver();
 			
@@ -116,7 +119,7 @@ public class PatientsActivity extends ActionBarActivity
 			// Map contains userid of doctor
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put(RemoteClientConstants.CHECKUP_DOCTOR_ID,
-					activity.getSharedPreferences(LocalConstants.USER_ID, 0));
+					userID);
 
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_CHECKUPS_DOCTOR, map);
