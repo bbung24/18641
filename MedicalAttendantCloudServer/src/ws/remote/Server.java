@@ -688,6 +688,8 @@ public class Server extends DefaultSocketClient
 	{
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> data = input.getMap();
+		//auto increment col-> set garbage val.
+		data.put(RemoteClientConstants.CHECKUP_ID, 0);
 		Integer checkUpID = -1;
 
 		String docID = (String) data
@@ -711,12 +713,12 @@ public class Server extends DefaultSocketClient
 			Object dataValue = pairs.getValue();
 			if (!key.equals(RemoteClientConstants.MED_CHECKUP_SELECTED))
 			{
-				if (count < 5 && dataValue instanceof String)
+				if (count < 4 && dataValue instanceof String)
 				{
 					col.append(key + ",");
 					value.append("\"" + dataValue + "\",");
 					count++;
-				} else if (count < 5)
+				} else if (count < 4)
 				{
 					col.append(key + ",");
 					value.append(dataValue + ",");
