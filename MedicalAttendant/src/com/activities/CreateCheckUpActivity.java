@@ -102,9 +102,9 @@ public class CreateCheckUpActivity extends ActionBarActivity
 			View rootView = inflater.inflate(R.layout.fragment_create_check_up,
 					container, false);
 			activity = getActivity();
-			resultEdit = (EditText) rootView.findViewById(R.id.response_edit);
-			medLV = (ListView) rootView.findViewById(R.id.medication_list);
-			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
+			resultEdit = (EditText) rootView.findViewById(R.id.create_checkup_result_edit);
+			medLV = (ListView) rootView.findViewById(R.id.create_checkup_med_lv);
+			submitBtn = (Button) rootView.findViewById(R.id.create_checkup_submit_btn);
 
 			// Request med_list and show in ListView.
 			sendMedlistRequest();

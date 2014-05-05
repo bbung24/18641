@@ -7,25 +7,22 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.activities.CreateCheckUpActivity$PlaceholderFragment" >
-    
+
     <EditText
-        android:id="@+id/result_edit"
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:layout_alignBaseline="@+id/result_edit"
-        android:layout_alignBottom="@+id/result_edit"
-        android:layout_alignLeft="@+id/result_edit"
+        android:id="@+id/create_checkup_result_edit"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_alignLeft="@+id/linearLayout1"
         android:ems="10"
-        android:inputType="textMultiLine" >
-        
-      <requestFocus />
-    </EditText>
-    
+        android:inputType="textMultiLine" />
+
     <LinearLayout
+        android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/result_edit"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/create_checkup_result_edit"
+        android:layout_centerHorizontal="true"
         android:orientation="vertical" >
 
         <TextView
@@ -33,25 +30,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/medication_to_take" />
+            android:text="@string/medication_to_take"
+            android:textSize="25sp" />
 
         <ListView
-            android:id="@+id/medication_list"
+            android:id="@+id/create_checkup_med_lv"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="100dp">
+            android:layout_height="350dp"
+             >
         </ListView>
-
-        <Button
-            android:id="@+id/submit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/submit" />
-
     </LinearLayout>
 
-    
+    <Button
+        android:id="@+id/create_checkup_submit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/submit" />
 
 </RelativeLayout>

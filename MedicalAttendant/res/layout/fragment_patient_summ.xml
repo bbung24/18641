@@ -9,39 +9,50 @@
     tools:context="com.activities.PatientSummActivity$PlaceholderFragment" >
 
     <TextView
-        android:id="@+id/tv_patient_summ_med_sugg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/suggested_medication"
-        android:textSize="30sp" />
-
-    <ListView
-        android:id="@+id/lv_patient_summ_med_history"
+        android:id="@+id/tv_patient_summ_result"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:layout_below="@+id/tv_patient_summ_med_history"
-        android:layout_centerHorizontal="true" >
-
-    </ListView>
-
-    <ListView
-        android:id="@+id/lv_patient_summ_med_sugg"
-        android:layout_width="wrap_content"
-        android:layout_height="350dp"
-        android:layout_alignLeft="@+id/lv_patient_summ_med_history"
-        android:layout_below="@+id/tv_patient_summ_med_sugg" >
-    </ListView>
+        android:layout_height="400dp"
+        android:text="" />
 
     <TextView
         android:id="@+id/tv_patient_summ_med_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/lv_patient_summ_med_sugg"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_patient_summ_result"
         android:text="@string/medication_history"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/tv_patient_summ_med_sugg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/tv_patient_summ_result"
+        android:text="@string/suggested_medication"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/lv_patient_summ_med_sugg"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignRight="@+id/tv_patient_summ_med_sugg"
+        android:layout_below="@+id/tv_patient_summ_med_sugg"
+        android:layout_marginTop="30dp" >
+
+    </ListView>
+
+    <ListView
+        android:id="@+id/lv_patient_summ_med_history"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignLeft="@+id/tv_patient_summ_med_history"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/lv_patient_summ_med_sugg" >
+
+    </ListView>
 
 </RelativeLayout>

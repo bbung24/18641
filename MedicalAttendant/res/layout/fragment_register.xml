@@ -153,14 +153,12 @@
                 android:id="@+id/register_radio_patient"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClicked"
                 android:text="@string/patient" />
 
             <RadioButton
                 android:id="@+id/register_radio_doctor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="onRadioButtonClicked"
                 android:text="@string/doctor" />
         </RadioGroup>
 
