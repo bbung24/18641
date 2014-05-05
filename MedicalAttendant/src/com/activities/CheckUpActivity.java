@@ -192,6 +192,7 @@ public class CheckUpActivity extends ActionBarActivity
 										RemoteClientConstants.REQUEST_CHECKUPS);
 
 						examList = new ArrayList<String>();
+						examMap = new HashMap<String,Integer>();
 						for (int i = 0; i < data.size(); i++)
 						{
 							Integer checkUpID = (Integer) data.get(i).get(
