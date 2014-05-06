@@ -49,10 +49,6 @@ public class RemoteClientService extends IntentService{
 		rc.sendOutput(output);
 	}
 
-	public void handleInput(Message input){
-		rc.handleInput(input);
-	}
-
 	public Message readInput(){
 		Message m = rc.readInput();
 		return m;

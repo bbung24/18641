@@ -517,6 +517,7 @@ public class Server extends DefaultSocketClient {
 	}
 
 	public void saveDist(Message input, Statement stmt) {
+		System.out.println("Save Dist");
 		HashMap<String, Object> response = new HashMap<String, Object>();
 		HashMap<String, Object> data = input.getMap();
 

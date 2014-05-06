@@ -174,8 +174,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 								Toast.LENGTH_LONG).show();
 					else
 					{
-						// TODO: Send information to database.
-
 						saveDist();
 						activity.finish();
 						Toast.makeText(activity,

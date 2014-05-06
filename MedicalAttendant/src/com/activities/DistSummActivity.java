@@ -130,9 +130,9 @@ public class DistSummActivity extends ActionBarActivity
 			}
 			byte[] voiceByte = (byte[]) m
 					.get(RemoteClientConstants.DIST_VOC_FILE);
-			convertByteToFile(LocalConstants.PIC_FILE_LOC + "test.3pg",
+			convertByteToFile(LocalConstants.PIC_FILE_LOC + "test.3gp",
 					voiceByte);
-			File vocFile = new File(LocalConstants.PIC_FILE_LOC + "test.3pg");
+			File vocFile = new File(LocalConstants.PIC_FILE_LOC + "test.3gp");
 			if (vocFile.exists())
 			{
 				vocViewBtn.setOnClickListener(new OnClickListener()
