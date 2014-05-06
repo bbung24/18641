@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -151,6 +152,8 @@ public class PatientsActivity extends ActionBarActivity
 		private class ResponseReceiver extends BroadcastReceiver
 		{
 
+			@SuppressWarnings("unchecked")
+			@SuppressLint({ "UseSparseArrays", "ShowToast" })
 			@Override
 			public void onReceive(Context context, Intent intent)
 			{
@@ -174,7 +177,7 @@ public class PatientsActivity extends ActionBarActivity
 
 						// Map to store <CHeckUPLabel, CheckUpID>
 						checkUpLabelIdMap = new HashMap<String, Integer>();
-
+						checkUpMap = new HashMap<Integer,Object>();
 						for (HashMap<String, Object> map : checkupList)
 						{
 							String patientID = (String) map
@@ -219,7 +222,7 @@ public class PatientsActivity extends ActionBarActivity
 												.get(checkUpID);
 
 										Toast.makeText(activity, "Selected:"
-												+ label, Toast.LENGTH_LONG);
+												+ label, Toast.LENGTH_LONG).show();
 
 										patSummIntent
 												.putExtra(
