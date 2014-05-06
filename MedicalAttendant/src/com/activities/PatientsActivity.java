@@ -84,10 +84,10 @@ public class PatientsActivity extends ActionBarActivity
 		private ArrayAdapter<String> checkUpListAdapter;
 		private ArrayList<HashMap<String, Object>> checkupList;
 		// <label, checkupid >
-		private HashMap<String, String> checkUpLabelIdMap;
+		private HashMap<String, Integer> checkUpLabelIdMap;
 
 		// <checkUpID, entire rowcheckups>
-		private HashMap<String, Object> checkUpMap;
+		private HashMap<Integer, Object> checkUpMap;
 		private ArrayList<String> labelList;
 		private Intent patSummIntent;
 		private String userID;
@@ -173,7 +173,7 @@ public class PatientsActivity extends ActionBarActivity
 								.get(RemoteClientConstants.REQUEST_CHECKUPS_DOC);
 
 						// Map to store <CHeckUPLabel, CheckUpID>
-						checkUpLabelIdMap = new HashMap<String, String>();
+						checkUpLabelIdMap = new HashMap<String, Integer>();
 
 						for (HashMap<String, Object> map : checkupList)
 						{
@@ -186,7 +186,7 @@ public class PatientsActivity extends ActionBarActivity
 							String label = "Patient: " + patientID + " Date: "
 									+ checkUpDate;
 							// VALUE -> id of checkUp
-							String checkUpID = (String) map
+							Integer checkUpID = (Integer) map
 									.get(RemoteClientConstants.CHECKUP_ID);
 
 							checkUpMap.put(checkUpID, map);
@@ -212,7 +212,7 @@ public class PatientsActivity extends ActionBarActivity
 
 										String label = (String) parent
 												.getItemAtPosition(position);
-										String checkUpID = checkUpLabelIdMap
+										Integer checkUpID = checkUpLabelIdMap
 												.get(label);
 
 										HashMap<String, Object> checkUp = (HashMap<String, Object>) checkUpMap
@@ -227,7 +227,6 @@ public class PatientsActivity extends ActionBarActivity
 														checkUp);
 									}
 								});
-
 						checkUpListView.setAdapter(checkUpListAdapter);
 
 					}
