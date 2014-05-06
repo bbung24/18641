@@ -79,15 +79,15 @@ public class ExaminationActivity extends ActionBarActivity
 	{
 		private Activity activity;
 		private ListView checkUpLV;
-		private ListView medLV;
-		private ArrayList<String> examList, takenList, medList;
-		ArrayList<Integer> medIdList;
+		private ListView medSugLV;
+		private ArrayList<String> examList, takenList, medSugList;
+		ArrayList<Integer> medSugIdList;
 		private ListCheckAdapter medAdapter;
 		private Button submitBtn;
 		private Integer checkUpID;
 		private Intent mServiceIntent;
 		private HashMap<Integer, String> medMap;
-		private ArrayList<HashMap<Integer, String>> medTable;
+		private ArrayList<HashMap<String, Object>> medTable;
 
 		public PlaceholderFragment()
 		{
@@ -110,7 +110,7 @@ public class ExaminationActivity extends ActionBarActivity
 			// examination.
 			// require checkupID, taken_relationship
 
-			medLV = (ListView) rootView.findViewById(R.id.medication_list);
+			medSugLV = (ListView) rootView.findViewById(R.id.medication_list);
 			requestMedSug();
 			setResponseReceiver();
 			// TODO: update this list with medication that doctor put in for
@@ -210,34 +210,34 @@ public class ExaminationActivity extends ActionBarActivity
 					else if (msg.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_SUG))
 					{
-						medTable = (ArrayList<HashMap<Integer, String>>) msg
+						medTable = (ArrayList<HashMap<String, Object>>) msg
 								.getMap().get(RemoteClientConstants.TABLE_MED);
 						medMap = new HashMap<Integer, String>();
 
-						for (HashMap<Integer, String> map : medTable)
+						for (HashMap<String, Object> map : medTable)
 						{
-							Integer medID = Integer.parseInt((String) (map
-									.get(RemoteClientConstants.MED_ID)));
-							String medName = map
+							Integer medID = (Integer) map
+									.get(RemoteClientConstants.MED_ID);
+							String medName = (String) map
 									.get(RemoteClientConstants.MED_NAME);
 							medMap.put(medID, medName);
 						}
 
-						medIdList = (ArrayList<Integer>) msg.getMap().get(
+						medSugIdList = (ArrayList<Integer>) msg.getMap().get(
 								RemoteClientConstants.REQUEST_MED_SUG);
+						//List of medicine name
+						medSugList = new ArrayList<String>();
 
-						medList = new ArrayList<String>();
-
-						for (Integer i : medIdList)
+						for (Integer i : medSugIdList)
 						{
-							medList.add(medMap.get(i));
+							medSugList.add(medMap.get(i));
 						}
 
-						medAdapter = new ListCheckAdapter(activity, medList);
+						medAdapter = new ListCheckAdapter(activity, medSugList);
 
-						medLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-						medLV.setAdapter(medAdapter);
-						medLV.setOnItemClickListener(new OnItemClickListener()
+						medSugLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+						medSugLV.setAdapter(medAdapter);
+						medSugLV.setOnItemClickListener(new OnItemClickListener()
 						{
 
 							@Override
