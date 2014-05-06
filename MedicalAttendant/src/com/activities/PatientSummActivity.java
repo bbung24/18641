@@ -271,7 +271,6 @@ public class PatientSummActivity extends ActionBarActivity
 									.get(RemoteClientConstants.TAKEN_DATE);
 							ArrayList<String> dates = medIdDateMap.get(medId);
 							dates.add(date);
-
 						}
 
 						medSugAdapter = new ArrayAdapter<String>(activity,
@@ -306,12 +305,7 @@ public class PatientSummActivity extends ActionBarActivity
 						medSugLV.setAdapter(medSugAdapter);
 					}
 
-				} else
-				{
-					Toast.makeText(activity, "internal error",
-							Toast.LENGTH_LONG).show();
-				}
-
+				} 
 			}
 		}
 

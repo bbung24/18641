@@ -438,6 +438,10 @@ public class Server extends DefaultSocketClient {
 						.get(RemoteClientConstants.EXAMINATION_MED_ID));
 				medSugIDList.add(i);
 			}
+			
+			System.out.println(result);
+			System.out.println(medSugIDList);
+			
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
 
@@ -477,6 +481,8 @@ public class Server extends DefaultSocketClient {
 					String.valueOf(checkUpID), stmt);
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 
+			System.out.println(db);
+			System.out.println(medDB);
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
 			response.put(RemoteClientConstants.REQUEST_MED_HIST, db);
@@ -792,16 +798,13 @@ public class Server extends DefaultSocketClient {
 			try {
 				md.insertData(RemoteClientConstants.TABLE_TAKEN,
 						col.toString(), value.toString(), stmt);
-
-				Message output = new Message("Server",
-						RemoteClientConstants.REQUEST_ADD_TAKEN, response);
-				sendOutput(output);
-
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-
+		Message output = new Message("Server",
+				RemoteClientConstants.REQUEST_ADD_TAKEN, response);
+		sendOutput(output);
 	}
 
 	private byte[] convertFileToByte(File file) {

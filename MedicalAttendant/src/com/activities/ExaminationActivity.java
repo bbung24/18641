@@ -266,9 +266,7 @@ public class ExaminationActivity extends ActionBarActivity
 					
 					else if(msg.getCommand().equals(RemoteClientConstants.REQUEST_ADD_TAKEN))
 					{
-						Toast.makeText(activity, "Submit Success", Toast.LENGTH_LONG).show();;
-						Intent checkUpActivityIntent = new Intent(activity, CheckUpActivity.class);
-						startActivity(checkUpActivityIntent);
+						Toast.makeText(activity, "Submit Success", Toast.LENGTH_LONG).show();
 						activity.finish();
 					}
 				}
