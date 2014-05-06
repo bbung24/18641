@@ -82,13 +82,14 @@ public class ExaminationActivity extends ActionBarActivity
 		private TextView resultTV;
 		private ListView medSugLV;
 		private ArrayList<String> examList, takenList, medSugList;
-		private ArrayList<Integer> medSugIdList,takenIdList;
+		private ArrayList<Integer> medSugIdList, takenIdList;
 		private ListCheckAdapter medAdapter;
 		private Button submitBtn;
 		private Integer checkUpID;
 		private Intent mServiceIntent;
 		private HashMap<Integer, String> medMap;
 		private ArrayList<HashMap<String, Object>> medTable;
+		private String result;
 
 		public PlaceholderFragment()
 		{
@@ -108,7 +109,7 @@ public class ExaminationActivity extends ActionBarActivity
 			// Get views
 			resultTV = (TextView) rootView.findViewById(R.id.tv_exam_result);
 			medSugLV = (ListView) rootView.findViewById(R.id.lv_exam_medsug);
-			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
+			submitBtn = (Button) rootView.findViewById(R.id.bt_exam_submit);
 			// Get checkUpID through intent
 			checkUpID = Integer.parseInt((String) intent.getExtras().get(
 					RemoteClientConstants.CHECKUP_ID));
@@ -138,13 +139,13 @@ public class ExaminationActivity extends ActionBarActivity
 			takenIdList = medAdapter.getSelectedId();
 			String date = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
 					.format(new Date());
-			
-			//	ArrayList of taken relationship table rows 
+
+			// ArrayList of taken relationship table rows
 			ArrayList<HashMap<String, Object>> takenRows = new ArrayList<HashMap<String, Object>>();
 
 			for (String medTaken : takenList)
 			{
-				//	Add information for each row 
+				// Add information for each row
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(RemoteClientConstants.TAKEN_CHECKUP_ID, checkUpID);
 				map.put(RemoteClientConstants.TAKEN_MED_ID, medTaken);
@@ -210,6 +211,15 @@ public class ExaminationActivity extends ActionBarActivity
 					else if (msg.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_SUG))
 					{
+						// Get a result of check up and set TextView
+						result = (String) msg.getMap().get(
+								RemoteClientConstants.CHECKUP_RESULT);
+						
+						Toast.makeText(activity, "result: " + result, Toast.LENGTH_LONG).show();;
+
+						resultTV.setText(result);
+
+						// Create a map of medicine ID and medicine name.
 						medTable = (ArrayList<HashMap<String, Object>>) msg
 								.getMap().get(RemoteClientConstants.TABLE_MED);
 						medMap = new HashMap<Integer, String>();
@@ -223,23 +233,18 @@ public class ExaminationActivity extends ActionBarActivity
 							medMap.put(medID, medName);
 						}
 
+						// Get a list of suggested medicine ID
 						medSugIdList = (ArrayList<Integer>) msg.getMap().get(
 								RemoteClientConstants.REQUEST_MED_SUG);
-						// List of medicine name
-						//medSugList = new ArrayList<String>();
-/*
-						for (Integer i : medSugIdList)
-						{
-							medSugList.add(medMap.get(i));
-						}
-*/
-						medAdapter = new ListCheckAdapter(activity, medSugIdList);
+
+						// Set a list of suggested medicine name.
+						medAdapter = new ListCheckAdapter(activity,
+								medSugIdList);
 
 						medSugLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 						medSugLV.setAdapter(medAdapter);
 						medSugLV.setOnItemClickListener(new OnItemClickListener()
 						{
-
 							@Override
 							public void onItemClick(AdapterView<?> parent,
 									View view, int position, long id)
