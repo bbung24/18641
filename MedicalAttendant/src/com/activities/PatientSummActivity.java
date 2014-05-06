@@ -3,6 +3,7 @@ package com.activities;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
@@ -88,6 +89,7 @@ public class PatientSummActivity extends ActionBarActivity
 		private ArrayList<HashMap<String, Object>> medHistMap, medTable;
 		private ArrayList<String> histLabel;
 		private HashMap<String, Integer> medMap; // <medName , medID>
+		private HashMap<Integer, String> revMedMap;
 
 		// TODO: suggested medicine list
 		// 1. Request and Receive suggested medicine list
@@ -224,7 +226,23 @@ public class PatientSummActivity extends ActionBarActivity
 									.get(RemoteClientConstants.MED_ID);
 							medMap.put(key, val);
 						}
-						medSugList = new ArrayList<String>(medMap.keySet());
+
+						revMedMap = new HashMap<Integer, String>();
+						for (HashMap<String, Object> row : medTable)
+						{
+							String val = (String) row
+									.get(RemoteClientConstants.MED_NAME);
+							int key = (Integer) row
+									.get(RemoteClientConstants.MED_ID);
+							revMedMap.put(key, val);
+						}
+
+						medSugList = new ArrayList<String>();
+
+						for (Integer id : medSugIdList)
+						{
+							medSugList.add(revMedMap.get(id));
+						}
 
 					} else if (msgIn.getCommand().equals(
 							RemoteClientConstants.REQUEST_MED_HIST))
@@ -253,7 +271,7 @@ public class PatientSummActivity extends ActionBarActivity
 									.get(RemoteClientConstants.TAKEN_DATE);
 							ArrayList<String> dates = medIdDateMap.get(medId);
 							dates.add(date);
-							
+
 						}
 
 						medSugAdapter = new ArrayAdapter<String>(activity,
@@ -274,7 +292,8 @@ public class PatientSummActivity extends ActionBarActivity
 								Integer medId = medMap.get(medName);
 								ArrayList<String> dateList = medIdDateMap
 										.get(medId);
-								dateLV.setEmptyView(activity.findViewById(android.R.id.empty));
+								dateLV.setEmptyView(activity
+										.findViewById(android.R.id.empty));
 								dateListAdapter = new ArrayAdapter<String>(
 										activity,
 										android.R.layout.simple_list_item_1,
