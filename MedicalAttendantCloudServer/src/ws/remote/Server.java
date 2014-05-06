@@ -481,7 +481,7 @@ public class Server extends DefaultSocketClient
 		HashMap<String, Object> response;
 		ArrayList<Integer> medSugIDList;
 		ArrayList<HashMap<String, Object>> medDB;
-		String result;
+		String result = "";
 		
 		checkUpID = (Integer) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
@@ -498,8 +498,13 @@ public class Server extends DefaultSocketClient
 					RemoteClientConstants.CHECKUP_ID,
 					String.valueOf(checkUpID), stmt);
 			
-			checkUpRow = checkUpDB.get(0);
-			result = (String) checkUpRow.get(RemoteClientConstants.CHECKUP_RESULT);
+			//	Find a row and its result  for the check.
+			for( HashMap<String, Object> row : checkUpDB)
+			{
+				if(row.get(RemoteClientConstants.CHECKUP_ID).equals(checkUpID))
+					result = (String) row.get(RemoteClientConstants.CHECKUP_RESULT);
+			}
+			
 			
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 			medSugIDList = new ArrayList<Integer>();
