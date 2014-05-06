@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import ws.local.LocalConstants;
 import android.app.Activity;
 import android.content.Intent;

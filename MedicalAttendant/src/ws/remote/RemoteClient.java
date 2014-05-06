@@ -1,5 +1,12 @@
 package ws.remote;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

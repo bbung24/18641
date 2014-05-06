@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,10 +15,6 @@ import ws.local.LocalConstants;
 import ws.remote.Message;
 import ws.remote.RemoteClientConstants;
 import ws.remote.RemoteClientService;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -20,6 +23,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +36,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.os.Build;
 
 public class PatientsActivity extends ActionBarActivity
 {

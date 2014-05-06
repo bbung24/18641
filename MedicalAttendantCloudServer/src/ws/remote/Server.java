@@ -1,5 +1,12 @@
 package ws.remote;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import handleConnections.DefaultSocketClient;
 import java.io.BufferedOutputStream;
 import java.io.File;

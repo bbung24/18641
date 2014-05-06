@@ -1,5 +1,11 @@
 package ws.remote;
 
+/**
+ * S14 18641 Medical Attendant.
+ * 
+ * @author Sang Rok Shin, Inho Yong
+ **/
+
 public class RemoteClientConstants
 {
 	private RemoteClientConstants()
@@ -36,7 +42,7 @@ public class RemoteClientConstants
 
 	public static final String CHECK_UP_ROW = "Entire row for CHECKUP_ID";
 
-	//	Checkup table variables
+	// Checkup table variables
 	public static final String TABLE_CHECKUP = "checkups";
 	public static final String CHECKUP_ID = "id";
 	public static final String CHECKUP_PATIENT_ID = "patient_id";

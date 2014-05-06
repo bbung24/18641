@@ -1,5 +1,12 @@
 package ws.local;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.Serializable;
 
 import ws.remote.Message;

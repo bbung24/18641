@@ -1,5 +1,12 @@
 package ws.local;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import android.os.Environment;
 
 public class LocalConstants {

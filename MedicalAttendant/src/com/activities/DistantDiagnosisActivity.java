@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.Serializable;
@@ -40,6 +47,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 
 public class DistantDiagnosisActivity extends ActionBarActivity
 {

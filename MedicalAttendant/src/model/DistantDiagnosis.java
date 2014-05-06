@@ -1,5 +1,12 @@
 package model;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 public class DistantDiagnosis
 {
 	private String id, name, symptom, picLoc, vocLoc;

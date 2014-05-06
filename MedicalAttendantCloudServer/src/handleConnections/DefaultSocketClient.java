@@ -1,5 +1,12 @@
 package handleConnections;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;

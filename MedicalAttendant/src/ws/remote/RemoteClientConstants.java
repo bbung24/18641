@@ -1,5 +1,12 @@
 package ws.remote;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 public class RemoteClientConstants
 {
 	private RemoteClientConstants()

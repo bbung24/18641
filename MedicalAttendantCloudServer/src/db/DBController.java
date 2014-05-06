@@ -1,5 +1,12 @@
 package db;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;

@@ -1,7 +1,13 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import ws.local.LocalConstants;
-import ws.remote.RemoteClient;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;

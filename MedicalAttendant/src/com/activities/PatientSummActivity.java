@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,7 +83,7 @@ public class PatientSummActivity extends ActionBarActivity
 		private Activity activity;
 		private ListView medSugLV, dateLV;
 		private TextView resultTV;
-		private ArrayList<String> medSugList, histDateList;
+		private ArrayList<String> medSugList;
 		private ArrayList<Integer> medSugIdList;
 		private Intent mIntent;
 		private Intent mServiceIntent;
@@ -87,18 +94,8 @@ public class PatientSummActivity extends ActionBarActivity
 		private Integer checkUpID;
 		private ArrayAdapter<String> medSugAdapter, dateListAdapter;
 		private ArrayList<HashMap<String, Object>> medHistMap, medTable;
-		private ArrayList<String> histLabel;
 		private HashMap<String, Integer> medMap; // <medName , medID>
 		private HashMap<Integer, String> revMedMap;
-
-		// TODO: suggested medicine list
-		// 1. Request and Receive suggested medicine list
-		// 2. set up listview
-
-		// TODO: medicine list history
-		// 1. Request and Receive medicine dosage history
-		// 2. group by date.
-		// 3. set up listview
 
 		public PlaceholderFragment()
 		{
@@ -305,7 +302,7 @@ public class PatientSummActivity extends ActionBarActivity
 						medSugLV.setAdapter(medSugAdapter);
 					}
 
-				} 
+				}
 			}
 		}
 

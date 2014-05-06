@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,7 +88,7 @@ public class ExaminationActivity extends ActionBarActivity
 		private Activity activity;
 		private TextView resultTV;
 		private ListView medSugLV;
-		private ArrayList<String> examList, takenList, medSugList;
+
 		private ArrayList<Integer> medSugIdList, takenIdList;
 		private ListCheckAdapter medAdapter;
 		private Button submitBtn;
@@ -127,9 +134,6 @@ public class ExaminationActivity extends ActionBarActivity
 					sendTakenMed();
 				}
 			});
-			// TODO: put into checkUpList database for checked medications and
-			// dates.
-			// then update checkUpList.
 
 			return rootView;
 		}
@@ -152,17 +156,17 @@ public class ExaminationActivity extends ActionBarActivity
 				map.put(RemoteClientConstants.TAKEN_DATE, date);
 				takenRows.add(map);
 			}
-			
+
 			HashMap<String, Object> response = new HashMap<String, Object>();
 			response.put(RemoteClientConstants.TABLE_TAKEN, takenRows);
-			
+
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_ADD_TAKEN, response);
-			
+
 			mServiceIntent = new Intent(activity, RemoteClientService.class);
 			mServiceIntent.putExtra("message", (Serializable) msg);
 			activity.startService(mServiceIntent);
-			
+
 		}
 
 		private void requestMedSug()
@@ -222,8 +226,10 @@ public class ExaminationActivity extends ActionBarActivity
 						// Get a result of check up and set TextView
 						result = (String) msg.getMap().get(
 								RemoteClientConstants.CHECKUP_RESULT);
-						
-						Toast.makeText(activity, "result: " + result, Toast.LENGTH_LONG).show();;
+
+						Toast.makeText(activity, "result: " + result,
+								Toast.LENGTH_LONG).show();
+						;
 
 						resultTV.setText(result);
 
@@ -263,10 +269,12 @@ public class ExaminationActivity extends ActionBarActivity
 
 						});
 					}
-					
-					else if(msg.getCommand().equals(RemoteClientConstants.REQUEST_ADD_TAKEN))
+
+					else if (msg.getCommand().equals(
+							RemoteClientConstants.REQUEST_ADD_TAKEN))
 					{
-						Toast.makeText(activity, "Submit Success", Toast.LENGTH_LONG).show();
+						Toast.makeText(activity, "Submit Success",
+								Toast.LENGTH_LONG).show();
 						activity.finish();
 					}
 				}
@@ -284,7 +292,6 @@ public class ExaminationActivity extends ActionBarActivity
 			private ViewHolder viewHolder = null;
 			private LayoutInflater inflater = null;
 			private ArrayList<Integer> idList = new ArrayList<Integer>();
-			private ArrayList<String> list = new ArrayList<String>();
 			private boolean[] isCheckedConfirm;// Keep track of checked box
 
 			public ListCheckAdapter(Context c, ArrayList<Integer> idList)

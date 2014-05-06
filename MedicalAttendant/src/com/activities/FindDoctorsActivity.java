@@ -1,5 +1,12 @@
 package com.activities;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -38,7 +45,6 @@ public class FindDoctorsActivity extends FragmentActivity implements
 	private ArrayList<String> list_doc;
 	private HashMap<String, Object> map_doc_add;
 	private Geocoder coder;
-	private List<Address> address;
 	private Location myLoc;
 	private LocationManager locationManager;
 	private String provider;
@@ -79,25 +85,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 		requestDocList();
 		setupResponseReceiver();
 
-		/*
-		 * String strAdd = "3 Bayard Rd Pittsburgh PA 15213"; try { address =
-		 * coder.getFromLocationName(strAdd, 1);
-		 * 
-		 * } catch (IOException e) { e.printStackTrace(); }
-		 * 
-		 * // Request list of doctors to the server rc = new RemoteClient();
-		 * rc.sendOutput(new Message(null,
-		 * RemoteClientConstants.REQUEST_LIST_ALLDOC, null));
-		 * 
-		 * Message msg = rc.readInput(); Set<String> docSet =
-		 * msg.getMap().keySet(); // 
-		 * addMarker. 
-		 * 
-		 * 
-		 * googleMap.addMarker(new MarkerOptions().position(new LatLng(address
-		 * .get(0).getLatitude(), address.get(0).getLongitude())));
-		 */
-		// TODO: Focus on current location.
+	
 		if (myLoc != null) {
 			onLocationChanged(myLoc);
 		}

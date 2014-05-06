@@ -1,12 +1,19 @@
 package model;
 
+/**	
+ * 	S14 18641
+ *  Medical Attendant.
+ * 	
+ * 	@author Sang Rok Shin, Inho Yong
+ **/
+
 public class User
 {
-	String id;
-	String pw;
-	int age;
-	int zipCode;
-	boolean isDoctor;
+	private String id;
+	private String pw;
+	private int age;
+	private int zipCode;
+	private boolean isDoctor;
 	
 	public User(String id, String pw, int age, int zipCode, boolean isDoctor)
 	{
