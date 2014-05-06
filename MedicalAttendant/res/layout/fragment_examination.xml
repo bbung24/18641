@@ -8,50 +8,50 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.activities.ExaminationActivity$PlaceholderFragment" >
 
-    <TextView
-            android:id="@+id/summary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Summary will go here" />
-    
     <ListView
-        android:id="@+id/check_up_list"
-        android:layout_width="150dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/summary" >
+        android:id="@+id/lv_exam_medsug"
+        android:layout_width="245dp"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
     </ListView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/bt_exam_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/lv_exam_medsug"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="124dp"
+        android:layout_marginRight="59dp"
+        android:text="@string/submit" />
+
+    <TextView
+        android:id="@+id/medication_to_take_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/medication_to_take"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/summary"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/check_up_list"
-        android:orientation="vertical" >
+        android:layout_centerHorizontal="true"
+        android:text="@string/exam_result"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/medication_to_take_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/medication_to_take" />
-
-        <ListView
-            android:id="@+id/medication_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="100dp">
-        </ListView>
-
-        <Button
-            android:id="@+id/submit_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/submit" />
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_exam_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/medication_to_take_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/summary"
+        android:text="TextView" />
 
 </RelativeLayout>

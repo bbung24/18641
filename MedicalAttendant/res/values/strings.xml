@@ -60,5 +60,6 @@
     <string name="create_checkups">Create Check Up</string>
     <string name="suggested_medication"> Suggested Medication to take</string>
     <string name="medication_history"> History of medication dosage</string>
+    <string name="exam_result">Examinatin Result</string>
 
 </resources>

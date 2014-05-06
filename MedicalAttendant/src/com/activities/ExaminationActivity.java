@@ -30,6 +30,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -78,10 +79,10 @@ public class ExaminationActivity extends ActionBarActivity
 	public static class PlaceholderFragment extends Fragment
 	{
 		private Activity activity;
-		private ListView checkUpLV;
+		private TextView resultTV;
 		private ListView medSugLV;
 		private ArrayList<String> examList, takenList, medSugList;
-		ArrayList<Integer> medSugIdList;
+		private ArrayList<Integer> medSugIdList,takenIdList;
 		private ListCheckAdapter medAdapter;
 		private Button submitBtn;
 		private Integer checkUpID;
@@ -99,52 +100,51 @@ public class ExaminationActivity extends ActionBarActivity
 		{
 			View rootView = inflater.inflate(R.layout.fragment_examination,
 					container, false);
-			checkUpLV = (ListView) rootView.findViewById(R.id.check_up_list);
+
 			activity = getActivity();
 
 			Intent intent = activity.getIntent();
+
+			// Get views
+			resultTV = (TextView) rootView.findViewById(R.id.tv_exam_result);
+			medSugLV = (ListView) rootView.findViewById(R.id.lv_exam_medsug);
+			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
+			// Get checkUpID through intent
 			checkUpID = Integer.parseInt((String) intent.getExtras().get(
 					RemoteClientConstants.CHECKUP_ID));
 
-			// TODO: update this list with checkUpList associated with clicked
-			// examination.
-			// require checkupID, taken_relationship
-
-			medSugLV = (ListView) rootView.findViewById(R.id.medication_list);
+			// Request suggested medicine list.
 			requestMedSug();
 			setResponseReceiver();
-			// TODO: update this list with medication that doctor put in for
-			// clicked examination.
-			// Require -> Checkup ID in examination relationship.
 
-			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);
+			// When click on submit, send medicine taken.
 			submitBtn.setOnClickListener(new OnClickListener()
 			{
-
 				@Override
 				public void onClick(View v)
 				{
 					sendTakenMed();
 				}
-
 			});
 			// TODO: put into checkUpList database for checked medications and
 			// dates.
 			// then update checkUpList.
-			
 
 			return rootView;
 		}
 
 		private void sendTakenMed()
 		{
-			takenList = medAdapter.getSelected();
+			takenIdList = medAdapter.getSelectedId();
 			String date = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.US)
 					.format(new Date());
+			
+			//	ArrayList of taken relationship table rows 
 			ArrayList<HashMap<String, Object>> takenRows = new ArrayList<HashMap<String, Object>>();
 
 			for (String medTaken : takenList)
 			{
+				//	Add information for each row 
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(RemoteClientConstants.TAKEN_CHECKUP_ID, checkUpID);
 				map.put(RemoteClientConstants.TAKEN_MED_ID, medTaken);
@@ -225,15 +225,15 @@ public class ExaminationActivity extends ActionBarActivity
 
 						medSugIdList = (ArrayList<Integer>) msg.getMap().get(
 								RemoteClientConstants.REQUEST_MED_SUG);
-						//List of medicine name
-						medSugList = new ArrayList<String>();
-
+						// List of medicine name
+						//medSugList = new ArrayList<String>();
+/*
 						for (Integer i : medSugIdList)
 						{
 							medSugList.add(medMap.get(i));
 						}
-
-						medAdapter = new ListCheckAdapter(activity, medSugList);
+*/
+						medAdapter = new ListCheckAdapter(activity, medSugIdList);
 
 						medSugLV.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 						medSugLV.setAdapter(medAdapter);
@@ -264,14 +264,15 @@ public class ExaminationActivity extends ActionBarActivity
 		{
 			private ViewHolder viewHolder = null;
 			private LayoutInflater inflater = null;
+			private ArrayList<Integer> idList = new ArrayList<Integer>();
 			private ArrayList<String> list = new ArrayList<String>();
 			private boolean[] isCheckedConfirm;// Keep track of checked box
 
-			public ListCheckAdapter(Context c, ArrayList<String> list)
+			public ListCheckAdapter(Context c, ArrayList<Integer> idList)
 			{
 				inflater = LayoutInflater.from(c);
-				this.list = list;
-				this.isCheckedConfirm = new boolean[list.size()];
+				this.idList = idList;
+				this.isCheckedConfirm = new boolean[idList.size()];
 			}
 
 			public void setChecked(int position)
@@ -279,13 +280,13 @@ public class ExaminationActivity extends ActionBarActivity
 				isCheckedConfirm[position] = !isCheckedConfirm[position];
 			}
 
-			public ArrayList<String> getSelected()
+			public ArrayList<Integer> getSelectedId()
 			{
-				ArrayList<String> selection = new ArrayList<String>();
+				ArrayList<Integer> selection = new ArrayList<Integer>();
 				for (int i = 0; i < isCheckedConfirm.length; i++)
 				{
 					if (isCheckedConfirm[i])
-						selection.add(list.get(i));
+						selection.add(idList.get(i));
 				}
 				return selection;
 			}
@@ -293,7 +294,7 @@ public class ExaminationActivity extends ActionBarActivity
 			@Override
 			public int getCount()
 			{
-				return list.size();
+				return idList.size();
 			}
 
 			@Override
@@ -328,7 +329,7 @@ public class ExaminationActivity extends ActionBarActivity
 				viewHolder.cBox.setFocusable(false);
 
 				// Set text to be input list, and initialize to false.
-				viewHolder.cBox.setText(list.get(position));
+				viewHolder.cBox.setText(medMap.get(idList.get(position)));
 				viewHolder.cBox.setChecked(isCheckedConfirm[position]);
 				return v;
 			}

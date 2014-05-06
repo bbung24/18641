@@ -476,11 +476,12 @@ public class Server extends DefaultSocketClient
 	{
 		// Get checkUpID for search.
 		Integer checkUpID;
-		ArrayList<HashMap<String, Object>> db;
+		ArrayList<HashMap<String, Object>> examDB, checkUpDB;
+		HashMap<String, Object> checkUpRow;
 		HashMap<String, Object> response;
-		ArrayList<Integer> medSugList;
+		ArrayList<Integer> medSugIDList;
 		ArrayList<HashMap<String, Object>> medDB;
-		
+		String result;
 		
 		checkUpID = (Integer) input.getMap().get(
 				RemoteClientConstants.CHECKUP_ID);
@@ -488,21 +489,34 @@ public class Server extends DefaultSocketClient
 		try
 		{
 			// ArrayList of examination_relationship table row.
-			db = md.getAllDataString(RemoteClientConstants.TABLE_EXAMINATION,
-					RemoteClientConstants.EXAMINATION_CHECKUP_ID, String.valueOf(checkUpID),
-					stmt);
+			examDB = md.getAllDataString(RemoteClientConstants.TABLE_EXAMINATION,
+					RemoteClientConstants.EXAMINATION_CHECKUP_ID,
+					String.valueOf(checkUpID), stmt);
+
+			checkUpDB = md.getAllDataString(
+					RemoteClientConstants.TABLE_CHECKUP,
+					RemoteClientConstants.CHECKUP_ID,
+					String.valueOf(checkUpID), stmt);
+			
+			checkUpRow = checkUpDB.get(0);
+			result = (String) checkUpRow.get(RemoteClientConstants.CHECKUP_RESULT);
 			
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
-			medSugList = new ArrayList<Integer>();
-			for (HashMap<String, Object> row : db)
+			medSugIDList = new ArrayList<Integer>();
+			for (HashMap<String, Object> row : examDB)
 			{
-				
-				Integer i = ((Integer) row.get(RemoteClientConstants.EXAMINATION_MED_ID));
-				medSugList.add(i);
+
+				Integer i = ((Integer) row
+						.get(RemoteClientConstants.EXAMINATION_MED_ID));
+				medSugIDList.add(i);
 			}
 			// put arraylist of suggested medicine to map
 			response = new HashMap<String, Object>();
-			response.put(RemoteClientConstants.REQUEST_MED_SUG, medSugList);
+			
+			response.put(RemoteClientConstants.CHECKUP_RESULT, result);
+			response.put(RemoteClientConstants.REQUEST_MED_SUG, medSugIDList);
+			
+			//	Map of Medicine ID and name
 			response.put(RemoteClientConstants.TABLE_MED, medDB);
 			// attach the map
 			Message msg = new Message("Server",
@@ -534,7 +548,8 @@ public class Server extends DefaultSocketClient
 		{
 			// ArrayList of examination_relationship table row.
 			db = md.getAllDataString(RemoteClientConstants.TABLE_TAKEN,
-					RemoteClientConstants.TAKEN_CHECKUP_ID, String.valueOf(checkUpID), stmt);
+					RemoteClientConstants.TAKEN_CHECKUP_ID,
+					String.valueOf(checkUpID), stmt);
 			medDB = md.getTable(RemoteClientConstants.TABLE_MED, stmt);
 
 			// put arraylist of suggested medicine to map
@@ -704,7 +719,7 @@ public class Server extends DefaultSocketClient
 
 		String docID = (String) data
 				.get(RemoteClientConstants.CHECKUP_DOCTOR_ID);
-		
+
 		String date = (String) data.get(RemoteClientConstants.CHECKUP_DATE);
 
 		StringBuilder col = new StringBuilder();
