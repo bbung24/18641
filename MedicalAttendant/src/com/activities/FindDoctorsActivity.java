@@ -206,7 +206,7 @@ public class FindDoctorsActivity extends FragmentActivity implements
 						googleMap.addMarker(new MarkerOptions()
 								.position(new LatLng(list_add_latlng.get(0)
 										.getLatitude(), list_add_latlng.get(0)
-										.getLongitude())));
+										.getLongitude())).title(doc));
 					} catch (IOException e) {
 						e.printStackTrace();
 						Toast.makeText(getApplicationContext(),
