@@ -50,7 +50,7 @@ public class RemoteClientConstants
 	public static final String EXAMINATION_MED_ID = "medication_id";
 
 	// taken_relatipnship table
-	public static final String TABLE_TAKEN = "taken_relationpships";
+	public static final String TABLE_TAKEN = "taken_relationships";
 	public static final String TAKEN_CHECKUP_ID = "check_up_id";
 	public static final String TAKEN_MED_ID = "medication_id";
 	public static final String TAKEN_DATE = "date";
