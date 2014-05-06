@@ -80,7 +80,8 @@ public class PatientSummActivity extends ActionBarActivity
 		private HashMap<String, Object> checkUp;
 		private HashMap<String, Object> reqMap;
 		private HashMap<String, ArrayList<String>> dateMedMap;
-		private String checkUpID, result;
+		private String result;
+		private Integer checkUpID;
 		private ArrayAdapter<String> medSugAdapter, dateListAdapter;
 		private ArrayList<HashMap<String, Object>> medHistMap;
 		private ArrayList<String> histLabel;
@@ -98,6 +99,7 @@ public class PatientSummActivity extends ActionBarActivity
 		{
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState)
@@ -117,7 +119,7 @@ public class PatientSummActivity extends ActionBarActivity
 			checkUp = (HashMap<String, Object>) mIntent
 					.getSerializableExtra(RemoteClientConstants.CHECK_UP_ROW);
 
-			checkUpID = (String) checkUp.get(RemoteClientConstants.CHECKUP_ID);
+			checkUpID = (Integer) checkUp.get(RemoteClientConstants.CHECKUP_ID);
 			result = (String) checkUp.get(RemoteClientConstants.CHECKUP_RESULT);
 
 			// Set result textview

@@ -228,6 +228,10 @@ public class PatientsActivity extends ActionBarActivity
 												.putExtra(
 														RemoteClientConstants.CHECK_UP_ROW,
 														checkUp);
+										startActivity(patSummIntent);
+										activity.finish();
+										
+										
 									}
 								});
 						checkUpListView.setAdapter(checkUpListAdapter);
