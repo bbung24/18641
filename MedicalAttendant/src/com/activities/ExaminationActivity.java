@@ -143,18 +143,26 @@ public class ExaminationActivity extends ActionBarActivity
 			// ArrayList of taken relationship table rows
 			ArrayList<HashMap<String, Object>> takenRows = new ArrayList<HashMap<String, Object>>();
 
-			for (String medTaken : takenList)
+			for (Integer id : takenIdList)
 			{
 				// Add information for each row
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				map.put(RemoteClientConstants.TAKEN_CHECKUP_ID, checkUpID);
-				map.put(RemoteClientConstants.TAKEN_MED_ID, medTaken);
+				map.put(RemoteClientConstants.TAKEN_MED_ID, id);
 				map.put(RemoteClientConstants.TAKEN_DATE, date);
+				takenRows.add(map);
 			}
+			
 			HashMap<String, Object> response = new HashMap<String, Object>();
 			response.put(RemoteClientConstants.TABLE_TAKEN, takenRows);
+			
 			Message msg = new Message("Client",
 					RemoteClientConstants.REQUEST_ADD_TAKEN, response);
+			
+			mServiceIntent = new Intent(activity, RemoteClientService.class);
+			mServiceIntent.putExtra("message", (Serializable) msg);
+			activity.startService(mServiceIntent);
+			
 		}
 
 		private void requestMedSug()
@@ -254,6 +262,14 @@ public class ExaminationActivity extends ActionBarActivity
 							}
 
 						});
+					}
+					
+					else if(msg.getCommand().equals(RemoteClientConstants.REQUEST_ADD_TAKEN))
+					{
+						Toast.makeText(activity, "Submit Success", Toast.LENGTH_LONG).show();;
+						Intent checkUpActivityIntent = new Intent(activity, CheckUpActivity.class);
+						startActivity(checkUpActivityIntent);
+						activity.finish();
 					}
 				}
 
