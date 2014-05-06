@@ -89,7 +89,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 		private Button submitBtn;
 		private Button addPicBtn;
 		private Button addVocBtn;
-		private Button medicalDevBtn;
 		private EditText symptomText;
 		private ListView docLV;
 		private Activity activity;
@@ -152,15 +151,6 @@ public class DistantDiagnosisActivity extends ActionBarActivity
 							VoiceRecordActivity.class);
 					startActivityForResult(vocRecIntent,
 							LocalConstants.VOICE_REQUEST);
-				}
-			});
-			medicalDevBtn = (Button) rootView
-					.findViewById(R.id.medical_device_btn);
-			medicalDevBtn.setOnClickListener(new OnClickListener()
-			{
-				public void onClick(View view)
-				{
-					// TODO: add medical device bluetooth connection.
 				}
 			});
 			submitBtn = (Button) rootView.findViewById(R.id.submit_btn);

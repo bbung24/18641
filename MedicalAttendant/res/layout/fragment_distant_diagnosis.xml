@@ -37,14 +37,6 @@
             android:layout_alignRight="@+id/picture_btn"
             android:layout_below="@+id/picture_btn"
             android:text="@string/add_voice_record" />
-
-        <Button
-            android:id="@+id/medical_device_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/voice_btn"
-            android:layout_below="@+id/voice_btn"
-            android:text="@string/use_medical_device" />
     </RelativeLayout>
 
     <ListView
