@@ -36,6 +36,7 @@ public class RemoteClientConstants
 
 	public static final String CHECK_UP_ROW = "Entire row for CHECKUP_ID";
 
+	//	Checkup table variables
 	public static final String TABLE_CHECKUP = "checkups";
 	public static final String CHECKUP_ID = "id";
 	public static final String CHECKUP_PATIENT_ID = "patient_id";
@@ -43,13 +44,13 @@ public class RemoteClientConstants
 	public static final String CHECKUP_RESULT = "result";
 	public static final String CHECKUP_DOCTOR_ID = "doctor_id";
 
-	// examination_relationship table
+	// Examination relationship table variables
 	public static final String TABLE_EXAMINATION = "examination_relationships";
 	public static final String EXAMINATION_CHECKUP_ID = "check_up_id";
 	public static final String EXAMINATION_MED_ID = "medication_id";
 
 	// taken_relatipnship table
-	public static final String TABLE_TAKEN = "taken_relatinpship";
+	public static final String TABLE_TAKEN = "taken_relatinpships";
 	public static final String TAKEN_CHECKUP_ID = "check_up_id";
 	public static final String TAKEN_MED_ID = "medication_id";
 	public static final String TAKEN_DATE = "date";
